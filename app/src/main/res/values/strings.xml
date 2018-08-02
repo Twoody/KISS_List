@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">TaskApp</string>
+    <string name="fillable">Enter Text Here</string>
+    <string name="button1">Add</string>
+</resources>
