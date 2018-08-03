@@ -18,13 +18,13 @@ public class TaskerDBHelper extends SQLiteOpenHelper {
     */
     private static final int DATABASE_VERSION = 1;
     private static final String DATABASE_NAME = "taskappDB";
-    private static final String TABLE_TASKS = "tasksTable";
+    private static final String TABLE_TASKS   = "tasksTable";
     // tasks Table Columns names
-    private static final String KEY_ID = "id";      //key
-    private static final String KEY_CATEGORY = "category"; //txt
-    private static final String KEY_CONTENT = "content";  //txt
-    private static final String KEY_STATUS = "status";   //int
-    private static final String KEY_PLACE = "place";    //int
+    private static final String KEY_ID        = "id";      //key
+    private static final String KEY_CATEGORY  = "category"; //txt
+    private static final String KEY_CONTENT   = "content";  //txt
+    private static final String KEY_STATUS    = "status";   //int
+    private static final String KEY_PLACE     = "place";    //int
 
     public TaskerDBHelper(Context context) {
         //constuctor
