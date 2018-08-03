@@ -16,19 +16,13 @@ public class MainActivity extends AppCompatActivity{
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         button = findViewById(R.id.floatingActionButton2);
-        button.setOnClickListener(openCategoryMenu(););
+        button.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v){
+                startActivity(new Intent (MainActivity.this, Pop.class));
+            }
+
+        });
     }//end onCreate()
-
-    public void openCategoryMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo){
-        /*
-        * Open a menu with EditText and `submit` button
-        */
-        //Intent intent = new Intent(this, addCategoryMenu);
-        super.onCreateContextMenu(menu, v, menuInfo);
-        menu.setHeaderTitle("Add a New Checklist");
-        getMenuInflater().inflate(R.menu.category_menu, menu);
-        Toast.makeText(getApplicationContext(), "Peroggative: Open a menu; Incomplete;", Toast.LENGTH_LONG);
-
-    }//end addCategoryToDatabase
 
 }//end MainActivity
