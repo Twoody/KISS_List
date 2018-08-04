@@ -7,32 +7,6 @@
     tools:context=".activity_add_task" >
 
 
-    <EditText
-        android:id="@+id/editText1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginTop="8dp"
-        android:ems="10"
-        android:hint="@string/fillable"
-        app:layout_constraintTop_toBottomOf="@+id/button1"
-        tools:layout_editor_absoluteX="0dp">
-
-        <requestFocus />
-    </EditText>
-
-    <Button
-        android:id="@+id/button1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentTop="true"
-        android:onClick="addTaskNow"
-        android:text="@string/button1"
-        tools:layout_editor_absoluteX="0dp"
-        tools:layout_editor_absoluteY="0dp" />
-
     <ListView
         android:id="@+id/listView1"
         android:layout_width="match_parent"
@@ -44,4 +18,17 @@
         tools:layout_editor_absoluteX="0dp">
 
     </ListView>
+
+    <android.support.design.widget.FloatingActionButton
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/floatingActionButton2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:clickable="true"
+        app:srcCompat="@android:drawable/ic_input_add"
+        tools:layout_editor_absoluteX="340dp"
+        tools:layout_editor_absoluteY="467dp" />
     </RelativeLayout>

@@ -1,10 +1,30 @@
 package com.example.tanner.taskapp;
 
 import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
+import android.util.Log;
+import android.view.Gravity;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.EditText;
+import android.widget.Toast;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class Pop extends Activity{
+    protected TaskerDBHelper db;
+    MyAdapter adapt;
+    List<Tasker> list;
+    Button button;
+
     @Override
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
@@ -20,5 +40,41 @@ public class Pop extends Activity{
         width          = (int) width2;
         height         = (int) height2;
         getWindow().setLayout(width, height);
+
+
+        db     = new TaskerDBHelper(this);
+        list   = db.getAllTasks();
+        adapt  = new MyAdapter(this, R.layout.list_inner_view, list);
+        button = findViewById(R.id.button1);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                addTaskNow(v);
+                openMainActivity();
+            }
+        });
     }//end onCreate()
+
+    public void openMainActivity(){
+        Intent intent = new Intent(this, activity_add_task.class);
+        startActivity(intent);
+    }//end openMainActivity()
+
+    public void addTaskNow(View v){
+        EditText t = findViewById(R.id.editText1);
+        String s1 = t.getText().toString();
+        String s2 = t.getText().toString();
+        if (s1.equalsIgnoreCase("") && s2.equalsIgnoreCase("") ){
+            Toast.makeText(this, "enter the task description first!!", Toast.LENGTH_LONG);
+        }
+        else {
+            Tasker task = new Tasker(s1, s2, 0, 1);
+            db.addTask(task);
+            Log.d("tasker", "adda added");
+            t.setText("");
+            adapt.add(task);
+            adapt.notifyDataSetChanged();
+        }
+    }//end addTaskNow()
+
 }

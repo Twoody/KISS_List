@@ -16,15 +16,16 @@ public class TaskerDBHelper extends SQLiteOpenHelper {
                 SQLiteDatabase.CursorFactory factory,
                 int version)
     */
-    private static final int DATABASE_VERSION = 1;
-    private static final String DATABASE_NAME = "taskappDB";
-    private static final String TABLE_TASKS   = "tasksTable";
+    private static final int DATABASE_VERSION    = 1;
+    private static final String DATABASE_NAME    = "taskappDB";
+    private static final String TABLE_TASKS      = "tasksTable";
+    private static final String TABLE_CATEGORIES = "categoriesTable";
     // tasks Table Columns names
-    private static final String KEY_ID        = "id";      //key
-    private static final String KEY_CATEGORY  = "category"; //txt
-    private static final String KEY_CONTENT   = "content";  //txt
-    private static final String KEY_STATUS    = "status";   //int
-    private static final String KEY_PLACE     = "place";    //int
+    private static final String KEY_ID           = "id";      //key
+    private static final String KEY_CATEGORY     = "category"; //txt
+    private static final String KEY_CONTENT      = "content";  //txt
+    private static final String KEY_STATUS       = "status";   //int
+    private static final String KEY_PLACE        = "place";    //int
 
     public TaskerDBHelper(Context context) {
         //constuctor
@@ -33,14 +34,24 @@ public class TaskerDBHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        String sql = "CREATE TABLE IF NOT EXISTS " + TABLE_TASKS + " ( "
+        String drop_sql  = "DROP TABLE IF EXISTS " + TABLE_TASKS;
+        String drop_sql2 = "DROP TABLE IF EXISTS " + TABLE_CATEGORIES;
+        db.execSQL(drop_sql);
+        db.execSQL(drop_sql2);
+
+        String create_sql = "CREATE TABLE IF NOT EXISTS " + TABLE_TASKS + " ( "
                 + KEY_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
                 + KEY_CATEGORY + " TEXT, "
                 + KEY_CONTENT + " TEXT, "
                 + KEY_STATUS + " INTEGER, "
                 + KEY_PLACE + " INTEGER "
                 + ")";
-        db.execSQL(sql);
+        String create_sql2 = "CREATE TABLE IF NOT EXISTS " + TABLE_CATEGORIES + " ( "
+                + KEY_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
+                + KEY_CATEGORY + " TEXT, "
+                + ")";
+        db.execSQL(create_sql);
+        db.execSQL(create_sql2);
     }
 
     @Override
