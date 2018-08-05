@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -20,8 +21,9 @@ import java.util.List;
 
 public class activity_add_task extends AppCompatActivity {
     protected TaskerDBHelper db;
-    MyAdapter adapt;
-    List<Tasker> list;
+    CatAdapter adapt;
+    List<Tasker> list1;
+    List<Categories> list2;
     private FloatingActionButton fab;
 
     @Override
@@ -30,8 +32,9 @@ public class activity_add_task extends AppCompatActivity {
         setContentView(R.layout.activity_add_task);
 
         db    = new TaskerDBHelper(this);
-        list  = db.getAllTasks();
-        adapt = new MyAdapter(this, R.layout.list_inner_view, list);
+        //list1 = db.getAllTasks("tasksTable"); //TODO: Add category param
+        list2 = db.getAllCategories();
+        adapt = new CatAdapter(this, R.layout.list_categories, list2);
         ListView listTask = findViewById(R.id.listView1);
         listTask.setAdapter(adapt);
 
@@ -43,25 +46,79 @@ public class activity_add_task extends AppCompatActivity {
             }
         });
     }
-    private class MyAdapter extends ArrayAdapter<Tasker> {
+    private class CatAdapter extends ArrayAdapter<Categories> {
         Context context;
-        List<Tasker> taskList = new ArrayList<Tasker>();
+        List<Categories> catList = new ArrayList<Categories>();
         int layoutResourceId;
-        private MyAdapter(Context context,
+        private CatAdapter(Context context,
                           int layoutResourceId,
-                          List<Tasker> objects)
+                          List<Categories> objects)
         {
             super(context, layoutResourceId, objects);
             this.layoutResourceId = layoutResourceId;
-            this.taskList = objects;
+            this.catList = objects;
             this.context = context;
         }//end constructor
 
-        /**
-         * This method will Definee what the view inside the list view will
-         * finally look like Here we are going to code that the checkbox state
-         * is the status of task and check box text is the task name
-         */
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            Button catbut = null;
+            if (convertView == null) {
+                LayoutInflater inflater = (LayoutInflater) context.getSystemService(
+                        Context.LAYOUT_INFLATER_SERVICE);
+                convertView = inflater.inflate(
+                        R.layout.list_categories,
+                        parent,
+                        false);
+                catbut = convertView.findViewById(
+                        R.id.catButton);
+                convertView.setTag(catbut);
+                catbut.setOnClickListener( new View.OnClickListener(){
+                    @Override
+                    public void onClick(View v) {
+                        Button but                = (Button) v;
+                        Categories changeActivity = (Categories) but.getTag();
+                        Toast toast = Toast.makeText(
+                                getApplicationContext(),
+                                "Clicked on Checkbox: " + but.getTag() +": " + but.getText(),
+                                Toast.LENGTH_LONG
+                        );
+                        toast.setGravity(Gravity.CENTER, 0, 0);
+                        toast.show();
+                    }//end onClick()
+                });//end chk.setOnClickListener()
+            }
+            else{
+                catbut = (Button) convertView.getTag();
+            }
+            Categories current = catList.get(position);
+            catbut.setText(current.getCategory());
+            catbut.setTag(current);
+            Log.d("listener", String.valueOf(current.getId()));
+            return convertView;
+        }//end getView
+
+/*
+        private class MyAdapter extends ArrayAdapter<Tasker> {
+            Context context;
+            List<Tasker> taskList = new ArrayList<Tasker>();
+            int layoutResourceId;
+            private MyAdapter(Context context,
+                              int layoutResourceId,
+                              List<Tasker> objects)
+            {
+                super(context, layoutResourceId, objects);
+                this.layoutResourceId = layoutResourceId;
+                this.taskList = objects;
+                this.context = context;
+            }//end constructor
+*/
+            /**
+             * This method will Definee what the view inside the list view will
+             * finally look like Here we are going to code that the checkbox state
+             * is the status of task and check box text is the task name
+             */
+        /*
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
             CheckBox chk = null;
@@ -69,12 +126,12 @@ public class activity_add_task extends AppCompatActivity {
                 LayoutInflater inflater = (LayoutInflater) context.getSystemService(
                         Context.LAYOUT_INFLATER_SERVICE);
                 convertView = inflater.inflate(
-                        R.layout.list_inner_view,
+                        R.layout.list_categories,
                         parent,
                         false);
-                chk = convertView.findViewById(
-                        R.id.checkBox1);
-                convertView.setTag(chk);
+                catbut = convertView.findViewById(
+                        R.id.catButton);
+                convertView.setTag(catbut);
                 chk.setOnClickListener( new View.OnClickListener(){
                     @Override
                     public void onClick(View v) {
@@ -105,5 +162,6 @@ public class activity_add_task extends AppCompatActivity {
             Log.d("listener", String.valueOf(current.getId()));
             return convertView;
         }//end getView
+        */
     }//end MyAdaper
 }//end activity_add_task

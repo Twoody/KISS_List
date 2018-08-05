@@ -21,14 +21,13 @@ import java.util.List;
 
 public class Pop extends Activity{
     protected TaskerDBHelper db;
-    MyAdapter adapt;
-    List<Tasker> list;
+    CatAdapter adapt;
+    List<Categories> list;
     Button button;
 
     @Override
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.add_category);
 
         DisplayMetrics dimensions = new DisplayMetrics();
@@ -43,8 +42,8 @@ public class Pop extends Activity{
 
 
         db     = new TaskerDBHelper(this);
-        list   = db.getAllTasks();
-        adapt  = new MyAdapter(this, R.layout.list_inner_view, list);
+        list   = db.getAllCategories();
+        adapt  = new CatAdapter(this, R.layout.list_categories, list);
         button = findViewById(R.id.button1);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -62,17 +61,17 @@ public class Pop extends Activity{
 
     public void addTaskNow(View v){
         EditText t = findViewById(R.id.editText1);
-        String s1 = t.getText().toString();
-        String s2 = t.getText().toString();
+        String s1  = t.getText().toString();
+        String s2  = t.getText().toString();
         if (s1.equalsIgnoreCase("") && s2.equalsIgnoreCase("") ){
             Toast.makeText(this, "enter the task description first!!", Toast.LENGTH_LONG);
         }
         else {
-            Tasker task = new Tasker(s1, s2, 0, 1);
-            db.addTask(task);
-            Log.d("tasker", "adda added");
+            Categories cat = new Categories(s1, 1);
+            db.addCat(cat);
+            Log.d("cat", "adda added");
             t.setText("");
-            adapt.add(task);
+            adapt.add(cat);
             adapt.notifyDataSetChanged();
         }
     }//end addTaskNow()

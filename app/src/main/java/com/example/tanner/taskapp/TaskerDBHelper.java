@@ -30,15 +30,11 @@ public class TaskerDBHelper extends SQLiteOpenHelper {
     public TaskerDBHelper(Context context) {
         //constuctor
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
+//        reinstateTables();
     }
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        String drop_sql  = "DROP TABLE IF EXISTS " + TABLE_TASKS;
-        String drop_sql2 = "DROP TABLE IF EXISTS " + TABLE_CATEGORIES;
-        db.execSQL(drop_sql);
-        db.execSQL(drop_sql2);
-
         String create_sql = "CREATE TABLE IF NOT EXISTS " + TABLE_TASKS + " ( "
                 + KEY_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
                 + KEY_CATEGORY + " TEXT, "
@@ -49,6 +45,7 @@ public class TaskerDBHelper extends SQLiteOpenHelper {
         String create_sql2 = "CREATE TABLE IF NOT EXISTS " + TABLE_CATEGORIES + " ( "
                 + KEY_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
                 + KEY_CATEGORY + " TEXT, "
+                + KEY_PLACE + " INTEGER "
                 + ")";
         db.execSQL(create_sql);
         db.execSQL(create_sql2);
@@ -57,10 +54,37 @@ public class TaskerDBHelper extends SQLiteOpenHelper {
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldV, int newV) {
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_TASKS);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_CATEGORIES);
         onCreate(db); // Create tables again
     }
 
-    //Do we want these files here? Where do they live?!
+    /*
+    *  This has almost no reason to be here.
+    *  It is strictly yo wipe out the databases when we are starting new.
+    */
+    public void reinstateTables(){
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_TASKS);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_CATEGORIES);
+        onCreate(db);
+    }
+
+    public void addCat(Categories category) {
+        //Add `task` to the database listed in `DATABASE_NAME`
+        //Tanner 20180717
+
+        SQLiteDatabase db    = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(KEY_CATEGORY, category.getCategory());
+
+        // status of task- can be 0 for not done and 1 for done
+        values.put(KEY_PLACE, category.getPlace());
+
+        db.insert(TABLE_CATEGORIES, null, values);
+        db.close(); // Closing database connection
+    }//end addTask()
+
+
     public void addTask(Tasker tasker) {
         //Add `task` to the database listed in `DATABASE_NAME`
         //Tanner 20180717
@@ -78,11 +102,11 @@ public class TaskerDBHelper extends SQLiteOpenHelper {
         db.close(); // Closing database connection
     }//end addTask()
 
-    public List<Tasker> getAllTasks() {
+    public List<Tasker> getAllTasks(String tableName) {
         List<Tasker> taskList = new ArrayList<Tasker>();
-        String selectAll = "SELECT * FROM " + TABLE_TASKS;
-        SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.rawQuery(selectAll, null);
+        String selectAll      = "SELECT * FROM " + tableName + " ORDER BY place ";
+        SQLiteDatabase db     = this.getReadableDatabase();
+        Cursor cursor         = db.rawQuery(selectAll, null);
         if (cursor.moveToNext()) {
             do {
                 Tasker tasker = new Tasker();
@@ -94,6 +118,37 @@ public class TaskerDBHelper extends SQLiteOpenHelper {
             } while (cursor.moveToNext());
         }
         return taskList;
+    }//end getAllTasks()
+
+    public Integer getCategoryCount(String category){
+        String table          = TABLE_CATEGORIES;
+        String select         = "SELECT count(*) from " + table + " WHERE category='"+ category +"'";
+        SQLiteDatabase db     = this.getReadableDatabase();
+        Cursor cursor         = db.rawQuery(select, null);
+        cursor.moveToNext();
+        int numOfCategories = cursor.getInt(0);
+        cursor.close();
+        return numOfCategories;
+    }//end getCategoryCount()
+/*    public Integer getUniqueCategories(){
+
+    }//end getUniqueCategories
+*/
+    public List<Categories> getAllCategories() {
+        List<Categories> catList = new ArrayList<Categories>();
+        String selectAll         = "SELECT * FROM " + TABLE_CATEGORIES + " ORDER BY place ";
+        SQLiteDatabase db        = this.getReadableDatabase();
+        Cursor cursor            = db.rawQuery(selectAll, null);
+        if (cursor.moveToNext()) {
+            do {
+                Categories category = new Categories();
+                category.setId(cursor.getInt(0));
+                category.setCategory(cursor.getString(1));
+                category.setPlace(cursor.getInt(2));
+                catList.add(category);
+            } while (cursor.moveToNext());
+        }
+        return catList;
     }//end getAllTasks()
 
     public void updateTask(Tasker tasker) {
