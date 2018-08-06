@@ -21,23 +21,24 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.List;
 
-public class activity_add_task extends AppCompatActivity {
+public class activity_add_category extends AppCompatActivity {
     protected TaskerDBHelper db;
     CatAdapter adapt;
     List<Tasker> list1;
     List<Categories> list2;
     private FloatingActionButton fab;
+    ListView listTask;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_add_task);
+        setContentView(R.layout.activity_add_category);
 
         db    = new TaskerDBHelper(this);
-        //list1 = db.getAllTasks("tasksTable"); //TODO: Add category param
+        //list1 = db.getAllTasks("tasksTable"); //TODO: Add category parameter to getAllTasks()
         list2 = db.getAllCategories();
         adapt = new CatAdapter(this, R.layout.list_categories, list2);
-        ListView listTask = findViewById(R.id.listView1);
+        listTask = findViewById(R.id.listView1);
         listTask.setAdapter(adapt);
 
         registerForContextMenu(listTask);
@@ -46,7 +47,9 @@ public class activity_add_task extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
-                startActivity(new Intent(activity_add_task.this, Pop.class));
+                startActivity(new Intent(activity_add_category.this, Pop.class));
+                //TODO:
+                //  adapt.notifyDataSetChanged(); //Should we have this instead of a new intent in Pop?
             }
         });
     }//end onCreate()
@@ -55,42 +58,67 @@ public class activity_add_task extends AppCompatActivity {
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
         super.onCreateContextMenu(menu, v, menuInfo);
         String foo = Integer.toString(v.getId());
-        //Toast.makeText(this, "ID: " + foo, Toast.LENGTH_LONG).show();
 
         if(v.getId() == R.id.listView1) {
             ListView catView = (ListView) v;
             AdapterView.AdapterContextMenuInfo acmi = (AdapterView.AdapterContextMenuInfo) menuInfo;
             Categories obj = (Categories) catView.getItemAtPosition(acmi.position);
-            menu.add(obj.getCategory());
         }
         else{
             Toast.makeText(this, "Tough shootin', Tex.", Toast.LENGTH_LONG).show();
         }
         menu.setHeaderTitle("Editing Tools:");
         getMenuInflater().inflate(R.menu.category_menu, menu);
-    }//end onCreaeContextMenu()
-
+        //adapt.notifyDataSetChanged();
+    }//end onCreateContextMenu()
 
     @Override
     public boolean onContextItemSelected(MenuItem item) {
         int item_id = item.getItemId();
         ContextMenu.ContextMenuInfo CMI = item.getMenuInfo();
-
-        switch (item_id) {
-            case R.id.select_cat:
-                Toast.makeText( this, "Selected ", Toast.LENGTH_SHORT).show();
-                return true;
-
-            case R.id.delete_cat:
-                Toast.makeText(this, "Option 2 selected", Toast.LENGTH_SHORT).show();
-                return true;
-
-            default:
-                return super.onContextItemSelected(item);
-        }//end switch
+        AdapterView.AdapterContextMenuInfo acmi = (AdapterView.AdapterContextMenuInfo) CMI;
+        Categories obj   = adapt.getItem(acmi.position);
+        String category  = obj.getCategory();
+        db               = new TaskerDBHelper(this);
+        boolean ret      = true;
+        String toastText = "";
+        toastText += "ITEM_ID: `" + item_id + "`:\n";
+        if (item_id == R.id.select_cat)
+            toastText += "Selected " + category;
+        else if(item_id == R.id.delete_cat){
+            Boolean didDelete = db.deleteCat(category);
+            if (didDelete)
+                toastText += "Deleted " + category;
+            else
+                toastText += "\nERROR: DID NOT DELETE `" + category + ";\n\tCATEGORY COULD NOT BE FOUND";
+            //openMainActivity(); // BUG: Need to refresh the list, not open the whole activity again...
+        }
+        else{
+            toastText += "ERROR: NOTHING SELECTED";
+            ret = super.onContextItemSelected(item);
+        }
+        Toast.makeText( this, toastText, Toast.LENGTH_SHORT).show();
+        refreshUIThread();
+        return ret;
     }//end onContextItemSelected
 
+    public void refreshUIThread(){
+        /*
+        *  Author: Tanner - 20180806
+        *  Data does not dynamically check the data when it is altered;
+        *  Functions to update UI if data is altered;
+        */
+        list2.clear();
+        list2.addAll(db.getAllCategories());
+        adapt.notifyDataSetChanged();
+        listTask.invalidateViews();
+        listTask.refreshDrawableState();
+    }//end refreshUIThread
 
+    public void openMainActivity(){
+        Intent intent = new Intent(this, activity_add_category.class);
+        startActivity(intent);
+    }//end openMainActivity()
 
     private class CatAdapter extends ArrayAdapter<Categories> {
         Context context;
@@ -210,4 +238,4 @@ public class activity_add_task extends AppCompatActivity {
         }//end getView
         */
     }//end MyAdaper
-}//end activity_add_task
+}//end activity_add_category

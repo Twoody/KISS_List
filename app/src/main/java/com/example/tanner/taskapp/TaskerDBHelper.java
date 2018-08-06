@@ -84,6 +84,23 @@ public class TaskerDBHelper extends SQLiteOpenHelper {
         db.close(); // Closing database connection
     }//end addTask()
 
+    public Boolean deleteCat(String category){
+        /*
+         * Author: Tanner Woody
+         * DAte:   20180805
+         * Delete `category` from `categories` table;
+         * Remove all instances of rows in tasksTable that have string `category` == column `category`
+        */
+        SQLiteDatabase db = this.getWritableDatabase();
+        //sqlitedatabse.delete returns total number of rows deleted;
+        int suc     = db.delete(TABLE_CATEGORIES, KEY_CATEGORY + " = '" + category +"'", null);
+        int suc2    = db.delete(TABLE_TASKS, KEY_CATEGORY + " = '" + category +"'", null);
+        Boolean ret = false;
+        if (suc > 0 || suc2 > 0)
+            ret = true;
+        db.close();
+        return ret;
+    }//end deleteCat()
 
     public void addTask(Tasker tasker) {
         //Add `task` to the database listed in `DATABASE_NAME`

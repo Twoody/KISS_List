@@ -1,22 +1,15 @@
 package com.example.tanner.taskapp;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.util.Log;
-import android.view.Gravity;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class Pop extends Activity{
@@ -49,13 +42,14 @@ public class Pop extends Activity{
             @Override
             public void onClick(View v) {
                 addTaskNow(v);
-                openMainActivity();
+                openMainActivity(); //BUG: We might want to do something like refreshUIThread
+                                    //     found in activity_add_category.java
             }
         });
     }//end onCreate()
 
     public void openMainActivity(){
-        Intent intent = new Intent(this, activity_add_task.class);
+        Intent intent = new Intent(this, activity_add_category.class);
         startActivity(intent);
     }//end openMainActivity()
 
