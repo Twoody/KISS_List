@@ -29,9 +29,11 @@ public class CatAdapter extends ArrayAdapter<Categories> {
                 R.layout.list_categories,
                 parent,
                 false);
+        //rowView.setLongClickable(true);
         Button catbut = (Button)rowView.findViewById(R.id.catButton);
         Categories current = catList.get(position);
         catbut.setText(current.getCategory());
+        //catbut.setLongClickable(true);
         rowView.setTag(catbut);
         return rowView;
     }

@@ -15,5 +15,6 @@
         android:text="Button"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
+        android:longClickable="true"
         tools:layout_editor_absoluteY="16dp" />
 </android.support.constraint.ConstraintLayout>
