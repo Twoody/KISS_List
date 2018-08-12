@@ -115,6 +115,23 @@ public class TaskerDBHelper extends SQLiteOpenHelper {
         return ret;
     }//end deleteCat()
 
+    public Boolean deleteTask(String id){
+        /*
+         * Author: Tanner Woody
+         * Date:   20180812
+         * Delete `task` from `tasksTable`;
+         * Remove all instances of rows with `id` provided;
+         * Returns false if 0 rows are removed;
+         */
+        SQLiteDatabase db = this.getWritableDatabase();
+        int suc     = db.delete(TABLE_TASKS, KEY_ID + " = '" + id +"'", null);
+        Boolean ret = false;
+        if (suc > 0)
+            ret = true;
+        db.close();
+        return ret;
+    }//end deleteTask()
+
     public void addTask(Tasker tasker) {
         //Add `task` to the database listed in `DATABASE_NAME`
         //Tanner 20180717

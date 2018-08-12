@@ -7,10 +7,13 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.ContextMenu;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.ListView;
@@ -78,6 +81,52 @@ public class activity_manage_tasks extends AppCompatActivity {
         listTask.refreshDrawableState();
     }//end refreshUIThread
 
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+        super.onCreateContextMenu(menu, v, menuInfo);
+        String foo = Integer.toString(v.getId());
+
+        if(v.getId() == R.id.listView_categories) {
+            ListView catView = (ListView) v;
+            AdapterView.AdapterContextMenuInfo acmi = (AdapterView.AdapterContextMenuInfo) menuInfo;
+            Categories obj = (Categories) catView.getItemAtPosition(acmi.position);
+        }
+        else{
+            Toast.makeText(this, "Tough shootin', Tex.", Toast.LENGTH_LONG).show();
+        }
+        menu.setHeaderTitle("Editing Tools:");
+        getMenuInflater().inflate(R.menu.task_menu, menu);
+    }//end onCreateContextMenu()
+
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+        int item_id = item.getItemId();
+        ContextMenu.ContextMenuInfo CMI = item.getMenuInfo();
+        AdapterView.AdapterContextMenuInfo acmi = (AdapterView.AdapterContextMenuInfo) CMI;
+        Tasker obj       = adapt.getItem(acmi.position);
+        String category  = obj.getCategory();
+        String content   = obj.getContent();
+        String id        = Integer.toString(obj.getId());
+        db               = new TaskerDBHelper(this);
+        boolean ret      = true;
+        String toastText = "";
+        if (item_id == R.id.select_task)
+            toastText += "Selected " + category;
+        else if(item_id == R.id.delete_task){
+            Boolean didDelete = db.deleteTask(id);
+            if (didDelete)
+                toastText += "Deleted " + content;
+            else
+                toastText += "\nERROR: DID NOT DELETE `" + content + ";\n\tCONTENT COULD NOT BE FOUND";
+        }
+        else{
+            toastText += "ERROR: NOTHING SELECTED";
+            ret = super.onContextItemSelected(item);
+        }
+        Toast.makeText( this, toastText, Toast.LENGTH_SHORT).show();
+        refreshUIThread();//BUG: NEED A BOOLEAN CHECK IF DATA WAS CHANGED OR NOT
+        return ret;
+    }//end onContextItemSelected
 
     private class MyAdapter extends ArrayAdapter<Tasker> {
         Context context;
@@ -104,11 +153,9 @@ public class activity_manage_tasks extends AppCompatActivity {
             /*
             *  BUG: cb.getText() is retruning the categroy instead of the content
             */
-            //Toast.makeText(getApplicationContext(), "INIT FOR CATEGORY: "+db.KEY_CATEGORY, Toast.LENGTH_LONG).show();
             Resources res = getResources();
             boolean debug = res.getBoolean(R.bool.debug);
             CheckBox chk  = null;
-            //refreshUIThread();
             if (convertView == null) {
                 LayoutInflater inflater = (LayoutInflater) context.getSystemService(
                         Context.LAYOUT_INFLATER_SERVICE);
@@ -153,8 +200,6 @@ public class activity_manage_tasks extends AppCompatActivity {
                 Log.d("listener: AMT", msg);
             }
             chk.setText(current.getContent());
-            //chk.setText("stupid");
-            //chk.setText(current.getCategory());
             chk.setChecked(current.getStatus() == 1 ? true:false);
             chk.setTag(current);
             Log.d("listener", String.valueOf(current.getId()));
