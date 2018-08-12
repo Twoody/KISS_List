@@ -7,10 +7,10 @@ public class Tasker {
     private int place;
     private int id;
     public Tasker() {
-        this.category = null;
-        this.content  = null;
-        this.status   = 0;
-        this.place    = 0;
+        this.category = null; //1
+        this.content  = null; //2
+        this.status   = 0;    //3
+        this.place    = 0;    //4
     }
     public Tasker(String category, String content, int status, int place) {
         super();
@@ -40,7 +40,7 @@ public class Tasker {
     public String getContent() {
         return content;
     }
-    public void setContent(String contect) {
+    public void setContent(String content) {
         this.content = content;
     }
     public int getStatus() {

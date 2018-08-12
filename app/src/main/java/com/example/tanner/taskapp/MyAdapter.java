@@ -25,16 +25,21 @@ public class MyAdapter extends ArrayAdapter<Tasker> {
     @Override
     public View getView(int position, View convertView, ViewGroup parent){
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(
-                                   Context.LAYOUT_INFLATER_SERVICE);
+                                   Context.LAYOUT_INFLATER_SERVICE
+        );
         View rowView = inflater.inflate(
                           R.layout.list_inner_view,
                           parent,
-                          false);
-        CheckBox chk = (CheckBox)rowView.findViewById(R.id.checkBox1);
+                          false
+        );
+        CheckBox chk = (CheckBox)rowView.findViewById(R.id.checkbox_task);
         Tasker current = taskList.get(position);
-        chk.setText(current.getCategory());
+        chk.setText(current.getContent());
         chk.setChecked(current.getStatus()==1?true:false);
         //rowView.setTag(chk);
         return rowView;
+    }
+    public void updateView(){
+        this.notifyDataSetChanged();
     }
 }

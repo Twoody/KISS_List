@@ -1,7 +1,9 @@
 package com.example.tanner.taskapp;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -33,41 +35,42 @@ public class Pop extends Activity{
         height         = (int) height2;
         getWindow().setLayout(width, height);
 
-
         db     = new TaskerDBHelper(this);
         list   = db.getAllCategories();
         adapt  = new CatAdapter(this, R.layout.list_categories, list);
-        button = findViewById(R.id.button1);
+        button = findViewById(R.id.button_addCategoryToDB);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                addTaskNow(v);
-                openMainActivity(); //BUG: We might want to do something like refreshUIThread
-                                    //     found in activity_add_category.java
+                addCatNow(v);
+                finish();
             }
         });
     }//end onCreate()
 
-    public void openMainActivity(){
-        Intent intent = new Intent(this, activity_add_category.class);
-        startActivity(intent);
-    }//end openMainActivity()
-
-    public void addTaskNow(View v){
-        EditText t = findViewById(R.id.editText1);
-        String s1  = t.getText().toString();
-        String s2  = t.getText().toString();
-        if (s1.equalsIgnoreCase("") && s2.equalsIgnoreCase("") ){
+    public void addCatNow(View v){
+        Resources res = getResources();
+        boolean debug = res.getBoolean(R.bool.debug);
+        EditText t    = findViewById(R.id.editText_categories);
+        String s1     = t.getText().toString();
+        if (s1.equalsIgnoreCase("")){
             Toast.makeText(this, "enter the task description first!!", Toast.LENGTH_LONG);
         }
         else {
             Categories cat = new Categories(s1, 1);
             db.addCat(cat);
-            Log.d("cat", "adda added");
+            Log.d("cat", s1 + " added");
             t.setText("");
             adapt.add(cat);
+            if (debug == true){
+                String msg = "\nDEBUG:\t"  + cat;
+                msg += "\n\tID:\t\t"       + cat.getId();
+                msg += "\n\tCATEGORY:\t"   + cat.getCategory();
+                msg += "\n\tPLACE:\t"      + cat.getPlace();
+                Log.d("listener: POP", msg);
+            }
             adapt.notifyDataSetChanged();
         }
+        finish();
     }//end addTaskNow()
-
-}
+}//end Pop()

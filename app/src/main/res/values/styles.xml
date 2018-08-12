@@ -11,9 +11,9 @@
     <style name="AppTheme.categoryPopup" parent="AppTheme">
         <item name="android:windowIsTranslucent">true</item>
         <item name="android:windowCloseOnTouchOutside">true</item>
-        <item name="android:colorPrimary">@color/colorPrimary</item>
-        <item name="android:colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="android:colorAccent">@color/colorAccent</item>
+        <item name="android:colorPrimary">@color/colorPrimary_popup</item>
+        <item name="android:colorPrimaryDark">@color/colorPrimaryDark_popup</item>
+        <item name="android:colorAccent">@color/colorAccent_popup</item>
 
     </style>
 </resources>

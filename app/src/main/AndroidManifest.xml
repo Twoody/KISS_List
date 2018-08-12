@@ -11,7 +11,7 @@
         android:theme="@style/AppTheme">
 
         <activity
-            android:name=".activity_add_category"
+            android:name=".activity_manage_category"
             android:label="@string/app_name">
             <intent-filter>
                 <action
@@ -22,11 +22,15 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".Checklists">
-        </activity>
-        <activity
             android:name=".Pop"
             android:theme="@style/AppTheme.categoryPopup">
+        </activity>
+        <activity
+            android:name=".Pop_tasks"
+            android:theme="@style/AppTheme.categoryPopup">
+        </activity>
+        <activity
+            android:name=".activity_manage_tasks">
         </activity>
     </application>
 

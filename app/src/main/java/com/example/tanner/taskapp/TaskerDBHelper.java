@@ -4,6 +4,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,11 +19,11 @@ public class TaskerDBHelper extends SQLiteOpenHelper {
     */
     private static final int DATABASE_VERSION    = 1;
     private static final String DATABASE_NAME    = "taskappDB";
-    private static final String TABLE_TASKS      = "tasksTable";
+    public static final String TABLE_TASKS      = "tasksTable";
     private static final String TABLE_CATEGORIES = "categoriesTable";
     // tasks Table Columns names
-    private static final String KEY_ID           = "id";      //key
-    private static final String KEY_CATEGORY     = "category"; //txt
+    private static final String KEY_ID           = "id";       //key
+    public static final String KEY_CATEGORY     = "category"; //txt
     private static final String KEY_CONTENT      = "content";  //txt
     private static final String KEY_STATUS       = "status";   //int
     private static final String KEY_PLACE        = "place";    //int
@@ -30,7 +31,8 @@ public class TaskerDBHelper extends SQLiteOpenHelper {
     public TaskerDBHelper(Context context) {
         //constuctor
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
-//        reinstateTables();
+        //reinstateTables();
+        //reinstateTables();
     }
 
     @Override
@@ -72,7 +74,7 @@ public class TaskerDBHelper extends SQLiteOpenHelper {
     public void addCat(Categories category) {
         //Add `task` to the database listed in `DATABASE_NAME`
         //Tanner 20180717
-
+        Boolean debug = true;
         SQLiteDatabase db    = this.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(KEY_CATEGORY, category.getCategory());
@@ -80,19 +82,30 @@ public class TaskerDBHelper extends SQLiteOpenHelper {
         // status of task- can be 0 for not done and 1 for done
         values.put(KEY_PLACE, category.getPlace());
 
-        db.insert(TABLE_CATEGORIES, null, values);
+        long newRowId = db.insert(TABLE_CATEGORIES, null, values);
         db.close(); // Closing database connection
+        if (newRowId == -1)
+            Log.e("cat: TBDH", "CATEGORY NOT INSERTED INTO DB");
+        else
+            category.setId((int)newRowId);
+        if (debug == true){
+            String msg = "\nDEBUG:\t"+ category;
+            msg += "\n\tID:\t\t\t"     + category.getId();
+            msg += "\n\tCATEGORY:\t"   + category.getCategory();
+            msg += "\n\tPLACE:\t\t"    + category.getPlace();
+            Log.d("listener: cat: TDBH", msg);
+        }
     }//end addTask()
 
     public Boolean deleteCat(String category){
         /*
          * Author: Tanner Woody
-         * DAte:   20180805
+         * Date:   20180805
          * Delete `category` from `categories` table;
          * Remove all instances of rows in tasksTable that have string `category` == column `category`
         */
         SQLiteDatabase db = this.getWritableDatabase();
-        //sqlitedatabse.delete returns total number of rows deleted;
+        //sqlitedatabase.delete returns total number of rows deleted;
         int suc     = db.delete(TABLE_CATEGORIES, KEY_CATEGORY + " = '" + category +"'", null);
         int suc2    = db.delete(TABLE_TASKS, KEY_CATEGORY + " = '" + category +"'", null);
         Boolean ret = false;
@@ -105,8 +118,9 @@ public class TaskerDBHelper extends SQLiteOpenHelper {
     public void addTask(Tasker tasker) {
         //Add `task` to the database listed in `DATABASE_NAME`
         //Tanner 20180717
-
-        SQLiteDatabase db = this.getWritableDatabase();
+        boolean debug        = true;
+        //boolean debug        = false;
+        SQLiteDatabase db    = this.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(KEY_CATEGORY, tasker.getCategory());
         values.put(KEY_CONTENT, tasker.getContent());
@@ -115,29 +129,53 @@ public class TaskerDBHelper extends SQLiteOpenHelper {
         values.put(KEY_STATUS, tasker.getStatus());
         values.put(KEY_PLACE, tasker.getPlace());
 
-        db.insert(TABLE_TASKS, null, values);
+        long newRowId = db.insert(TABLE_TASKS, null, values);
         db.close(); // Closing database connection
+
+        if (newRowId == -1)
+            Log.e("task:TBDH", "TASK NOT INSERTED INTO DB");
+        else
+            tasker.setId((int)newRowId);
+
+        if (debug == true){
+            String msg = "\nDEBUG:\t"+ tasker;
+            msg += "\n\tID:\t\t\t"     + tasker.getId();
+            msg += "\n\tCATEGORY:\t"   + tasker.getCategory();
+            msg += "\n\tCONTENT:\t"    + tasker.getContent();
+            msg += "\n\tSTATUS:\t\t"   + tasker.getStatus();
+            msg += "\n\tPLACE:\t\t"    + tasker.getPlace();
+            Log.d("listener: task: TDBH", msg);
+        }
     }//end addTask()
 
-    public List<Tasker> getAllTasks(String tableName) {
+    public List<Tasker> getAllTasks(String tableName, String category) {
         List<Tasker> taskList = new ArrayList<Tasker>();
-        String selectAll      = "SELECT * FROM " + tableName + " ORDER BY place ";
-        SQLiteDatabase db     = this.getReadableDatabase();
+        String selectAll      = "SELECT * FROM " + tableName;
+        if (category != "") {
+            selectAll += " WHERE category = '" + category + "' ";
+        }
+        selectAll += " ORDER BY place ";
+        SQLiteDatabase db     = this.getWritableDatabase();
         Cursor cursor         = db.rawQuery(selectAll, null);
+        int cnt = 0;
         if (cursor.moveToNext()) {
             do {
                 Tasker tasker = new Tasker();
                 tasker.setId(cursor.getInt(0));
                 tasker.setCategory(cursor.getString(1));
-                tasker.setStatus(cursor.getInt(2));
-                tasker.setPlace(cursor.getInt(3));
+                tasker.setContent(cursor.getString(2));
+                tasker.setStatus(cursor.getInt(3));
+                tasker.setPlace(cursor.getInt(4));
                 taskList.add(tasker);
+                Log.d("LOOP", "Loop " + Integer.toString(cnt) + ": " + tasker.getContent());
+                cnt++;
             } while (cursor.moveToNext());
         }
         return taskList;
     }//end getAllTasks()
 
     public Integer getCategoryCount(String category){
+        //BUG: Do not include where clause if category is empty string
         String table          = TABLE_CATEGORIES;
         String select         = "SELECT count(*) from " + table + " WHERE category='"+ category +"'";
         SQLiteDatabase db     = this.getReadableDatabase();
@@ -179,5 +217,6 @@ public class TaskerDBHelper extends SQLiteOpenHelper {
         values.put(KEY_PLACE, tasker.getPlace());
 
         db.update(TABLE_TASKS, values, whereclause, _ids);
+        db.close();
     }//end updateTask()
 }

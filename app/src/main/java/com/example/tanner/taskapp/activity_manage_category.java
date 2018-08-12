@@ -21,10 +21,9 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.List;
 
-public class activity_add_category extends AppCompatActivity {
+public class activity_manage_category extends AppCompatActivity {
     protected TaskerDBHelper db;
     CatAdapter adapt;
-    List<Tasker> list1;
     List<Categories> list2;
     private FloatingActionButton fab;
     ListView listTask;
@@ -32,34 +31,37 @@ public class activity_add_category extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_add_category);
+        setContentView(R.layout.activity_manage_category);
 
         db    = new TaskerDBHelper(this);
-        //list1 = db.getAllTasks("tasksTable"); //TODO: Add category parameter to getAllTasks()
         list2 = db.getAllCategories();
         adapt = new CatAdapter(this, R.layout.list_categories, list2);
-        listTask = findViewById(R.id.listView1);
+        listTask = findViewById(R.id.listView_categories);
         listTask.setAdapter(adapt);
 
         registerForContextMenu(listTask);
 
-        fab = findViewById(R.id.floatingActionButton2);
+        fab = findViewById(R.id.fab_add_category);
         fab.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
-                startActivity(new Intent(activity_add_category.this, Pop.class));
-                //TODO:
-                //  adapt.notifyDataSetChanged(); //Should we have this instead of a new intent in Pop?
+                startActivity(new Intent(activity_manage_category.this, Pop.class));
             }
         });
     }//end onCreate()
+
+    @Override
+    public void onResume(){
+        super.onResume();
+        refreshUIThread();
+    }
 
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
         super.onCreateContextMenu(menu, v, menuInfo);
         String foo = Integer.toString(v.getId());
 
-        if(v.getId() == R.id.listView1) {
+        if(v.getId() == R.id.listView_categories) {
             ListView catView = (ListView) v;
             AdapterView.AdapterContextMenuInfo acmi = (AdapterView.AdapterContextMenuInfo) menuInfo;
             Categories obj = (Categories) catView.getItemAtPosition(acmi.position);
@@ -69,7 +71,6 @@ public class activity_add_category extends AppCompatActivity {
         }
         menu.setHeaderTitle("Editing Tools:");
         getMenuInflater().inflate(R.menu.category_menu, menu);
-        //adapt.notifyDataSetChanged();
     }//end onCreateContextMenu()
 
     @Override
@@ -98,7 +99,7 @@ public class activity_add_category extends AppCompatActivity {
             ret = super.onContextItemSelected(item);
         }
         Toast.makeText( this, toastText, Toast.LENGTH_SHORT).show();
-        refreshUIThread();
+        refreshUIThread();//BUG: NEED A BOOLEAN CHECK IF DATA WAS CHANGED OR NOT
         return ret;
     }//end onContextItemSelected
 
@@ -116,7 +117,7 @@ public class activity_add_category extends AppCompatActivity {
     }//end refreshUIThread
 
     public void openMainActivity(){
-        Intent intent = new Intent(this, activity_add_category.class);
+        Intent intent = new Intent(this, activity_manage_category.class);
         startActivity(intent);
     }//end openMainActivity()
 
@@ -139,13 +140,16 @@ public class activity_add_category extends AppCompatActivity {
             Button catbut = null;
             if (convertView == null) {
                 LayoutInflater inflater = (LayoutInflater) context.getSystemService(
-                        Context.LAYOUT_INFLATER_SERVICE);
+                        Context.LAYOUT_INFLATER_SERVICE
+                );
                 convertView = inflater.inflate(
                         R.layout.list_categories,
                         parent,
-                        false);
+                        false
+                );
                 catbut = convertView.findViewById(
-                        R.id.catButton);
+                        R.id.catButton
+                );
                 convertView.setTag(catbut);
                 catbut.setOnClickListener( new View.OnClickListener(){
                     @Override
@@ -154,11 +158,13 @@ public class activity_add_category extends AppCompatActivity {
                         Categories changeActivity = (Categories) but.getTag();
                         Toast toast = Toast.makeText(
                                 getApplicationContext(),
-                                "Clicked on Checkbox: " + but.getTag() +": " + but.getText(),
+                                "Clicked on Button: " + but.getTag() +"\nTEXT:" + but.getText(),
                                 Toast.LENGTH_LONG
                         );
                         toast.setGravity(Gravity.CENTER, 0, 0);
                         toast.show();
+                        String category = (String) but.getText();
+                        openTasksActivity(category); //ListView activity of each task per category selected.
                     }//end onClick()
                 });//end chk.setOnClickListener()
             }
@@ -172,70 +178,12 @@ public class activity_add_category extends AppCompatActivity {
             return convertView;
         }//end getView
 
-/*
-        private class MyAdapter extends ArrayAdapter<Tasker> {
-            Context context;
-            List<Tasker> taskList = new ArrayList<Tasker>();
-            int layoutResourceId;
-            private MyAdapter(Context context,
-                              int layoutResourceId,
-                              List<Tasker> objects)
-            {
-                super(context, layoutResourceId, objects);
-                this.layoutResourceId = layoutResourceId;
-                this.taskList = objects;
-                this.context = context;
-            }//end constructor
-*/
-            /**
-             * This method will Definee what the view inside the list view will
-             * finally look like Here we are going to code that the checkbox state
-             * is the status of task and check box text is the task name
-             */
-        /*
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            CheckBox chk = null;
-            if (convertView == null) {
-                LayoutInflater inflater = (LayoutInflater) context.getSystemService(
-                        Context.LAYOUT_INFLATER_SERVICE);
-                convertView = inflater.inflate(
-                        R.layout.list_categories,
-                        parent,
-                        false);
-                catbut = convertView.findViewById(
-                        R.id.catButton);
-                convertView.setTag(catbut);
-                chk.setOnClickListener( new View.OnClickListener(){
-                    @Override
-                    public void onClick(View v) {
-                        CheckBox cb       = (CheckBox) v;
-                        Tasker changeTask = (Tasker) cb.getTag();
-                        int isChecked     = cb.isChecked() == true ? 1 : 0;
-                        changeTask.setStatus(isChecked);
-                        //db.updateTask(changeTask);
-                        Toast toast = Toast.makeText(
-                                getApplicationContext(),
-                                "Clicked on Checkbox: " + cb.getTag() +": " + cb.getText()
-                                        + " is " + cb.isChecked() + ": "
-                                        + Integer.toString(isChecked),
-                                Toast.LENGTH_LONG
-                        );
-                        toast.setGravity(Gravity.CENTER, 0, 0);
-                        toast.show();
-                    }//end onClick()
-                });//end chk.setOnClickListener()
-            }
-            else{
-                chk = (CheckBox) convertView.getTag();
-            }
-            Tasker current = taskList.get(position);
-            chk.setText(current.getCategory());
-            chk.setChecked(current.getStatus() == 1 ? true:false);
-            chk.setTag(current);
-            Log.d("listener", String.valueOf(current.getId()));
-            return convertView;
-        }//end getView
-        */
+        public void openTasksActivity(String category){
+            Intent intent;
+            Class foo = activity_manage_tasks.class;
+            intent = new Intent(activity_manage_category.this, foo);
+            intent.putExtra("category", category);
+            startActivity(intent);
+        }//end openTasksActivity
     }//end MyAdaper
-}//end activity_add_category
+}//end activity_manage_category
