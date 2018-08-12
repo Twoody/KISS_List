@@ -17,6 +17,7 @@ public class TaskerDBHelper extends SQLiteOpenHelper {
                 SQLiteDatabase.CursorFactory factory,
                 int version)
     */
+    boolean debug = false;
     private static final int DATABASE_VERSION    = 1;
     private static final String DATABASE_NAME    = "taskappDB";
     public static final String TABLE_TASKS      = "tasksTable";
@@ -74,7 +75,6 @@ public class TaskerDBHelper extends SQLiteOpenHelper {
     public void addCat(Categories category) {
         //Add `task` to the database listed in `DATABASE_NAME`
         //Tanner 20180717
-        Boolean debug = true;
         SQLiteDatabase db    = this.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(KEY_CATEGORY, category.getCategory());
@@ -118,8 +118,6 @@ public class TaskerDBHelper extends SQLiteOpenHelper {
     public void addTask(Tasker tasker) {
         //Add `task` to the database listed in `DATABASE_NAME`
         //Tanner 20180717
-        boolean debug        = true;
-        //boolean debug        = false;
         SQLiteDatabase db    = this.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(KEY_CATEGORY, tasker.getCategory());

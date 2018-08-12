@@ -26,7 +26,6 @@ public class activity_manage_tasks extends AppCompatActivity {
     private FloatingActionButton fab_add_task;
     ListView listTask;
     String category;
-    boolean debug = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
