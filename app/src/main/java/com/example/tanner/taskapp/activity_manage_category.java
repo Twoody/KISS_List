@@ -171,8 +171,16 @@ public class activity_manage_category extends AppCompatActivity {
             else{
                 catbut = (Button) convertView.getTag();
             }
-            Categories current = catList.get(position);
-            catbut.setText(current.getCategory());
+            Categories current    = catList.get(position);
+            String display        = current.getCategory();
+            List listOfTasks      = db.getAllTasks(db.TABLE_TASKS, current.getCategory());
+            List completedTasks   = db.getAllCompletedTasks(db.TABLE_TASKS, current.getCategory());
+            int numberOfTasks     = listOfTasks.size();
+            int numberOfCompleted = completedTasks.size();
+            display += " (" + Integer.toString(numberOfCompleted);
+            display += "/";
+            display += Integer.toString(numberOfTasks) + ")";
+            catbut.setText(display);
             catbut.setTag(current);
             Log.d("listener", String.valueOf(current.getId()));
             return convertView;

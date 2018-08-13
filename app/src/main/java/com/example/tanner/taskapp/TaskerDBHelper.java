@@ -189,6 +189,37 @@ public class TaskerDBHelper extends SQLiteOpenHelper {
         return taskList;
     }//end getAllTasks()
 
+    public List<Tasker> getAllCompletedTasks(String tableName, String category) {
+        List<Tasker> taskList = new ArrayList<Tasker>();
+        String selectAll      = "SELECT * FROM " + tableName;
+        String whereclause    = "";
+        whereclause += " WHERE 1=1 ";
+        if (category != "") {
+            whereclause += " AND category = '" + category + "' ";
+        }
+        whereclause += " AND status = '1' ";
+        selectAll += whereclause;
+        selectAll += " ORDER BY place ";
+        SQLiteDatabase db     = this.getWritableDatabase();
+        Cursor cursor         = db.rawQuery(selectAll, null);
+        int cnt = 0;
+        if (cursor.moveToNext()) {
+            do {
+                Tasker tasker = new Tasker();
+                tasker.setId(cursor.getInt(0));
+                tasker.setCategory(cursor.getString(1));
+                tasker.setContent(cursor.getString(2));
+                tasker.setStatus(cursor.getInt(3));
+                tasker.setPlace(cursor.getInt(4));
+                taskList.add(tasker);
+                Log.d("LOOP", "Loop " + Integer.toString(cnt) + ": " + tasker.getContent());
+                cnt++;
+            } while (cursor.moveToNext());
+        }
+        return taskList;
+    }//end getAllTasks()
+
+
     public Integer getCategoryCount(String category){
         //BUG: Do not include where clause if category is empty string
         String table          = TABLE_CATEGORIES;
