@@ -7,12 +7,16 @@ import android.content.res.Resources;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
+import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import java.security.Key;
 import java.util.List;
 
 public class Pop extends Activity{
@@ -40,6 +44,19 @@ public class Pop extends Activity{
         db     = new TaskerDBHelper(this);
         list   = db.getAllCategories();
         adapt  = new CatAdapter(this, R.layout.list_categories, list);
+        EditText foo = (EditText) findViewById(R.id.editText_categories);
+
+        foo.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+
+                if (actionId == EditorInfo.IME_ACTION_DONE) {
+                    addCatNow(v);
+                    return true;
+                }
+                return false;
+            }
+        });
         button = findViewById(R.id.button_addCategoryToDB);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -73,6 +90,6 @@ public class Pop extends Activity{
             }
             adapt.notifyDataSetChanged();
         }
-        finish();
+        //finish();
     }//end addTaskNow()
 }//end Pop()
