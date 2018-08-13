@@ -33,9 +33,9 @@ public class activity_manage_category extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_manage_category);
 
-        db    = new TaskerDBHelper(this);
-        list2 = db.getAllCategories();
-        adapt = new CatAdapter(this, R.layout.list_categories, list2);
+        db       = new TaskerDBHelper(this);
+        list2    = db.getAllCategories();
+        adapt    = new CatAdapter(this, R.layout.list_categories, list2);
         listTask = findViewById(R.id.listView_categories);
         listTask.setAdapter(adapt);
 
@@ -163,7 +163,7 @@ public class activity_manage_category extends AppCompatActivity {
                         );
                         toast.setGravity(Gravity.CENTER, 0, 0);
                         toast.show();
-                        String category = (String) but.getText();
+                        String category = changeActivity.getCategory();
                         openTasksActivity(category); //ListView activity of each task per category selected.
                     }//end onClick()
                 });//end chk.setOnClickListener()

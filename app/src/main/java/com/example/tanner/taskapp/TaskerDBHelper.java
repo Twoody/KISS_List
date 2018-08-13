@@ -18,7 +18,7 @@ public class TaskerDBHelper extends SQLiteOpenHelper {
                 SQLiteDatabase.CursorFactory factory,
                 int version)
     */
-    boolean debug = true;
+    boolean debug = false;
     boolean verbose = false;
     private static final int DATABASE_VERSION    = 1;
     private static final String DATABASE_NAME    = "taskappDB";
@@ -229,6 +229,15 @@ public class TaskerDBHelper extends SQLiteOpenHelper {
         return taskList;
     }//end getAllTasks()
 
+    public String getCategoryFromId(String id){
+        String query      = "SELECT * FROM " + TABLE_CATEGORIES + " WHERE id = '"+id+"'";
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor     = db.rawQuery(query, null);
+        cursor.moveToNext();
+        String cat = cursor.getString(1);
+        cursor.close();
+        return cat;
+    }
 
     public Integer getCategoryCount(String category){
         //BUG: Do not include where clause if category is empty string
