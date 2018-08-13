@@ -43,7 +43,7 @@ public class Pop_tasks extends Activity{
         int width      = dimensions.widthPixels;
         int height     = dimensions.heightPixels;
         double width2  = width  * 0.8;
-        double height2 = height * 0.8;
+        double height2 = height * 0.4;
         width          = (int) width2;
         height         = (int) height2;
         getWindow().setLayout(width, height);
