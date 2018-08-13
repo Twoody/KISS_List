@@ -1,6 +1,7 @@
 package com.example.tanner.taskapp;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.res.Resources;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
@@ -17,14 +18,15 @@ public class TaskerDBHelper extends SQLiteOpenHelper {
                 SQLiteDatabase.CursorFactory factory,
                 int version)
     */
-    boolean debug = false;
+    boolean debug = true;
+    boolean verbose = false;
     private static final int DATABASE_VERSION    = 1;
     private static final String DATABASE_NAME    = "taskappDB";
-    public static final String TABLE_TASKS      = "tasksTable";
-    private static final String TABLE_CATEGORIES = "categoriesTable";
+    public static final String TABLE_TASKS       = "tasksTable";
+    public static final String TABLE_CATEGORIES  = "categoriesTable";
     // tasks Table Columns names
     private static final String KEY_ID           = "id";       //key
-    public static final String KEY_CATEGORY     = "category"; //txt
+    public static final String KEY_CATEGORY      = "category"; //txt
     private static final String KEY_CONTENT      = "content";  //txt
     private static final String KEY_STATUS       = "status";   //int
     private static final String KEY_PLACE        = "place";    //int
@@ -63,7 +65,7 @@ public class TaskerDBHelper extends SQLiteOpenHelper {
 
     /*
     *  This has almost no reason to be here.
-    *  It is strictly yo wipe out the databases when we are starting new.
+    *  It is strictly to wipe out the databases when we are starting new.
     */
     public void reinstateTables(){
         SQLiteDatabase db = this.getWritableDatabase();
@@ -88,7 +90,7 @@ public class TaskerDBHelper extends SQLiteOpenHelper {
             Log.e("cat: TBDH", "CATEGORY NOT INSERTED INTO DB");
         else
             category.setId((int)newRowId);
-        if (debug == true){
+        if (debug == true && verbose == true){
             String msg = "\nDEBUG:\t"+ category;
             msg += "\n\tID:\t\t\t"     + category.getId();
             msg += "\n\tCATEGORY:\t"   + category.getCategory();
@@ -152,7 +154,7 @@ public class TaskerDBHelper extends SQLiteOpenHelper {
         else
             tasker.setId((int)newRowId);
 
-        if (debug == true){
+        if (debug == true && verbose == true){
             String msg = "\nDEBUG:\t"+ tasker;
             msg += "\n\tID:\t\t\t"     + tasker.getId();
             msg += "\n\tCATEGORY:\t"   + tasker.getCategory();
@@ -167,7 +169,7 @@ public class TaskerDBHelper extends SQLiteOpenHelper {
         List<Tasker> taskList = new ArrayList<Tasker>();
         String selectAll      = "SELECT * FROM " + tableName;
         if (category != "") {
-            selectAll += " WHERE category = '" + category + "' ";
+            selectAll += " WHERE " + KEY_CATEGORY + " = '" + category + "' ";
         }
         selectAll += " ORDER BY place ";
         SQLiteDatabase db     = this.getWritableDatabase();
@@ -186,6 +188,10 @@ public class TaskerDBHelper extends SQLiteOpenHelper {
                 cnt++;
             } while (cursor.moveToNext());
         }
+        if (cnt == 0)
+            Log.e("TBDH: getAllTasks", "NO ITEMS FOUND FOR QUERY `"+selectAll+"`");
+        else if(debug == true)
+            Log.d("TBDH: getAllTasks", "QUERY `"+selectAll+"` RETURNED "+ cnt +" RESULTS");
         return taskList;
     }//end getAllTasks()
 
@@ -195,7 +201,7 @@ public class TaskerDBHelper extends SQLiteOpenHelper {
         String whereclause    = "";
         whereclause += " WHERE 1=1 ";
         if (category != "") {
-            whereclause += " AND category = '" + category + "' ";
+            whereclause += " AND "+ KEY_CATEGORY +" = '" + category + "' ";
         }
         whereclause += " AND status = '1' ";
         selectAll += whereclause;
@@ -216,6 +222,10 @@ public class TaskerDBHelper extends SQLiteOpenHelper {
                 cnt++;
             } while (cursor.moveToNext());
         }
+        if (cnt == 0)
+            Log.e("TBDH: getAllTasks", "NO ITEMS FOUND FOR QUERY `"+selectAll+"`");
+        else if(debug == true)
+            Log.d("TBDH: getAllTasks", "QUERY `"+selectAll+"` RETURNED "+ cnt +" RESULTS");
         return taskList;
     }//end getAllTasks()
 
@@ -223,7 +233,7 @@ public class TaskerDBHelper extends SQLiteOpenHelper {
     public Integer getCategoryCount(String category){
         //BUG: Do not include where clause if category is empty string
         String table          = TABLE_CATEGORIES;
-        String select         = "SELECT count(*) from " + table + " WHERE category='"+ category +"'";
+        String select         = "SELECT count(*) from " + table + " WHERE " +KEY_CATEGORY+ "='" + category +"'";
         SQLiteDatabase db     = this.getReadableDatabase();
         Cursor cursor         = db.rawQuery(select, null);
         cursor.moveToNext();
@@ -231,10 +241,7 @@ public class TaskerDBHelper extends SQLiteOpenHelper {
         cursor.close();
         return numOfCategories;
     }//end getCategoryCount()
-/*    public Integer getUniqueCategories(){
 
-    }//end getUniqueCategories
-*/
     public List<Categories> getAllCategories() {
         List<Categories> catList = new ArrayList<Categories>();
         String selectAll         = "SELECT * FROM " + TABLE_CATEGORIES + " ORDER BY place ";
