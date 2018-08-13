@@ -9,6 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -80,6 +81,12 @@ public class activity_manage_tasks extends AppCompatActivity {
         listTask.invalidateViews();
         listTask.refreshDrawableState();
     }//end refreshUIThread
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        this.finish();
+    }//end onBackPressed()
 
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
