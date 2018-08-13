@@ -7,10 +7,13 @@ import android.content.res.Resources;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
+import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.List;
@@ -46,15 +49,26 @@ public class Pop_tasks extends Activity{
         getWindow().setLayout(width, height);
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
 
-        db     = new TaskerDBHelper(this);
-        list   = db.getAllTasks("tasksTable", category);
-        adapt  = new MyAdapter(this, R.layout.list_inner_view, list);
-        button = findViewById(R.id.button_addTaskToDB);
+        db             = new TaskerDBHelper(this);
+        list           = db.getAllTasks("tasksTable", category);
+        adapt          = new MyAdapter(this, R.layout.list_inner_view, list);
+        button         = findViewById(R.id.button_addTaskToDB);
+        EditText input = (EditText) findViewById(R.id.editText_tasks);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 addTaskNow(v);
                 finish();
+            }
+        });
+        input.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_DONE) {
+                    addTaskNow(v);
+                    return true;
+                }
+                return false;
             }
         });
     }//end onCreate()
