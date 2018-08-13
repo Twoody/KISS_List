@@ -150,9 +150,6 @@ public class activity_manage_tasks extends AppCompatActivity {
      */
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
-            /*
-            *  BUG: cb.getText() is retruning the categroy instead of the content
-            */
             Resources res = getResources();
             boolean debug = res.getBoolean(R.bool.debug);
             CheckBox chk  = null;
