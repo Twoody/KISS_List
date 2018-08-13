@@ -49,7 +49,6 @@ public class Pop extends Activity{
         foo.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-
                 if (actionId == EditorInfo.IME_ACTION_DONE) {
                     addCatNow(v);
                     return true;
@@ -90,6 +89,6 @@ public class Pop extends Activity{
             }
             adapt.notifyDataSetChanged();
         }
-        //finish();
+        finish();
     }//end addTaskNow()
 }//end Pop()

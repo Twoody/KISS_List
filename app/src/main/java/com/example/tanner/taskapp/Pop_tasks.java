@@ -31,7 +31,6 @@ public class Pop_tasks extends Activity{
         setContentView(R.layout.add_task);
 
         //Get `category` from `catBut` and homescreen a couple activities back;
-        //BUG: Switch to `id`
         Intent parentIntent = getIntent();
         Bundle parentBD = parentIntent.getExtras();
         if (parentBD != null)
