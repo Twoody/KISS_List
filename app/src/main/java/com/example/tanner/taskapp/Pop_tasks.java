@@ -30,7 +30,8 @@ public class Pop_tasks extends Activity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.add_task);
 
-        //`category` from `catBut` and homescreen a couple activities back;
+        //Get `category` from `catBut` and homescreen a couple activities back;
+        //BUG: Switch to `id`
         Intent parentIntent = getIntent();
         Bundle parentBD = parentIntent.getExtras();
         if (parentBD != null)
@@ -79,12 +80,10 @@ public class Pop_tasks extends Activity{
         EditText t    = findViewById(R.id.editText_tasks);
         String s1     = category;
         String s2     = t.getText().toString();
-        //s2            = "COME ON!";
         if (s1.equalsIgnoreCase("") && s2.equalsIgnoreCase("") ){
             Toast.makeText(this, "enter the task description first!!", Toast.LENGTH_LONG);
         }
         else {
-            //`status` == 0 is not checked; `status` == 1 is checked;
             Tasker task = new Tasker(s1, s2, 0, 1);
             db.addTask(task);
             adapt.add(task);
