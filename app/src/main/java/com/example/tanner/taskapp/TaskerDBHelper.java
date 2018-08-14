@@ -136,7 +136,9 @@ public class TaskerDBHelper extends SQLiteOpenHelper {
         int suc     = db.delete(TABLE_CATEGORIES, KEY_CATEGORY + " = '" + category +"'", null);
         int suc2    = db.delete(TABLE_TASKS, KEY_CATEGORY + " = '" + category +"'", null);
         //Update all other `place` values where `place` > catPlace
-        updateCategoryPlaceOnDelete(catPlace);
+        int rowsUpdated = updateCategoryPlaceOnDelete(catPlace);
+        if(rowsUpdated == 0)
+            Log.w("TDBH: deleteCat", "WARNING: NO ROWS UPDATED WITH NEW `"+KEY_PLACE+"`");
         Boolean ret = false;
         if (suc > 0 || suc2 > 0)
             ret = true;
@@ -152,8 +154,8 @@ public class TaskerDBHelper extends SQLiteOpenHelper {
         */
         String query = "SELECT * FROM " + TABLE_CATEGORIES;
         String where = " WHERE 1=1";
-        where += " AND " + KEY_PLACE + " > '" + place + "'";
-        query += place;
+        where += " AND " + KEY_PLACE + " > " + place + "";
+        query += where;
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor     = db.rawQuery(query, null);
         int updates       = 0;
@@ -183,12 +185,13 @@ public class TaskerDBHelper extends SQLiteOpenHelper {
         String update       = "UPDATE " + TABLE_CATEGORIES;
         String set          = " SET " + KEY_PLACE + "='"+newPlace+"'";
         String where        = " WHERE 1=1";
-        where += "AND id='" + itemId + "'";
+        where += " AND " + KEY_ID + "='" + itemId + "'";
         update += set + where;
         SQLiteDatabase db = this.getWritableDatabase();
         try {
             db.execSQL(update);
             ret = true;
+            Log.d("updateCategoryPlace()", "UPDATED `"+itemId+"` FROM `"+catRow.getInt(2)+"` TO `"+newPlace+"`");
         }
         catch (SQLException e){
             Log.e("TDBH: UCPOD", "ISSUE WITH QUERY `" + update + "`");
@@ -267,7 +270,8 @@ public class TaskerDBHelper extends SQLiteOpenHelper {
                 tasker.setStatus(cursor.getInt(3));
                 tasker.setPlace(cursor.getInt(4));
                 taskList.add(tasker);
-                Log.d("LOOP", "Loop " + Integer.toString(cnt) + ": " + tasker.getContent());
+                if (debug && verbose)
+                    Log.d("TBDH: GAT: LOOP", "Loop " + Integer.toString(cnt) + ": " + tasker.getContent());
                 cnt++;
             } while (cursor.moveToNext());
         }

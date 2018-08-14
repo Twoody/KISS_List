@@ -141,6 +141,8 @@ public class activity_manage_category extends AppCompatActivity {
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
+            Resources res = getResources();
+            boolean debug = res.getBoolean(R.bool.debug);
             Button catbut = null;
             if (convertView == null) {
                 LayoutInflater inflater = (LayoutInflater) context.getSystemService(
@@ -176,11 +178,14 @@ public class activity_manage_category extends AppCompatActivity {
                 catbut = (Button) convertView.getTag();
             }
             Categories current    = catList.get(position);
+            int place             = current.getPlace();
             String display        = current.getCategory();
             List listOfTasks      = db.getAllTasks(db.TABLE_TASKS, current.getCategory());
             List completedTasks   = db.getAllCompletedTasks(db.TABLE_TASKS, current.getCategory());
             int numberOfTasks     = listOfTasks.size();
             int numberOfCompleted = completedTasks.size();
+            if(debug)
+                display = Integer.toString(place) + ": " + display;
             display += " (" + Integer.toString(numberOfCompleted);
             display += "/";
             display += Integer.toString(numberOfTasks) + ")";
