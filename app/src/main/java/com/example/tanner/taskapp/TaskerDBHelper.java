@@ -105,6 +105,8 @@ public class TaskerDBHelper extends SQLiteOpenHelper {
          * Date:   20180805
          * Delete `category` from `categories` table;
          * Remove all instances of rows in tasksTable that have string `category` == column `category`
+         * TODO:
+         *      Properly hand `place` of all table entries exceeding `this.place`
         */
         SQLiteDatabase db = this.getWritableDatabase();
         //sqlitedatabase.delete returns total number of rows deleted;
@@ -124,6 +126,8 @@ public class TaskerDBHelper extends SQLiteOpenHelper {
          * Delete `task` from `tasksTable`;
          * Remove all instances of rows with `id` provided;
          * Returns false if 0 rows are removed;
+         * * TODO:
+         *      Properly hand `place` of all table entries exceeding `this.place`
          */
         SQLiteDatabase db = this.getWritableDatabase();
         int suc     = db.delete(TABLE_TASKS, KEY_ID + " = '" + id +"'", null);
@@ -227,7 +231,59 @@ public class TaskerDBHelper extends SQLiteOpenHelper {
         else if(debug == true)
             Log.d("TBDH: getAllTasks", "QUERY `"+selectAll+"` RETURNED "+ cnt +" RESULTS");
         return taskList;
-    }//end getAllTasks()
+    }//end getAllCompletedTasks()
+
+    public List<Tasker> getAllnoncompletedTasks(String tableName, String category) {
+        List<Tasker> taskList = new ArrayList<Tasker>();
+        String selectAll      = "SELECT * FROM " + tableName;
+        String whereclause    = "";
+        whereclause += " WHERE 1=1 ";
+        if (category != "") {
+            whereclause += " AND "+ KEY_CATEGORY +" = '" + category + "' ";
+        }
+        whereclause += " AND status = '0' ";
+        selectAll += whereclause;
+        selectAll += " ORDER BY place ";
+        SQLiteDatabase db     = this.getWritableDatabase();
+        Cursor cursor         = db.rawQuery(selectAll, null);
+        int cnt = 0;
+        if (cursor.moveToNext()) {
+            do {
+                Tasker tasker = new Tasker();
+                tasker.setId(cursor.getInt(0));
+                tasker.setCategory(cursor.getString(1));
+                tasker.setContent(cursor.getString(2));
+                tasker.setStatus(cursor.getInt(3));
+                tasker.setPlace(cursor.getInt(4));
+                taskList.add(tasker);
+                Log.d("LOOP", "Loop " + Integer.toString(cnt) + ": " + tasker.getContent());
+                cnt++;
+            } while (cursor.moveToNext());
+        }
+        if (cnt == 0)
+            Log.e("TBDH: getAllTasks", "NO ITEMS FOUND FOR QUERY `"+selectAll+"`");
+        else if(debug == true)
+            Log.d("TBDH: getAllTasks", "QUERY `"+selectAll+"` RETURNED "+ cnt +" RESULTS");
+        return taskList;
+    }//end getAllNoncompletedTasks()
+
+    public int countCategories(){
+        /*
+         *  Tanner 20180814
+         *  Return count of all categories;
+         *  Return -1 if Error
+         */
+        int count;
+        String query      = "SELECT count(*) FROM " + TABLE_CATEGORIES;
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor     = db.rawQuery(query, null);
+        if (cursor.moveToNext())
+            count = cursor.getInt(0);
+        else
+            count = -1;
+        cursor.close();
+        return count;
+    }//end countCategories
 
     public String getCategoryFromId(String id){
         String query      = "SELECT * FROM " + TABLE_CATEGORIES + " WHERE id = '"+id+"'";

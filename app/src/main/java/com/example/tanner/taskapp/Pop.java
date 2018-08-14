@@ -75,7 +75,9 @@ public class Pop extends Activity{
             Toast.makeText(this, "enter the task description first!!", Toast.LENGTH_LONG);
         }
         else {
-            Categories cat = new Categories(s1, 1);
+            int categoryCount = db.countCategories();
+            int place         = categoryCount + 1; //Always append the added item
+            Categories cat    = new Categories(s1, place);
             db.addCat(cat);
             Log.d("cat", s1 + " added");
             t.setText("");
