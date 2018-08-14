@@ -160,7 +160,7 @@ public class TaskerDBHelper extends SQLiteOpenHelper {
         if(cursor.moveToNext()){
             do{
                 int id       = cursor.getInt(0);
-                int newPlace = cursor.getInt(2);
+                int newPlace = cursor.getInt(2)-1;
                 if(updateCategoryPlace(cursor, newPlace))
                     updates++;
             } while(cursor.moveToNext());
@@ -206,7 +206,7 @@ public class TaskerDBHelper extends SQLiteOpenHelper {
          * Remove all instances of rows with `id` provided;
          * Returns false if 0 rows are removed;
          * * TODO:
-         *      Properly hand `place` of all table entries exceeding `this.place`
+         *      TEST that properly handling `place` of all table entries exceeding `this.place`
          */
         SQLiteDatabase db = this.getWritableDatabase();
         int suc     = db.delete(TABLE_TASKS, KEY_ID + " = '" + id +"'", null);
