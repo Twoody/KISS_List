@@ -2,6 +2,7 @@ package com.example.tanner.taskapp;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -75,7 +76,9 @@ public class activity_manage_category extends AppCompatActivity {
 
     @Override
     public boolean onContextItemSelected(MenuItem item) {
-        int item_id = item.getItemId();
+        Resources res = getResources();
+        boolean debug = res.getBoolean(R.bool.debug);
+        int item_id   = item.getItemId();
         ContextMenu.ContextMenuInfo CMI = item.getMenuInfo();
         AdapterView.AdapterContextMenuInfo acmi = (AdapterView.AdapterContextMenuInfo) CMI;
         Categories obj   = adapt.getItem(acmi.position);
@@ -83,7 +86,8 @@ public class activity_manage_category extends AppCompatActivity {
         db               = new TaskerDBHelper(this);
         boolean ret      = true;
         String toastText = "";
-        toastText += "ITEM_ID: `" + item_id + "`:\n";
+        if(debug == true)
+            toastText += "ITEM_ID: `" + item_id + "`:\n";
         if (item_id == R.id.select_cat)
             toastText += "Selected " + category;
         else if(item_id == R.id.delete_cat){
