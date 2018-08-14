@@ -83,7 +83,9 @@ public class Pop_tasks extends Activity{
             Toast.makeText(this, "enter the task description first!!", Toast.LENGTH_LONG);
         }
         else {
-            Tasker task = new Tasker(s1, s2, 0, 1);
+            int taskCount = db.countTasks(s1);
+            int place         = taskCount + 1; //Always append the added item
+            Tasker task = new Tasker(s1, s2, 0, place);
             db.addTask(task);
             adapt.add(task);
             Log.d("task", "task added");

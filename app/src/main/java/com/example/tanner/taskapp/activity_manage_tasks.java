@@ -106,7 +106,9 @@ public class activity_manage_tasks extends AppCompatActivity {
     }//end onCreateContextMenu()
 
     @Override
-    public boolean onContextItemSelected(MenuItem item) {
+    public boolean onContextItemSelected(MenuItem item){
+        Resources res = getResources();
+        boolean debug = res.getBoolean(R.bool.debug);
         int item_id = item.getItemId();
         ContextMenu.ContextMenuInfo CMI = item.getMenuInfo();
         AdapterView.AdapterContextMenuInfo acmi = (AdapterView.AdapterContextMenuInfo) CMI;
@@ -117,6 +119,8 @@ public class activity_manage_tasks extends AppCompatActivity {
         db               = new TaskerDBHelper(this);
         boolean ret      = true;
         String toastText = "";
+        if(debug == true)
+            toastText += "ITEM_ID: `" + item_id + "`:\n";
         if (item_id == R.id.select_task)
             toastText += "Selected " + category;
         else if(item_id == R.id.delete_task){
@@ -203,7 +207,12 @@ public class activity_manage_tasks extends AppCompatActivity {
                 msg += "\n\tPLACE:\t\t"    + current.getPlace();
                 Log.d("listener: AMT", msg);
             }
-            chk.setText(current.getContent());
+            String display   = "";
+            int displayPlace = current.getPlace();
+            if(debug)
+                display = Integer.toString(displayPlace) + ": " + display;
+            display += current.getContent();
+            chk.setText(display);
             chk.setChecked(current.getStatus() == 1 ? true:false);
             chk.setTag(current);
             Log.d("listener", String.valueOf(current.getId()));
