@@ -3,12 +3,14 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.res.Resources;
 import android.database.Cursor;
+import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 
 public class TaskerDBHelper extends SQLiteOpenHelper {
@@ -99,6 +101,26 @@ public class TaskerDBHelper extends SQLiteOpenHelper {
         }
     }//end addTask()
 
+    public int getCategoryPlace(String category){
+        /*
+        *  Tanner 20180814
+        *  Get the `place` of the provided `category` from category's table;
+        *  Return -1 if not found;
+        *  Else, return place of category;
+        */
+        int ret = -1;
+        String query = "SELECT * FROM " + TABLE_CATEGORIES;
+        String where = " WHERE 1=1";
+        where += " AND " + KEY_CATEGORY + " = '"+category+"'";
+        query += where;
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor     = db.rawQuery(query, null);
+        if(cursor.moveToNext())
+            ret = cursor.getInt(2);
+        cursor.close();
+        return ret;
+    }
+
     public Boolean deleteCat(String category){
         /*
          * Author: Tanner Woody
@@ -110,14 +132,71 @@ public class TaskerDBHelper extends SQLiteOpenHelper {
         */
         SQLiteDatabase db = this.getWritableDatabase();
         //sqlitedatabase.delete returns total number of rows deleted;
+        int catPlace = getCategoryPlace(category);
         int suc     = db.delete(TABLE_CATEGORIES, KEY_CATEGORY + " = '" + category +"'", null);
         int suc2    = db.delete(TABLE_TASKS, KEY_CATEGORY + " = '" + category +"'", null);
+        //Update all other `place` values where `place` > catPlace
+        updateCategoryPlaceOnDelete(catPlace);
         Boolean ret = false;
         if (suc > 0 || suc2 > 0)
             ret = true;
         db.close();
         return ret;
     }//end deleteCat()
+
+    public int updateCategoryPlaceOnDelete(int place){
+        /*
+        *  Tanner 20180814
+        *  Run `upate` statements on all Category items where item.place > place;
+        *  Update statement will set item.place to (item.place - 1);
+        */
+        String query = "SELECT * FROM " + TABLE_CATEGORIES;
+        String where = " WHERE 1=1";
+        where += " AND " + KEY_PLACE + " > '" + place + "'";
+        query += place;
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor     = db.rawQuery(query, null);
+        int updates       = 0;
+        if(cursor.moveToNext()){
+            do{
+                int id       = cursor.getInt(0);
+                int newPlace = cursor.getInt(2);
+                if(updateCategoryPlace(cursor, newPlace))
+                    updates++;
+            } while(cursor.moveToNext());
+        }
+        else
+            Log.e("TDBH: UCPOD", "ISSUE WITH QUERY `" + query + "`");
+        cursor.close();
+        db.close();
+        return updates;
+    }//end updateCategoryPlaceOnDelete
+
+    public boolean updateCategoryPlace(Cursor catRow, int newPlace){
+        /*
+        *  Tanner 20180814
+        *  Update item in Category table with `newPlace` via `id`
+        */
+        boolean ret         = false;
+        int itemId          = catRow.getInt(0);
+        String itemCategory = catRow.getString(1);
+        String update       = "UPDATE " + TABLE_CATEGORIES;
+        String set          = " SET " + KEY_PLACE + "='"+newPlace+"'";
+        String where        = " WHERE 1=1";
+        where += "AND id='" + itemId + "'";
+        update += set + where;
+        SQLiteDatabase db = this.getWritableDatabase();
+        try {
+            db.execSQL(update);
+            ret = true;
+        }
+        catch (SQLException e){
+            Log.e("TDBH: UCPOD", "ISSUE WITH QUERY `" + update + "`");
+            Log.e("TDBH: UCPOD", e.getMessage());
+        }
+        db.close();
+        return ret;
+    }//end updateCategoryPlaceOnDelete()
 
     public Boolean deleteTask(String id){
         /*
@@ -286,23 +365,25 @@ public class TaskerDBHelper extends SQLiteOpenHelper {
     }//end countCategories
 
     public String getCategoryFromId(String id){
+        String cat = "";
         String query      = "SELECT * FROM " + TABLE_CATEGORIES + " WHERE id = '"+id+"'";
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor     = db.rawQuery(query, null);
-        cursor.moveToNext();
-        String cat = cursor.getString(1);
+        if (cursor.moveToNext())
+            cat = cursor.getString(1);
         cursor.close();
         return cat;
     }
 
     public Integer getCategoryCount(String category){
         //BUG: Do not include where clause if category is empty string
+        int numOfCategories = -1;
         String table          = TABLE_CATEGORIES;
         String select         = "SELECT count(*) from " + table + " WHERE " +KEY_CATEGORY+ "='" + category +"'";
         SQLiteDatabase db     = this.getReadableDatabase();
         Cursor cursor         = db.rawQuery(select, null);
-        cursor.moveToNext();
-        int numOfCategories = cursor.getInt(0);
+        if (cursor.moveToNext())
+            numOfCategories = cursor.getInt(0);
         cursor.close();
         return numOfCategories;
     }//end getCategoryCount()
