@@ -59,4 +59,6 @@ Purpose:
 		2. Test data consumption;
 		3. Test storage consumption;
 		4. Test max length of characters that are allowed
+	L. Add DAILY, WEEKLY, MONTHLY, SEMIANNUAL, YEARLY	tabs
+		1. Make tasklist reoccurring for each category;
 
