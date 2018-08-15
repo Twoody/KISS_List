@@ -63,7 +63,7 @@ public class TaskerDBHelper extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_TASKS);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_CATEGORIES);
         onCreate(db); // Create tables again
-        db.close();
+        //db.close();
     }
 
     /*
@@ -75,7 +75,7 @@ public class TaskerDBHelper extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_TASKS);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_CATEGORIES);
         onCreate(db);
-        db.close();
+        //db.close();
     }
 
     public void addCat(Categories category) {
@@ -100,7 +100,7 @@ public class TaskerDBHelper extends SQLiteOpenHelper {
             msg += "\n\tPLACE:\t\t"    + category.getPlace();
             Log.d("listener: cat: TDBH", msg);
         }
-        db.close(); // Closing database connection
+        //db.close(); // Closing database connection
     }//end addTask()
 
     public int getCategoryPlace(String category){
@@ -120,7 +120,7 @@ public class TaskerDBHelper extends SQLiteOpenHelper {
         if(cursor.moveToNext())
             ret = cursor.getInt(2);
         cursor.close();
-        db.close();
+        //db.close();
         return ret;
     }
 
@@ -141,7 +141,7 @@ public class TaskerDBHelper extends SQLiteOpenHelper {
         if(cursor.moveToNext())
             ret = cursor.getInt(4);
         cursor.close();
-        db.close();
+        //db.close();
         return ret;
     }//end getTaskPlace()
 
@@ -162,7 +162,7 @@ public class TaskerDBHelper extends SQLiteOpenHelper {
         if(cursor.moveToNext())
             ret = cursor.getString(1);
         cursor.close();
-        db.close();
+        //db.close();
         return ret;
     }
 
@@ -186,7 +186,7 @@ public class TaskerDBHelper extends SQLiteOpenHelper {
         Boolean ret = false;
         if (suc > 0 || suc2 > 0)
             ret = true;
-        db.close();
+        //db.close();
         return ret;
     }//end deleteCat()
 
@@ -211,7 +211,6 @@ public class TaskerDBHelper extends SQLiteOpenHelper {
         Boolean ret = false;
         if (suc > 0)
             ret = true;
-        db.close();
         return ret;
     }//end deleteTask()
 
@@ -239,7 +238,7 @@ public class TaskerDBHelper extends SQLiteOpenHelper {
         else
             Log.e("TDBH: UCPOD", "ISSUE WITH QUERY `" + query + "`");
         cursor.close();
-        db.close();
+        //db.close();
         return updates;
     }//end updateCategoryPlaceOnDelete
 
@@ -266,7 +265,7 @@ public class TaskerDBHelper extends SQLiteOpenHelper {
             Log.e("TDBH: UCPOD", "ISSUE WITH QUERY `" + update + "`");
             Log.e("TDBH: UCPOD", e.getMessage());
         }
-        db.close();
+        //db.close();
         return ret;
     }//end updateCategoryPlaceOnDelete()
 
@@ -295,7 +294,7 @@ public class TaskerDBHelper extends SQLiteOpenHelper {
         else
             Log.e("TDBH: UTPOD", "ISSUE WITH QUERY `" + query + "`");
         cursor.close();
-        db.close();
+        //db.close();
         return updates;
     }//end updateTaskPlaceOnDelete
 
@@ -322,7 +321,7 @@ public class TaskerDBHelper extends SQLiteOpenHelper {
             Log.e("TDBH: updateTaskPlace", "ISSUE WITH QUERY `" + update + "`");
             Log.e("TDBH: updateTaskPlace", e.getMessage());
         }
-        db.close();
+        //db.close();
         return ret;
     }//end updateTaskPlace()
 
@@ -355,7 +354,7 @@ public class TaskerDBHelper extends SQLiteOpenHelper {
             msg += "\n\tPLACE:\t\t"    + tasker.getPlace();
             Log.d("listener: task: TDBH", msg);
         }
-        db.close(); // Closing database connection
+        //db.close(); // Closing database connection
     }//end addTask()
 
     public List<Tasker> getAllTasks(String tableName, String category) {
@@ -386,7 +385,7 @@ public class TaskerDBHelper extends SQLiteOpenHelper {
             Log.e("TBDH: getAllTasks", "NO ITEMS FOUND FOR QUERY `"+selectAll+"`");
         else if(debug == true)
             Log.d("TBDH: getAllTasks", "QUERY `"+selectAll+"` RETURNED "+ cnt +" RESULTS");
-        db.close();
+        //db.close();
         return taskList;
     }//end getAllTasks()
 
@@ -422,11 +421,11 @@ public class TaskerDBHelper extends SQLiteOpenHelper {
             Log.e("TBDH: getAllTasks", "NO ITEMS FOUND FOR QUERY `"+selectAll+"`");
         else if(debug == true)
             Log.d("TBDH: getAllTasks", "QUERY `"+selectAll+"` RETURNED "+ cnt +" RESULTS");
-        db.close();
+        //db.close();
         return taskList;
     }//end getAllCompletedTasks()
 
-    public List<Tasker> getAllnoncompletedTasks(String tableName, String category) {
+    public List<Tasker> getAllNoncompletedTasks(String tableName, String category) {
         List<Tasker> taskList = new ArrayList<Tasker>();
         String selectAll      = "SELECT * FROM " + tableName;
         String whereclause    = "";
@@ -458,7 +457,7 @@ public class TaskerDBHelper extends SQLiteOpenHelper {
             Log.e("TBDH: getAllTasks", "NO ITEMS FOUND FOR QUERY `"+selectAll+"`");
         else if(debug == true)
             Log.d("TBDH: getAllTasks", "QUERY `"+selectAll+"` RETURNED "+ cnt +" RESULTS");
-        db.close();
+        //db.close();
         return taskList;
     }//end getAllNoncompletedTasks()
 
@@ -477,7 +476,7 @@ public class TaskerDBHelper extends SQLiteOpenHelper {
         else
             count = -1;
         cursor.close();
-        db.close();
+        //db.close();
         return count;
     }//end countCategories
 
@@ -499,7 +498,7 @@ public class TaskerDBHelper extends SQLiteOpenHelper {
         else
             count = -1;
         cursor.close();
-        db.close();
+        //db.close();
         return count;
     }//end countTasks()
 
@@ -525,7 +524,7 @@ public class TaskerDBHelper extends SQLiteOpenHelper {
         if (cursor.moveToNext())
             numOfCategories = cursor.getInt(0);
         cursor.close();
-        db.close();
+        //db.close();
         return numOfCategories;
     }//end getCategoryCount()
 
@@ -543,7 +542,7 @@ public class TaskerDBHelper extends SQLiteOpenHelper {
                 catList.add(category);
             } while (cursor.moveToNext());
         }
-        db.close();
+        //db.close();
         return catList;
     }//end getAllTasks()
 
@@ -558,6 +557,6 @@ public class TaskerDBHelper extends SQLiteOpenHelper {
         values.put(KEY_PLACE, tasker.getPlace());
 
         db.update(TABLE_TASKS, values, whereclause, _ids);
-        db.close();
+        //db.close();
     }//end updateTask()
 }
