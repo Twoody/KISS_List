@@ -24,6 +24,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class activity_manage_tasks extends AppCompatActivity {
+    /*
+    *  Author:  Tanner Woody
+    *  Date:    20180816
+    *  TODO:
+    *       1. Enable activity for changing `place` of items
+    *            This should use `getAllTasks` and only have one listview
+    *       2.
+    *       3.
+    */
     protected TaskerDBHelper db;
     MyAdapter adapt1;
     MyAdapter adapt2;
@@ -33,6 +42,10 @@ public class activity_manage_tasks extends AppCompatActivity {
     ListView listTask1;
     ListView listTask2;
     String category;
+    final int NCT_SELECT = 0; //NOT COMPLETED TASKS
+    final int NCT_DELETE = 1; //NOT COMPLETED TASKS
+    final int CT_SELECT  = 2; //COMPLETED TASKS
+    final int CT_DELETE  = 3; //COMPLETED TASKS
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,7 +69,7 @@ public class activity_manage_tasks extends AppCompatActivity {
         adapt2    = new MyAdapter(this, R.layout.list_inner_view, list2);
         listTask2 = findViewById(R.id.listView_completedTasks);
         listTask2.setAdapter(adapt2);
-        //list2    = db.getAllCompletedTasks(db.TABLE_TASKS, category);
+
         registerForContextMenu(listTask1);
         registerForContextMenu(listTask2);
 
@@ -120,11 +133,22 @@ public class activity_manage_tasks extends AppCompatActivity {
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
         super.onCreateContextMenu(menu, v, menuInfo);
         String foo = Integer.toString(v.getId());
-
-        if(v.getId() == R.id.listView_tasks || v.getId() == R.id.listView_completedTasks) {
+        Tasker obj;
+        String SELECT = "Select";
+        String DELETE = "Delete";
+        if(v.getId() == R.id.listView_tasks){
             ListView catView = (ListView) v;
             AdapterView.AdapterContextMenuInfo acmi = (AdapterView.AdapterContextMenuInfo) menuInfo;
-            Tasker obj = (Tasker) catView.getItemAtPosition(acmi.position);
+            obj = (Tasker) catView.getItemAtPosition(acmi.position);
+            menu.add(0, NCT_SELECT, 0, SELECT);
+            menu.add(0, NCT_DELETE, 0, DELETE);
+        }
+        else if(v.getId() == R.id.listView_completedTasks) {
+            ListView catView = (ListView) v;
+            AdapterView.AdapterContextMenuInfo acmi = (AdapterView.AdapterContextMenuInfo) menuInfo;
+            obj = (Tasker) catView.getItemAtPosition(acmi.position);
+            menu.add(0, CT_SELECT, 0, SELECT);
+            menu.add(0, CT_DELETE, 0, DELETE);
         }
         else{
             Toast.makeText(this, "Tough shootin', Tex.", Toast.LENGTH_LONG).show();
@@ -135,33 +159,36 @@ public class activity_manage_tasks extends AppCompatActivity {
 
     @Override
     public boolean onContextItemSelected(MenuItem item){
+        Tasker obj;
         Resources res = getResources();
         boolean debug = res.getBoolean(R.bool.debug);
-        int item_id = item.getItemId();
+        int item_id   = item.getItemId();
         ContextMenu.ContextMenuInfo CMI = item.getMenuInfo();
         AdapterView.AdapterContextMenuInfo acmi = (AdapterView.AdapterContextMenuInfo) CMI;
-        Tasker obj = adapt1.getItem(acmi.position);
-        int db_id  = obj.getId();
-        Log.d("TEST44", "db_id: " + db_id);
-
-        if(obj == null) {
-            //BUG: This never gets called...
-            //  CAUSING deleteTask(id) ERROR!
+        if(item_id == NCT_SELECT || item_id == NCT_DELETE)
+            obj = adapt1.getItem(acmi.position);
+        else if(item_id == CT_SELECT || item_id == CT_DELETE)
             obj = adapt2.getItem(acmi.position);
-            db_id  = obj.getId();
-            Log.d("TEST55", "db_id: " + db_id);
-        }
+        else
+            return false;
+
+        int db_id        = obj.getId();
         String category  = obj.getCategory();
         String content   = obj.getContent();
         String id        = Integer.toString(obj.getId());
         db               = new TaskerDBHelper(this);
         boolean ret      = true;
         String toastText = "";
-        if(debug == true)
+
+        if(debug) {
+            Log.d("TEST44", "position: " + acmi.position);
+            Log.d("TEST44", "db_id: " + db_id);
+        }
+        if(debug)
             toastText += "ITEM_ID: `" + item_id + "`:\n";
-        if (item_id == R.id.select_task)
+        if (item_id == CT_SELECT || item_id == NCT_SELECT)
             toastText += "Selected " + content;
-        else if(item_id == R.id.delete_task){
+        else if(item_id == NCT_DELETE || item_id == CT_DELETE){
             Boolean didDelete = db.deleteTask(id);
             if (didDelete)
                 toastText += "Deleted " + content;
