@@ -24,13 +24,14 @@ Purpose:
 	Completed items will go into the green zone, where they are marked complete.
 	Added items will always be appended to the end of the list.
 
-(Not yet implemented)
+(Not yet implemented & TODO)
 	A. The user should be able to `select` an item.
 		1. Selecting an item will open a new activity, designed for editing.
 		2. The user should be able to: 
 			a. rearrange items
 			b. mass delete items
 			c. export selected items to another list
+		3. SELECT ALL
 	B. There needs to be CONFIRMATION WINDOWS ensuring the user wants to delete and export.
 	C. The area for completed tasks should only be visible when at least one item is completed.
 	D. Font, sizing, style, and colors need to be configured.
@@ -53,3 +54,9 @@ Purpose:
 		2. Number of completed tasks out of number of total tasks
 		3. Back button
 	J. Allow users to pick their own color and font schema;
+	K. Fix database management
+		1. db.close() best practice
+		2. Test data consumption;
+		3. Test storage consumption;
+		4. Test max length of characters that are allowed
+
