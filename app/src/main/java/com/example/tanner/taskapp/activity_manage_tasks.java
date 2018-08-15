@@ -25,10 +25,13 @@ import java.util.List;
 
 public class activity_manage_tasks extends AppCompatActivity {
     protected TaskerDBHelper db;
-    MyAdapter adapt;
+    MyAdapter adapt1;
+    MyAdapter adapt2;
     List<Tasker> list1;
+    List<Tasker> list2;
     private FloatingActionButton fab_add_task;
-    ListView listTask;
+    ListView listTask1;
+    ListView listTask2;
     String category;
 
     @Override
@@ -44,11 +47,18 @@ public class activity_manage_tasks extends AppCompatActivity {
             category = "";
 
         db       = new TaskerDBHelper(this);
-        list1    = db.getAllTasks("tasksTable", category);
-        adapt    = new MyAdapter(this, R.layout.list_inner_view, list1);
-        listTask = findViewById(R.id.listView_tasks);
-        listTask.setAdapter(adapt);
-        registerForContextMenu(listTask);
+        list1    = db.getAllNoncompletedTasks(db.TABLE_TASKS, category);
+        adapt1    = new MyAdapter(this, R.layout.list_inner_view, list1);
+        listTask1 = findViewById(R.id.listView_tasks);
+        listTask1.setAdapter(adapt1);
+
+        list2    = db.getAllCompletedTasks(db.TABLE_TASKS, category);
+        adapt2    = new MyAdapter(this, R.layout.list_inner_view, list2);
+        listTask2 = findViewById(R.id.listView_completedTasks);
+        listTask2.setAdapter(adapt2);
+        //list2    = db.getAllCompletedTasks(db.TABLE_TASKS, category);
+        registerForContextMenu(listTask1);
+        registerForContextMenu(listTask2);
 
         fab_add_task = findViewById(R.id.fab_add_task);
         fab_add_task.setOnClickListener(new View.OnClickListener() {
@@ -70,17 +80,35 @@ public class activity_manage_tasks extends AppCompatActivity {
     }
 
     public void refreshUIThread(){
+        refreshUIThread_notcompleted();
+        refreshUIThread_completed();
+    }
+
+    public void refreshUIThread_completed(){
+        /*
+         *  Author: Tanner - 20180806
+         *  Data does not dynamically check the data when it is altered;
+         *  Functions to update UI if data is altered;
+         */
+        list2.clear();
+        list2.addAll(db.getAllCompletedTasks(db.TABLE_TASKS, category));
+        adapt2.notifyDataSetChanged();
+        listTask2.invalidateViews();
+        listTask2.refreshDrawableState();
+    }//end refreshUIThread_notcompleted()
+
+    public void refreshUIThread_notcompleted(){
         /*
          *  Author: Tanner - 20180806
          *  Data does not dynamically check the data when it is altered;
          *  Functions to update UI if data is altered;
          */
         list1.clear();
-        list1.addAll(db.getAllTasks(db.TABLE_TASKS, category));
-        adapt.notifyDataSetChanged();
-        listTask.invalidateViews();
-        listTask.refreshDrawableState();
-    }//end refreshUIThread
+        list1.addAll(db.getAllNoncompletedTasks(db.TABLE_TASKS, category));
+        adapt1.notifyDataSetChanged();
+        listTask1.invalidateViews();
+        listTask1.refreshDrawableState();
+    }//end refreshUIThread_notcompleted()
 
     @Override
     public void onBackPressed() {
@@ -93,10 +121,10 @@ public class activity_manage_tasks extends AppCompatActivity {
         super.onCreateContextMenu(menu, v, menuInfo);
         String foo = Integer.toString(v.getId());
 
-        if(v.getId() == R.id.listView_categories) {
+        if(v.getId() == R.id.listView_tasks || v.getId() == R.id.listView_completedTasks) {
             ListView catView = (ListView) v;
             AdapterView.AdapterContextMenuInfo acmi = (AdapterView.AdapterContextMenuInfo) menuInfo;
-            Categories obj = (Categories) catView.getItemAtPosition(acmi.position);
+            Tasker obj = (Tasker) catView.getItemAtPosition(acmi.position);
         }
         else{
             Toast.makeText(this, "Tough shootin', Tex.", Toast.LENGTH_LONG).show();
@@ -112,7 +140,16 @@ public class activity_manage_tasks extends AppCompatActivity {
         int item_id = item.getItemId();
         ContextMenu.ContextMenuInfo CMI = item.getMenuInfo();
         AdapterView.AdapterContextMenuInfo acmi = (AdapterView.AdapterContextMenuInfo) CMI;
-        Tasker obj       = adapt.getItem(acmi.position);
+        Tasker obj = adapt1.getItem(acmi.position);
+        int db_id  = obj.getId();
+        Log.d("TEST44", "db_id: " + db_id);
+
+        if(obj == null) {
+            //BUG: This never gets called...
+            obj = adapt2.getItem(acmi.position);
+            db_id  = obj.getId();
+            Log.d("TEST55", "db_id: " + db_id);
+        }
         String category  = obj.getCategory();
         String content   = obj.getContent();
         String id        = Integer.toString(obj.getId());
@@ -122,7 +159,7 @@ public class activity_manage_tasks extends AppCompatActivity {
         if(debug == true)
             toastText += "ITEM_ID: `" + item_id + "`:\n";
         if (item_id == R.id.select_task)
-            toastText += "Selected " + category;
+            toastText += "Selected " + content;
         else if(item_id == R.id.delete_task){
             Boolean didDelete = db.deleteTask(id);
             if (didDelete)
@@ -161,10 +198,11 @@ public class activity_manage_tasks extends AppCompatActivity {
      */
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
-            Resources res = getResources();
-            boolean debug = res.getBoolean(R.bool.debug);
-            CheckBox chk  = null;
-            if (convertView == null) {
+            Resources res       = getResources();
+            final boolean debug = res.getBoolean(R.bool.debug);
+            CheckBox chk        = null;
+            Tasker current      = taskList.get(position);
+            if (convertView == null){
                 LayoutInflater inflater = (LayoutInflater) context.getSystemService(
                         Context.LAYOUT_INFLATER_SERVICE);
                 convertView = inflater.inflate(
@@ -182,22 +220,13 @@ public class activity_manage_tasks extends AppCompatActivity {
                         int isChecked     = cb.isChecked() == true ? 1 : 0;
                         changeTask.setStatus(isChecked); //1 is checked; 0 is not checked
                         db.updateTask(changeTask);
-                        Toast toast = Toast.makeText(
-                                getApplicationContext(),
-                                "Clicked on Checkbox: " + cb.getTag() +":\nTEXT: " + cb.getText()
-                                        + " is " + cb.isChecked() + ":\n BOOL: "
-                                        + Integer.toString(isChecked),
-                                Toast.LENGTH_LONG
-                        );
-                        toast.setGravity(Gravity.CENTER, 0, 0);
-                        toast.show();
+                        refreshUIThread();
                     }//end onClick()
                 });//end chk.setOnClickListener()
             }
             else{
                 chk = (CheckBox) convertView.getTag();
             }
-            Tasker current = taskList.get(position);
             if (debug == true) {
                 String msg = "\nDEBUG:\t"+ current;
                 msg += "\n\tID:\t\t\t"     + current.getId();
