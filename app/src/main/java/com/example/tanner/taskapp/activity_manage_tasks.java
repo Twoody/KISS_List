@@ -146,6 +146,7 @@ public class activity_manage_tasks extends AppCompatActivity {
 
         if(obj == null) {
             //BUG: This never gets called...
+            //  CAUSING deleteTask(id) ERROR!
             obj = adapt2.getItem(acmi.position);
             db_id  = obj.getId();
             Log.d("TEST55", "db_id: " + db_id);
