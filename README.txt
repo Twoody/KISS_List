@@ -61,4 +61,5 @@ Purpose:
 		4. Test max length of characters that are allowed
 	L. Add DAILY, WEEKLY, MONTHLY, SEMIANNUAL, YEARLY	tabs
 		1. Make tasklist reoccurring for each category;
-
+	M. Let user add notes and commentary
+		1. Not sure how to handle and implement properly...
