@@ -87,17 +87,7 @@ public class Pop_tasks extends Activity{
             int place         = taskCount + 1; //Always append the added item
             Tasker task = new Tasker(s1, s2, 0, place);
             db.addTask(task);
-            adapt.add(task);
-            Log.d("task", "task added");
-            if (debug == true){
-                String msg = "\nDEBUG:\t"+ task + "\n";
-                msg += "\n\tID:\t\t"       + task.getId();
-                msg += "\n\tCATEGORY:\t"   + task.getCategory();
-                msg += "\n\tCONTENT:\t"    + task.getContent();
-                msg += "\n\tSTATUS:\t"     + task.getStatus();
-                msg += "\n\tPLACE:\t"      + task.getPlace();
-                Log.d("listener: POP_TASKS", msg);
-            }
+            //adapt.add(task);
             t.setText("");
             adapt.add(task);
             adapt.notifyDataSetChanged();

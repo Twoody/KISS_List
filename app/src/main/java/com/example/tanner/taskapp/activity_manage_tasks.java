@@ -179,13 +179,6 @@ public class activity_manage_tasks extends AppCompatActivity {
         db               = new TaskerDBHelper(this);
         boolean ret      = true;
         String toastText = "";
-
-        if(debug) {
-            Log.d("TEST44", "position: " + acmi.position);
-            Log.d("TEST44", "db_id: " + db_id);
-        }
-        if(debug)
-            toastText += "ITEM_ID: `" + item_id + "`:\n";
         if (item_id == CT_SELECT || item_id == NCT_SELECT)
             toastText += "Selected " + content;
         else if(item_id == NCT_DELETE || item_id == CT_DELETE){
@@ -255,19 +248,8 @@ public class activity_manage_tasks extends AppCompatActivity {
             else{
                 chk = (CheckBox) convertView.getTag();
             }
-            if (debug == true) {
-                String msg = "\nDEBUG:\t"+ current;
-                msg += "\n\tID:\t\t\t"     + current.getId();
-                msg += "\n\tCATEGORY:\t"   + current.getCategory();
-                msg += "\n\tCONTENT:\t"    + current.getContent();
-                msg += "\n\tSTATUS:\t\t"   + current.getStatus();
-                msg += "\n\tPLACE:\t\t"    + current.getPlace();
-                Log.d("listener: AMT", msg);
-            }
             String display   = "";
             int displayPlace = current.getPlace();
-            if(debug)
-                display = Integer.toString(displayPlace) + ": " + display;
             display += current.getContent();
             chk.setText(display);
             chk.setChecked(current.getStatus() == 1 ? true:false);

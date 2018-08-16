@@ -82,13 +82,6 @@ public class Pop extends Activity{
             Log.d("cat", s1 + " added");
             t.setText("");
             adapt.add(cat);
-            if (debug == true){
-                String msg = "\nDEBUG:\t"  + cat;
-                msg += "\n\tID:\t\t"       + cat.getId();
-                msg += "\n\tCATEGORY:\t"   + cat.getCategory();
-                msg += "\n\tPLACE:\t"      + cat.getPlace();
-                Log.d("listener: POP", msg);
-            }
             adapt.notifyDataSetChanged();
         }
         finish();

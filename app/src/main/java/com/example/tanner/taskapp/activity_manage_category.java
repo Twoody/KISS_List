@@ -86,8 +86,6 @@ public class activity_manage_category extends AppCompatActivity {
         db               = new TaskerDBHelper(this);
         boolean ret      = true;
         String toastText = "";
-        if(debug == true)
-            toastText += "ITEM_ID: `" + item_id + "`:\n";
         if (item_id == R.id.select_cat)
             toastText += "Selected " + category;
         else if(item_id == R.id.delete_cat){
@@ -184,8 +182,6 @@ public class activity_manage_category extends AppCompatActivity {
             List completedTasks   = db.getAllCompletedTasks(db.TABLE_TASKS, current.getCategory());
             int numberOfTasks     = listOfTasks.size();
             int numberOfCompleted = completedTasks.size();
-            if(debug)
-                display = Integer.toString(place) + ": " + display;
             display += " (" + Integer.toString(numberOfCompleted);
             display += "/";
             display += Integer.toString(numberOfTasks) + ")";

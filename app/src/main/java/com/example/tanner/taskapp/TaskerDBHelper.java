@@ -93,13 +93,6 @@ public class TaskerDBHelper extends SQLiteOpenHelper {
             Log.e("cat: TBDH", "CATEGORY NOT INSERTED INTO DB");
         else
             category.setId((int)newRowId);
-        if (debug == true && verbose == true){
-            String msg = "\nDEBUG:\t"+ category;
-            msg += "\n\tID:\t\t\t"     + category.getId();
-            msg += "\n\tCATEGORY:\t"   + category.getCategory();
-            msg += "\n\tPLACE:\t\t"    + category.getPlace();
-            Log.d("listener: cat: TDBH", msg);
-        }
         //db.close(); // Closing database connection
     }//end addTask()
 
@@ -236,7 +229,7 @@ public class TaskerDBHelper extends SQLiteOpenHelper {
             } while(cursor.moveToNext());
         }
         else
-            Log.e("TDBH: UCPOD", "ISSUE WITH QUERY `" + query + "`");
+            Log.w("TDBH: UCPOD", "ISSUE WITH QUERY `" + query + "`");
         cursor.close();
         //db.close();
         return updates;
@@ -344,16 +337,6 @@ public class TaskerDBHelper extends SQLiteOpenHelper {
             Log.e("task:TBDH", "TASK NOT INSERTED INTO DB");
         else
             tasker.setId((int)newRowId);
-
-        if (debug == true && verbose == true){
-            String msg = "\nDEBUG:\t"+ tasker;
-            msg += "\n\tID:\t\t\t"     + tasker.getId();
-            msg += "\n\tCATEGORY:\t"   + tasker.getCategory();
-            msg += "\n\tCONTENT:\t"    + tasker.getContent();
-            msg += "\n\tSTATUS:\t\t"   + tasker.getStatus();
-            msg += "\n\tPLACE:\t\t"    + tasker.getPlace();
-            Log.d("listener: task: TDBH", msg);
-        }
         //db.close(); // Closing database connection
     }//end addTask()
 
@@ -376,15 +359,11 @@ public class TaskerDBHelper extends SQLiteOpenHelper {
                 tasker.setStatus(cursor.getInt(3));
                 tasker.setPlace(cursor.getInt(4));
                 taskList.add(tasker);
-                if (debug && verbose)
-                    Log.d("TBDH: GAT: LOOP", "Loop " + Integer.toString(cnt) + ": " + tasker.getContent());
                 cnt++;
             } while (cursor.moveToNext());
         }
         if (cnt == 0)
             Log.e("TBDH: getAllTasks", "NO ITEMS FOUND FOR QUERY `"+selectAll+"`");
-        else if(debug == true)
-            Log.d("TBDH: getAllTasks", "QUERY `"+selectAll+"` RETURNED "+ cnt +" RESULTS");
         //db.close();
         return taskList;
     }//end getAllTasks()
@@ -412,15 +391,12 @@ public class TaskerDBHelper extends SQLiteOpenHelper {
                 tasker.setStatus(cursor.getInt(3));
                 tasker.setPlace(cursor.getInt(4));
                 taskList.add(tasker);
-                if (debug && verbose)
-                    Log.d("LOOP", "Loop " + Integer.toString(cnt) + ": " + tasker.getContent());
+
                 cnt++;
             } while (cursor.moveToNext());
         }
         if (cnt == 0)
             Log.e("TBDH: getAllTasks", "NO ITEMS FOUND FOR QUERY `"+selectAll+"`");
-        else if(debug == true)
-            Log.d("TBDH: getAllTasks", "QUERY `"+selectAll+"` RETURNED "+ cnt +" RESULTS");
         //db.close();
         return taskList;
     }//end getAllCompletedTasks()
@@ -448,15 +424,11 @@ public class TaskerDBHelper extends SQLiteOpenHelper {
                 tasker.setStatus(cursor.getInt(3));
                 tasker.setPlace(cursor.getInt(4));
                 taskList.add(tasker);
-                if (debug && verbose)
-                    Log.d("LOOP", "Loop " + Integer.toString(cnt) + ": " + tasker.getContent());
                 cnt++;
             } while (cursor.moveToNext());
         }
         if (cnt == 0)
-            Log.e("TBDH: getAllTasks", "NO ITEMS FOUND FOR QUERY `"+selectAll+"`");
-        else if(debug == true)
-            Log.d("TBDH: getAllTasks", "QUERY `"+selectAll+"` RETURNED "+ cnt +" RESULTS");
+            Log.w("TBDH: getAllTasks", "NO ITEMS FOUND FOR QUERY `"+selectAll+"`");
         //db.close();
         return taskList;
     }//end getAllNoncompletedTasks()
