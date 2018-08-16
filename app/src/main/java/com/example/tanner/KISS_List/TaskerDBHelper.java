@@ -58,9 +58,9 @@ public class TaskerDBHelper extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldV, int newV) {
-        db.execSQL("DROP TABLE IF EXISTS " + TABLE_TASKS);
-        db.execSQL("DROP TABLE IF EXISTS " + TABLE_CATEGORIES);
-        onCreate(db); // Create tables again
+        //db.execSQL("DROP TABLE IF EXISTS " + TABLE_TASKS);
+        //db.execSQL("DROP TABLE IF EXISTS " + TABLE_CATEGORIES);
+        //onCreate(db); // Create tables again
         //db.close();
     }
 
