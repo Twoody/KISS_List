@@ -7,4 +7,8 @@
     <item
         android:id="@+id/delete_cat"
         android:title="Delete" />
+    <item
+        android:id="@+id/rename_cat"
+        android:title="Rename List" />
+
 </menu>
