@@ -160,9 +160,10 @@ public class activity_manage_category extends AppCompatActivity {
                     public void onClick(View v) {
                         Button but                = (Button) v;
                         Categories changeActivity = (Categories) but.getTag();
+                        String changeCategory = changeActivity.getCategory();
                         Toast toast = Toast.makeText(
                                 getApplicationContext(),
-                                "Clicked on Button: " + but.getTag() +"\nTEXT:" + but.getText(),
+                                "Opening " + changeCategory,
                                 Toast.LENGTH_LONG
                         );
                         toast.setGravity(Gravity.CENTER, 0, 0);
