@@ -96,6 +96,13 @@ public class activity_manage_category extends AppCompatActivity {
                 toastText += "\nERROR: DID NOT DELETE `" + category + ";\n\tCATEGORY COULD NOT BE FOUND";
             //openMainActivity(); // BUG: Need to refresh the list, not open the whole activity again...
         }
+        else if(item_id == R.id.rename_cat){
+                //Open a popup window;
+                //autofill editTest with exiting `content`
+                //update table with new `content`
+                //make toast
+                toastText += "Renamed list";
+        }
         else{
             toastText += "ERROR: NOTHING SELECTED";
             ret = super.onContextItemSelected(item);
