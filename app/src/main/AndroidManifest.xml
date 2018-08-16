@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.tanner.KISS_List">
+    package="com.beWoody.tanner.KISS_List">
 
     <application
         android:allowBackup="true"
@@ -27,6 +27,10 @@
         </activity>
         <activity
             android:name=".Pop_tasks"
+            android:theme="@style/AppTheme.categoryPopup">
+        </activity>
+        <activity
+            android:name=".Pop_renameContent"
             android:theme="@style/AppTheme.categoryPopup">
         </activity>
         <activity

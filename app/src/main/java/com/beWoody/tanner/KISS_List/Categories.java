@@ -1,4 +1,4 @@
-package com.example.tanner.KISS_List;
+package com.beWoody.tanner.KISS_List;
 
 public class Categories {
     private String category;
