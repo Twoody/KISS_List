@@ -44,6 +44,8 @@ public class activity_manage_tasks extends AppCompatActivity {
     final int NCT_DELETE = 1; //NOT COMPLETED TASKS
     final int CT_SELECT  = 2; //COMPLETED TASKS
     final int CT_DELETE  = 3; //COMPLETED TASKS
+    final int CT_RENAME  = 4; //COMPLETED TASKS
+    final int NCT_RENAME = 5; //NOT COMPLETED TASKS
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -134,12 +136,14 @@ public class activity_manage_tasks extends AppCompatActivity {
         Tasker obj;
         String SELECT = "Select";
         String DELETE = "Delete";
+        String RENAME = "Edit content";
         if(v.getId() == R.id.listView_tasks){
             ListView catView = (ListView) v;
             AdapterView.AdapterContextMenuInfo acmi = (AdapterView.AdapterContextMenuInfo) menuInfo;
             obj = (Tasker) catView.getItemAtPosition(acmi.position);
             menu.add(0, NCT_SELECT, 0, SELECT);
             menu.add(0, NCT_DELETE, 0, DELETE);
+            menu.add(0, NCT_RENAME, 0, RENAME);
         }
         else if(v.getId() == R.id.listView_completedTasks) {
             ListView catView = (ListView) v;
@@ -147,11 +151,12 @@ public class activity_manage_tasks extends AppCompatActivity {
             obj = (Tasker) catView.getItemAtPosition(acmi.position);
             menu.add(0, CT_SELECT, 0, SELECT);
             menu.add(0, CT_DELETE, 0, DELETE);
+            menu.add(0, CT_RENAME, 0, RENAME);
         }
         else{
             Toast.makeText(this, "Tough shootin', Tex.", Toast.LENGTH_LONG).show();
         }
-        menu.setHeaderTitle("Editing Tools:");
+        //menu.setHeaderTitle("");
         getMenuInflater().inflate(R.menu.task_menu, menu);
     }//end onCreateContextMenu()
 
@@ -163,9 +168,9 @@ public class activity_manage_tasks extends AppCompatActivity {
         int item_id   = item.getItemId();
         ContextMenu.ContextMenuInfo CMI = item.getMenuInfo();
         AdapterView.AdapterContextMenuInfo acmi = (AdapterView.AdapterContextMenuInfo) CMI;
-        if(item_id == NCT_SELECT || item_id == NCT_DELETE)
+        if(item_id == NCT_SELECT || item_id == NCT_DELETE || item_id == NCT_RENAME)
             obj = adapt1.getItem(acmi.position);
-        else if(item_id == CT_SELECT || item_id == CT_DELETE)
+        else if(item_id == CT_SELECT || item_id == CT_DELETE || item_id == CT_RENAME)
             obj = adapt2.getItem(acmi.position);
         else
             return false;
@@ -185,6 +190,13 @@ public class activity_manage_tasks extends AppCompatActivity {
                 toastText += "Deleted " + content;
             else
                 toastText += "\nERROR: DID NOT DELETE `" + content + ";\n\tCONTENT COULD NOT BE FOUND";
+        }
+        else if(item_id == CT_RENAME || item_id == NCT_RENAME){
+            //Open a popup window;
+            //autofill editTest with exiting `content`
+            //update table with new `content`
+            //make toast
+            toastText += "Edited task";
         }
         else{
             toastText += "ERROR: NOTHING SELECTED";
