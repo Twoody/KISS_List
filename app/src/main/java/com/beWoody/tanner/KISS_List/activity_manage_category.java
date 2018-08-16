@@ -70,7 +70,7 @@ public class activity_manage_category extends AppCompatActivity {
         else{
             Toast.makeText(this, "Tough shootin', Tex.", Toast.LENGTH_LONG).show();
         }
-        menu.setHeaderTitle("Editing Tools:");
+        //menu.setHeaderTitle("Editing Tools:");
         getMenuInflater().inflate(R.menu.category_menu, menu);
     }//end onCreateContextMenu()
 
