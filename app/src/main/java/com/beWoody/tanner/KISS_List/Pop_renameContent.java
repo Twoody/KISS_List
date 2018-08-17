@@ -18,8 +18,6 @@ import java.util.List;
 
 public class Pop_renameContent  extends Activity {
     protected TaskerDBHelper db;
-    //MyAdapter adapt;
-    //List<Tasker> list;
     Button button;
     String taskId;
 
@@ -49,8 +47,6 @@ public class Pop_renameContent  extends Activity {
 
         db              = new TaskerDBHelper(this);
         Tasker thisTask = db.getTask(taskId);
-        //list            = db.getAllTasks(thisTask.getCategory());
-        //adapt           = new MyAdapter(this, R.layout.list_inner_view, list);
         button          = findViewById(R.id.button_updateTaskContent);
         EditText input  = (EditText) findViewById(R.id.editText_renameTasks);
 
@@ -84,9 +80,6 @@ public class Pop_renameContent  extends Activity {
         else{
             db.updateTaskContent(taskId, newContent);
             t.setText("");
-            //Tasker task = db.getTask(taskId);
-            //adapt.add(task);
-            //adapt.notifyDataSetChanged();
         }
         finish();
     }//end addTaskNow()
