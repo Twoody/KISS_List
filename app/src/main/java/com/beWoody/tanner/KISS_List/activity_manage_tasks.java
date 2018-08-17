@@ -163,7 +163,6 @@ Log.d("AMT44", "cat: `"+category+"`");
         else{
             Toast.makeText(this, "Tough shootin', Tex.", Toast.LENGTH_LONG).show();
         }
-        //menu.setHeaderTitle("");
         getMenuInflater().inflate(R.menu.task_menu, menu);
     }//end onCreateContextMenu()
 
@@ -235,8 +234,6 @@ Log.d("AMT44", "cat: `"+category+"`");
      */
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
-            Resources res       = getResources();
-            final boolean debug = res.getBoolean(R.bool.debug);
             CheckBox chk        = null;
             Tasker current      = taskList.get(position);
             if (convertView == null){
@@ -265,7 +262,6 @@ Log.d("AMT44", "cat: `"+category+"`");
                 chk = (CheckBox) convertView.getTag();
             }
             String display   = "";
-            int displayPlace = current.getPlace();
             display += current.getContent();
             chk.setText(display);
             chk.setChecked(current.getStatus() == 1 ? true:false);
@@ -274,5 +270,4 @@ Log.d("AMT44", "cat: `"+category+"`");
             return convertView;
         }//end getView
     }//end MyAdaper
-
 }//end activity_manage_tasks()
