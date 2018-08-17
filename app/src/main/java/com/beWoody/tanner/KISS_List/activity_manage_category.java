@@ -145,7 +145,7 @@ public class activity_manage_category extends AppCompatActivity {
         }//end constructor
 
         @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
+        public View getView(final int position, View convertView, ViewGroup parent) {
             Resources res = getResources();
             boolean debug = res.getBoolean(R.bool.debug);
             Button catbut = null;
@@ -167,7 +167,8 @@ public class activity_manage_category extends AppCompatActivity {
                     public void onClick(View v) {
                         Button but                = (Button) v;
                         Categories changeActivity = (Categories) but.getTag();
-                        String changeCategory = changeActivity.getCategory();
+                        String catId              = Integer.toString(changeActivity.getId());
+                        String changeCategory     = changeActivity.getCategory();
                         Toast toast = Toast.makeText(
                                 getApplicationContext(),
                                 "Opening " + changeCategory,
@@ -175,8 +176,7 @@ public class activity_manage_category extends AppCompatActivity {
                         );
                         toast.setGravity(Gravity.CENTER, 0, 0);
                         toast.show();
-                        String category = changeActivity.getCategory();
-                        openTasksActivity(category); //ListView activity of each task per category selected.
+                        openTasksActivity(catId); //ListView activity of each task per category selected.
                     }//end onClick()
                 });//end chk.setOnClickListener()
             }
@@ -186,8 +186,8 @@ public class activity_manage_category extends AppCompatActivity {
             Categories current    = catList.get(position);
             int place             = current.getPlace();
             String display        = current.getCategory();
-            List listOfTasks      = db.getAllTasks(db.TABLE_TASKS, current.getCategory());
-            List completedTasks   = db.getAllCompletedTasks(db.TABLE_TASKS, current.getCategory());
+            List listOfTasks      = db.getAllTasks(current.getCategory());
+            List completedTasks   = db.getAllCompletedTasks(current.getCategory());
             int numberOfTasks     = listOfTasks.size();
             int numberOfCompleted = completedTasks.size();
             display += " (" + Integer.toString(numberOfCompleted);
@@ -195,15 +195,15 @@ public class activity_manage_category extends AppCompatActivity {
             display += Integer.toString(numberOfTasks) + ")";
             catbut.setText(display);
             catbut.setTag(current);
-            Log.d("listener", String.valueOf(current.getId()));
+            //Log.d("listener: getView()", String.valueOf(current.getId()));
             return convertView;
         }//end getView
 
-        public void openTasksActivity(String category){
+        public void openTasksActivity(String catId){
             Intent intent;
             Class foo = activity_manage_tasks.class;
-            intent = new Intent(activity_manage_category.this, foo);
-            intent.putExtra("category", category);
+            intent    = new Intent(activity_manage_category.this, foo);
+            intent.putExtra("catId", catId);
             startActivity(intent);
         }//end openTasksActivity
     }//end MyAdaper
