@@ -32,7 +32,7 @@
         android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"
         android:onClick="addCatNow"
-        android:text="@string/button1"
+        android:text="@string/button1_add"
         tools:layout_editor_absoluteX="0dp"
         tools:layout_editor_absoluteY="0dp" />
 
