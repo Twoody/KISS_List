@@ -60,24 +60,19 @@ public class activity_manage_category extends AppCompatActivity {
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
         super.onCreateContextMenu(menu, v, menuInfo);
-        String foo = Integer.toString(v.getId());
 
         if(v.getId() == R.id.listView_categories) {
             ListView catView = (ListView) v;
             AdapterView.AdapterContextMenuInfo acmi = (AdapterView.AdapterContextMenuInfo) menuInfo;
-            Categories obj = (Categories) catView.getItemAtPosition(acmi.position);
         }
         else{
             Toast.makeText(this, "Tough shootin', Tex.", Toast.LENGTH_LONG).show();
         }
-        //menu.setHeaderTitle("Editing Tools:");
         getMenuInflater().inflate(R.menu.category_menu, menu);
     }//end onCreateContextMenu()
 
     @Override
     public boolean onContextItemSelected(MenuItem item) {
-        Resources res = getResources();
-        boolean debug = res.getBoolean(R.bool.debug);
         int item_id   = item.getItemId();
         ContextMenu.ContextMenuInfo CMI = item.getMenuInfo();
         AdapterView.AdapterContextMenuInfo acmi = (AdapterView.AdapterContextMenuInfo) CMI;
@@ -94,7 +89,6 @@ public class activity_manage_category extends AppCompatActivity {
                 toastText += "Deleted " + category;
             else
                 toastText += "\nERROR: DID NOT DELETE `" + category + ";\n\tCATEGORY COULD NOT BE FOUND";
-            //openMainActivity(); // BUG: Need to refresh the list, not open the whole activity again...
         }
         else if(item_id == R.id.rename_cat){
                 //Open a popup window;
@@ -146,8 +140,6 @@ public class activity_manage_category extends AppCompatActivity {
 
         @Override
         public View getView(final int position, View convertView, ViewGroup parent) {
-            Resources res = getResources();
-            boolean debug = res.getBoolean(R.bool.debug);
             Button catbut = null;
             if (convertView == null) {
                 LayoutInflater inflater = (LayoutInflater) context.getSystemService(
@@ -184,7 +176,6 @@ public class activity_manage_category extends AppCompatActivity {
                 catbut = (Button) convertView.getTag();
             }
             Categories current    = catList.get(position);
-            int place             = current.getPlace();
             String display        = current.getCategory();
             List listOfTasks      = db.getAllTasks(current.getCategory());
             List completedTasks   = db.getAllCompletedTasks(current.getCategory());
@@ -195,7 +186,6 @@ public class activity_manage_category extends AppCompatActivity {
             display += Integer.toString(numberOfTasks) + ")";
             catbut.setText(display);
             catbut.setTag(current);
-            //Log.d("listener: getView()", String.valueOf(current.getId()));
             return convertView;
         }//end getView
 
