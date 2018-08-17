@@ -18,7 +18,7 @@ import java.util.List;
 
 public class Pop_tasks extends Activity{
     protected TaskerDBHelper db;
-    MyAdapter adapt;
+    //MyAdapter adapt;
     List<Tasker> list;
     Button button;
     String category;
@@ -48,8 +48,10 @@ public class Pop_tasks extends Activity{
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
 
         db             = new TaskerDBHelper(this);
-        list           = db.getAllTasks("tasksTable", category);
-        adapt          = new MyAdapter(this, R.layout.list_inner_view, list);
+        //BUG: Do we need the whole `list`?
+        //BUG: Do we need an adapter?
+        //list           = db.getAllTasks(category);
+        //adapt          = new MyAdapter(this, R.layout.list_inner_view, list);
         button         = findViewById(R.id.button_addTaskToDB);
         EditText input = (EditText) findViewById(R.id.editText_tasks);
         button.setOnClickListener(new View.OnClickListener() {
@@ -87,8 +89,8 @@ public class Pop_tasks extends Activity{
             db.addTask(task);
             //adapt.add(task);
             t.setText("");
-            adapt.add(task);
-            adapt.notifyDataSetChanged();
+            //adapt.add(task);
+            //adapt.notifyDataSetChanged();
         }
         finish();
     }//end addTaskNow()
