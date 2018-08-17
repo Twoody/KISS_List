@@ -39,6 +39,8 @@ public class activity_manage_tasks extends AppCompatActivity {
     private FloatingActionButton fab_add_task;
     ListView listTask1;
     ListView listTask2;
+    Categories parentCat;
+    String catId;
     String category;
     final int NCT_SELECT = 0; //NOT COMPLETED TASKS
     final int NCT_DELETE = 1; //NOT COMPLETED TASKS
@@ -51,21 +53,26 @@ public class activity_manage_tasks extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_manage_tasks);
-
+        db = new TaskerDBHelper(this);
         Intent parentIntent = getIntent();
         Bundle parentBD     = parentIntent.getExtras();
+
         if (parentBD != null)
-            category = (String) parentBD.get("category");
+            catId   = (String) parentBD.get("catId");
+        else
+            catId = "";
+        Log.d("taskInit", "catid: `" + catId + "`");
+        if (catId != "")
+            category = db.getCategoryFromId(catId);
         else
             category = "";
-
-        db       = new TaskerDBHelper(this);
-        list1    = db.getAllNoncompletedTasks(db.TABLE_TASKS, category);
+Log.d("AMT44", "cat: `"+category+"`");
+        list1     = db.getAllNoncompletedTasks(category);
         adapt1    = new MyAdapter(this, R.layout.list_inner_view, list1);
         listTask1 = findViewById(R.id.listView_tasks);
         listTask1.setAdapter(adapt1);
 
-        list2    = db.getAllCompletedTasks(db.TABLE_TASKS, category);
+        list2    = db.getAllCompletedTasks(category);
         adapt2    = new MyAdapter(this, R.layout.list_inner_view, list2);
         listTask2 = findViewById(R.id.listView_completedTasks);
         listTask2.setAdapter(adapt2);
@@ -104,7 +111,7 @@ public class activity_manage_tasks extends AppCompatActivity {
          *  Functions to update UI if data is altered;
          */
         list2.clear();
-        list2.addAll(db.getAllCompletedTasks(db.TABLE_TASKS, category));
+        list2.addAll(db.getAllCompletedTasks(category));
         adapt2.notifyDataSetChanged();
         listTask2.invalidateViews();
         listTask2.refreshDrawableState();
@@ -117,7 +124,7 @@ public class activity_manage_tasks extends AppCompatActivity {
          *  Functions to update UI if data is altered;
          */
         list1.clear();
-        list1.addAll(db.getAllNoncompletedTasks(db.TABLE_TASKS, category));
+        list1.addAll(db.getAllNoncompletedTasks(category));
         adapt1.notifyDataSetChanged();
         listTask1.invalidateViews();
         listTask1.refreshDrawableState();
@@ -175,7 +182,7 @@ public class activity_manage_tasks extends AppCompatActivity {
         else
             return false;
 
-        int db_id        = obj.getId();
+        int taskId       = obj.getId();
         String category  = obj.getCategory();
         String content   = obj.getContent();
         String id        = Integer.toString(obj.getId());
@@ -192,10 +199,9 @@ public class activity_manage_tasks extends AppCompatActivity {
                 toastText += "\nERROR: DID NOT DELETE `" + content + ";\n\tCONTENT COULD NOT BE FOUND";
         }
         else if(item_id == CT_RENAME || item_id == NCT_RENAME){
-            //Open a popup window;
-            //autofill editTest with exiting `content`
-            //update table with new `content`
-            //make toast
+            Intent renamePopup = new Intent(activity_manage_tasks.this, Pop_renameContent.class);
+            renamePopup.putExtra("taskId", id);
+            startActivity(renamePopup);
             toastText += "Edited task";
         }
         else{
