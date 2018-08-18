@@ -36,7 +36,6 @@ public class MyAdapter extends ArrayAdapter<Tasker> {
         Tasker current = taskList.get(position);
         chk.setText(current.getContent());
         chk.setChecked(current.getStatus()==1?true:false);
-        //rowView.setTag(chk);
         return rowView;
     }
     public void updateView(){
