@@ -28,7 +28,7 @@ public class activity_manage_tasks extends AppCompatActivity {
     *  TODO:
     *       1. Enable activity for changing `place` of items
     *            This should use `getAllTasks` and only have one listview
-    *       2.
+    *       2. Set the character limit allowed in the text box.
     *       3.
     */
     protected TaskerDBHelper db;

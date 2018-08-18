@@ -23,6 +23,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class activity_manage_category extends AppCompatActivity {
+    /*
+     *  Author:  Tanner Woody
+     *  Date:    20180816
+     *  TODO:
+     *       1. Enable activity for changing `place` of items
+     *            This should use `getAllCategories` and only have one listview
+     *       2. Set the character limit for the editText
+     *       3. Allow renaming of lists
+     */
     protected TaskerDBHelper db;
     CatAdapter adapt;
     List<Categories> list2;
