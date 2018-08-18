@@ -14,8 +14,6 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.util.List;
-
 public class Pop_renameContent  extends Activity {
     protected TaskerDBHelper db;
     Button button;
@@ -71,8 +69,6 @@ public class Pop_renameContent  extends Activity {
     }//end onCreate()
 
     public void renameTaskContentNow(View v){
-        Resources res     = getResources();
-        boolean debug     = res.getBoolean(R.bool.debug);
         EditText t        = findViewById(R.id.editText_renameTasks);
         String newContent = t.getText().toString();
         if (newContent.equalsIgnoreCase("") )
