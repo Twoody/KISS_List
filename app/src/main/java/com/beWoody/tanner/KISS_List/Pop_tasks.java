@@ -2,7 +2,6 @@ package com.beWoody.tanner.KISS_List;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.content.res.Resources;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.view.KeyEvent;
@@ -14,12 +13,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.util.List;
-
 public class Pop_tasks extends Activity{
     protected TaskerDBHelper db;
-    //MyAdapter adapt;
-    List<Tasker> list;
     Button button;
     String category;
 
@@ -48,10 +43,6 @@ public class Pop_tasks extends Activity{
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
 
         db             = new TaskerDBHelper(this);
-        //BUG: Do we need the whole `list`?
-        //BUG: Do we need an adapter?
-        //list           = db.getAllTasks(category);
-        //adapt          = new MyAdapter(this, R.layout.list_inner_view, list);
         button         = findViewById(R.id.button_addTaskToDB);
         EditText input = (EditText) findViewById(R.id.editText_tasks);
         button.setOnClickListener(new View.OnClickListener() {
@@ -74,23 +65,18 @@ public class Pop_tasks extends Activity{
     }//end onCreate()
 
     public void addTaskNow(View v){
-        Resources res = getResources();
-        boolean debug = res.getBoolean(R.bool.debug);
-        EditText t    = findViewById(R.id.editText_tasks);
-        String s1     = category;
-        String s2     = t.getText().toString();
+        EditText t = findViewById(R.id.editText_tasks);
+        String s1  = category;
+        String s2  = t.getText().toString();
         if (s1.equalsIgnoreCase("") && s2.equalsIgnoreCase("") ){
             Toast.makeText(this, "enter the task description first!!", Toast.LENGTH_LONG);
         }
         else {
             int taskCount = db.countTasks(s1);
-            int place         = taskCount + 1; //Always append the added item
-            Tasker task = new Tasker(s1, s2, 0, place);
+            int place     = taskCount + 1; //Always append the added item
+            Tasker task   = new Tasker(s1, s2, 0, place);
             db.addTask(task);
-            //adapt.add(task);
             t.setText("");
-            //adapt.add(task);
-            //adapt.notifyDataSetChanged();
         }
         finish();
     }//end addTaskNow()
