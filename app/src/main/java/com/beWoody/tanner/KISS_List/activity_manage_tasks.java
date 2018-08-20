@@ -6,7 +6,6 @@ import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -39,7 +38,6 @@ public class activity_manage_tasks extends AppCompatActivity {
     private FloatingActionButton fab_add_task;
     ListView listTask1;
     ListView listTask2;
-    Categories parentCat;
     String catId;
     String category;
     final int NCT_SELECT = 0; //NOT COMPLETED TASKS
@@ -61,12 +59,10 @@ public class activity_manage_tasks extends AppCompatActivity {
             catId   = (String) parentBD.get("catId");
         else
             catId = "";
-        Log.d("taskInit", "catid: `" + catId + "`");
         if (catId != "")
             category = db.getCategoryFromId(catId);
         else
             category = "";
-Log.d("AMT44", "cat: `"+category+"`");
         list1     = db.getAllNoncompletedTasks(category);
         adapt1    = new MyAdapter(this, R.layout.list_inner_view, list1);
         listTask1 = findViewById(R.id.listView_tasks);
@@ -87,6 +83,7 @@ Log.d("AMT44", "cat: `"+category+"`");
                 //Start Pop_tasks.java activity
                 Intent popup = new Intent(activity_manage_tasks.this, Pop_tasks.class);
                 popup.putExtra("category", category);
+                popup.putExtra("catId", catId);
                 startActivity(popup);
             }//end onClick()
         });//end setOnClickListener()
@@ -266,7 +263,6 @@ Log.d("AMT44", "cat: `"+category+"`");
             chk.setText(display);
             chk.setChecked(current.getStatus() == 1 ? true:false);
             chk.setTag(current);
-            Log.d("listener", String.valueOf(current.getId()));
             return convertView;
         }//end getView
     }//end MyAdaper
