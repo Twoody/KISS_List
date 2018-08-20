@@ -87,6 +87,7 @@ public class activity_manage_category extends AppCompatActivity {
         AdapterView.AdapterContextMenuInfo acmi = (AdapterView.AdapterContextMenuInfo) CMI;
         Categories obj   = adapt.getItem(acmi.position);
         String category  = obj.getCategory();
+        String catId     = Integer.toString(obj.getId());
         db               = new TaskerDBHelper(this);
         boolean ret      = true;
         String toastText = "";
@@ -104,7 +105,10 @@ public class activity_manage_category extends AppCompatActivity {
                 //autofill editTest with exiting `content`
                 //update table with new `content`
                 //make toast
-                toastText += "Renamed list";
+            Intent renamePopup = new Intent(activity_manage_category.this, Pop_renameContent_cat.class);
+            renamePopup.putExtra("catId", catId);
+            startActivity(renamePopup);
+            toastText += "Edited task";
         }
         else{
             toastText += "ERROR: NOTHING SELECTED";
