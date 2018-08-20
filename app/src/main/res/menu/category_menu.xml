@@ -10,5 +10,4 @@
     <item
         android:id="@+id/rename_cat"
         android:title="Rename List" />
-
 </menu>
