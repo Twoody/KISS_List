@@ -17,6 +17,7 @@ public class Pop_tasks extends Activity{
     protected TaskerDBHelper db;
     Button button;
     String category;
+    int catId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState){
@@ -26,10 +27,14 @@ public class Pop_tasks extends Activity{
         //Get `category` from `catBut` and homescreen a couple activities back;
         Intent parentIntent = getIntent();
         Bundle parentBD = parentIntent.getExtras();
-        if (parentBD != null)
+        if (parentBD != null) {
             category = (String) parentBD.get("category");
-        else
+            catId    = (int) parentBD.get("catId");
+        }
+        else {
             category = "";
+            catId    = -1;
+        }
 
         DisplayMetrics dimensions = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(dimensions);
@@ -74,7 +79,7 @@ public class Pop_tasks extends Activity{
         else {
             int taskCount = db.countTasks(s1);
             int place     = taskCount + 1; //Always append the added item
-            Tasker task   = new Tasker(s1, s2, 0, place);
+            Tasker task   = new Tasker(s1, s2, 0, place, catId);
             db.addTask(task);
             t.setText("");
         }
