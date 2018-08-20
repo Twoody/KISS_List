@@ -6,18 +6,21 @@ public class Tasker {
     private int status;
     private int place;
     private int id;
+    private int catId;
     public Tasker() {
         this.category = null; //1
         this.content  = null; //2
         this.status   = 0;    //3
         this.place    = 0;    //4
+        this.catId    = 0;    //5
     }
-    public Tasker(String category, String content, int status, int place) {
+    public Tasker(String category, String content, int status, int place, int catId) {
         super();
         this.category = category;
         this.content  = content;
         this.status   = status;
         this.place    = place;
+        this.catId    = catId;
     }
     public int getId() {
         return id;
@@ -48,5 +51,11 @@ public class Tasker {
     }
     public void setStatus(int status) {
         this.status = status;
+    }
+    public int getCatId() {
+        return catId;
+    }
+    public void setCatId(int status) {
+        this.catId = catId;
     }
 }
