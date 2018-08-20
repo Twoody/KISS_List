@@ -17,6 +17,11 @@ public class TaskerDBHelper extends SQLiteOpenHelper {
                 String name,
                 SQLiteDatabase.CursorFactory factory,
                 int version)
+
+       TODO: FIND OUT WHEN TO CALL:
+                add_catId_to_task()
+                updateTasksTable_catID()
+             , SUCH THAT USERS DATA WILL WORK CORRECTLY WITH NEW UPDATES
     */
     boolean debug = false;
     boolean verbose = false;
@@ -36,6 +41,8 @@ public class TaskerDBHelper extends SQLiteOpenHelper {
         //constuctor
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
         //reinstateTables();
+        //add_catId_to_task();
+        //updateTasksTable_catId();
     }
 
     @Override
@@ -45,7 +52,8 @@ public class TaskerDBHelper extends SQLiteOpenHelper {
                 + KEY_CATEGORY + " TEXT, "
                 + KEY_CONTENT + " TEXT, "
                 + KEY_STATUS + " INTEGER, "
-                + KEY_PLACE + " INTEGER "
+                + KEY_PLACE + " INTEGER, "
+                + KEY_CATEGORY_ID + " INTEGER "
                 + ")";
         String create_sql2 = "CREATE TABLE IF NOT EXISTS " + TABLE_CATEGORIES + " ( "
                 + KEY_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
@@ -62,7 +70,8 @@ public class TaskerDBHelper extends SQLiteOpenHelper {
         //db.execSQL("DROP TABLE IF EXISTS " + TABLE_CATEGORIES);
         //onCreate(db); // Create tables again
         //db.close();
-        add_catId_to_task();
+        //add_catId_to_task();
+        //updateTasksTable_catId();
     }
 
     /*
@@ -645,18 +654,27 @@ public class TaskerDBHelper extends SQLiteOpenHelper {
          *  Tanner 20180819
          *  SHOULD ONLY BE CALLED ONCE!
          *  Alter table tasks and add catId
-         *  Set catId to TABLE_CATEGORIES.id;
-         *     --Allows multiple lists with the same name;
          */
         SQLiteDatabase db = this.getWritableDatabase();
         String newColumn  = "catId";
-        String alter      = "Alter table " + TABLE_TASKS + " add column " + newColumn;
-        String update     = "UPDATE table " + TABLE_TASKS;
+        String alter      = "ALTER TABLE " + TABLE_TASKS + " ADD COLUMN " + newColumn;
+        db.execSQL(alter);
+
+    }//add_catId_to_task()
+
+    public void updateTasksTable_catId(){
+        /*
+        *  Tanner 20180819
+        *  Set catId to TABLE_CATEGORIES.id;
+        *     --Allows multiple lists with the same name;
+        */
+        SQLiteDatabase db = this.getWritableDatabase();
+        String newColumn  = "catId";
+        String update     = "UPDATE " + TABLE_TASKS;
         String set        = " SET " + newColumn + " = ";
         set += "(Select " + KEY_ID + " FFOM " + TABLE_CATEGORIES;
         set += "  WHERE " + TABLE_CATEGORIES + "." + KEY_CATEGORY + " = " + TABLE_TASKS + "." + KEY_CATEGORY + ")";
         update += set;
-        db.execSQL(alter);
         db.execSQL(update);
-    }//add_catId_to_task()
+    }
 }
