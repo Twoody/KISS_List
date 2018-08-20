@@ -30,6 +30,7 @@ public class TaskerDBHelper extends SQLiteOpenHelper {
     private static final String KEY_CONTENT      = "content";  //txt
     private static final String KEY_STATUS       = "status";   //int
     private static final String KEY_PLACE        = "place";    //int
+    private static final String KEY_CATEGORY_ID  = "catId";    //txt
 
     public TaskerDBHelper(Context context) {
         //constuctor
@@ -61,6 +62,7 @@ public class TaskerDBHelper extends SQLiteOpenHelper {
         //db.execSQL("DROP TABLE IF EXISTS " + TABLE_CATEGORIES);
         //onCreate(db); // Create tables again
         //db.close();
+        add_catId_to_task();
     }
 
     /*
@@ -131,11 +133,45 @@ public class TaskerDBHelper extends SQLiteOpenHelper {
         try {
             db.execSQL(update);
             ret = true;
-            Log.d("updateTaskContent()", "UPDATED `" + taskId + "` content TO `" + newContent + "`");
+            //Log.d("updateTaskContent()", "UPDATED `" + taskId + "` content TO `" + newContent + "`");
         }
         catch (SQLException e){
             Log.e("TDBH: updateTaskPlace", "ISSUE WITH QUERY `" + update + "`");
             Log.e("TDBH: updateTaskPlace", e.getMessage());
+        }
+        //db.close();
+        return ret;
+    }
+    public boolean updateCatCategory(String catId, String newCategory){
+        /*
+         *  Tanner 20180816
+         *  Update item in Categories table with `newCategory` via `catId`
+         *  Update items in taskTable with newCategory;
+         *  TODO: Break up try/catch into two segments;
+         */
+        boolean ret       = false;
+        SQLiteDatabase db = this.getWritableDatabase();
+        String updateCat  = "UPDATE " + TABLE_CATEGORIES;
+        String setCat     = " SET " + KEY_CONTENT + "='" + newCategory + "'";
+        String whereCat   = " WHERE 1=1";
+        whereCat += " AND " + KEY_ID + "='" + catId + "'";
+        updateCat += setCat + whereCat;
+
+        String updateTask = "UPDATE " + TABLE_TASKS;
+        String setTask    = " Set " + KEY_CATEGORY + " = '" + newCategory + "'";
+        String whereTask  = " WHERE 1=1";
+        whereTask += "AND " + KEY_CATEGORY_ID + "= '" + catId + "'";
+        updateTask += setTask + whereCat;
+        try {
+            db.execSQL(updateCat);
+            db.execSQL(updateTask);
+            ret = true;
+        }
+        catch (SQLException e){
+            Log.e("TDBH: updateCatCategory", "ISSUE WITH QUERY `" + updateCat + "`");
+            Log.e("TDBH: updateCatCategory", e.getMessage());
+            Log.e("TDBH: updateCatCategory", "ISSUE WITH QUERY `" + updateTask + "`");
+            Log.e("TDBH: updateCatCategory", e.getMessage());
         }
         //db.close();
         return ret;
@@ -158,7 +194,8 @@ public class TaskerDBHelper extends SQLiteOpenHelper {
             String content  = cursor.getString(2);
             int status      = cursor.getInt(3);
             int place       = cursor.getInt(4);
-            ret = new Tasker(category, content, status, place);
+            int catId       = cursor.getInt(5);
+            ret = new Tasker(category, content, status, place, catId);
         }
         cursor.close();
         //Log.d("getTask", "SQL: `" + query + "`");
@@ -602,4 +639,24 @@ public class TaskerDBHelper extends SQLiteOpenHelper {
         db.update(TABLE_TASKS, values, whereclause, _ids);
         //db.close();
     }//end updateTask()
+
+    public void add_catId_to_task(){
+        /*
+         *  Tanner 20180819
+         *  SHOULD ONLY BE CALLED ONCE!
+         *  Alter table tasks and add catId
+         *  Set catId to TABLE_CATEGORIES.id;
+         *     --Allows multiple lists with the same name;
+         */
+        SQLiteDatabase db = this.getWritableDatabase();
+        String newColumn  = "catId";
+        String alter      = "Alter table " + TABLE_TASKS + " add column " + newColumn;
+        String update     = "UPDATE table " + TABLE_TASKS;
+        String set        = " SET " + newColumn + " = ";
+        set += "(Select " + KEY_ID + " FFOM " + TABLE_CATEGORIES;
+        set += "  WHERE " + TABLE_CATEGORIES + "." + KEY_CATEGORY + " = " + TABLE_TASKS + "." + KEY_CATEGORY + ")";
+        update += set;
+        db.execSQL(alter);
+        db.execSQL(update);
+    }//add_catId_to_task()
 }
