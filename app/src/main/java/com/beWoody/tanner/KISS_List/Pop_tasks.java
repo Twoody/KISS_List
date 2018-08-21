@@ -12,7 +12,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.util.Log;
 
 public class Pop_tasks extends Activity{
     protected TaskerDBHelper db;

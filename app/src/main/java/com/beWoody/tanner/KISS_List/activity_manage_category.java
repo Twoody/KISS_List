@@ -2,11 +2,9 @@ package com.beWoody.tanner.KISS_List;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.Resources;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.ContextMenu;
 import android.view.Gravity;
 import android.view.LayoutInflater;
