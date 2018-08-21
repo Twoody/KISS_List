@@ -44,7 +44,7 @@ public class Pop_renameContent_cat extends Activity{
 
         db                 = new TaskerDBHelper(this);
         Categories thisCat = db.getCategories(catId);
-        button             = findViewById(R.id.button_updateTaskContent);
+        button             = findViewById(R.id.button_updateCatContent);
         EditText input     = (EditText) findViewById(R.id.editText_renameCat);
 
         input.setText(thisCat.getCategory());
