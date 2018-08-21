@@ -34,6 +34,10 @@
             android:theme="@style/AppTheme.categoryPopup">
         </activity>
         <activity
+            android:name=".Pop_renameContent_cat"
+            android:theme="@style/AppTheme.categoryPopup">
+        </activity>
+        <activity
             android:name=".activity_manage_tasks">
         </activity>
     </application>
