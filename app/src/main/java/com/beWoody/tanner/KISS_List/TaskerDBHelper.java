@@ -161,7 +161,7 @@ public class TaskerDBHelper extends SQLiteOpenHelper {
         boolean ret       = false;
         SQLiteDatabase db = this.getWritableDatabase();
         String updateCat  = "UPDATE " + TABLE_CATEGORIES;
-        String setCat     = " SET " + KEY_CONTENT + "='" + newCategory + "'";
+        String setCat     = " SET " + KEY_CATEGORY + "='" + newCategory + "'";
         String whereCat   = " WHERE 1=1";
         whereCat += " AND " + KEY_ID + "='" + catId + "'";
         updateCat += setCat + whereCat;
@@ -169,8 +169,9 @@ public class TaskerDBHelper extends SQLiteOpenHelper {
         String updateTask = "UPDATE " + TABLE_TASKS;
         String setTask    = " Set " + KEY_CATEGORY + " = '" + newCategory + "'";
         String whereTask  = " WHERE 1=1";
-        whereTask += "AND " + KEY_CATEGORY_ID + "= '" + catId + "'";
-        updateTask += setTask + whereCat;
+        whereTask += " AND " + KEY_CATEGORY_ID + " = " + catId + "";
+        updateTask += setTask + whereTask;
+        Log.d("LOG88", "QUERY:" + updateTask);
         try {
             db.execSQL(updateCat);
             db.execSQL(updateTask);
@@ -184,7 +185,7 @@ public class TaskerDBHelper extends SQLiteOpenHelper {
         }
         //db.close();
         return ret;
-    }
+    }//end updateCatCategory()
 
     public Tasker getTask(String taskId){
         /*
@@ -450,6 +451,7 @@ public class TaskerDBHelper extends SQLiteOpenHelper {
         // status of task- can be 0 for not done and 1 for done
         values.put(KEY_STATUS, tasker.getStatus());
         values.put(KEY_PLACE, tasker.getPlace());
+        values.put(KEY_CATEGORY_ID, tasker.getCatId());
 
         long newRowId = db.insert(TABLE_TASKS, null, values);
 
@@ -483,7 +485,7 @@ public class TaskerDBHelper extends SQLiteOpenHelper {
             } while (cursor.moveToNext());
         }
         if (cnt == 0)
-            Log.e("TBDH: getAllTasks", "NO ITEMS FOUND FOR QUERY `"+selectAll+"`");
+            Log.w("TBDH: getAllTasks", "NO ITEMS FOUND FOR QUERY `"+selectAll+"`");
         //db.close();
         return taskList;
     }//end getAllTasks()
@@ -516,7 +518,7 @@ public class TaskerDBHelper extends SQLiteOpenHelper {
             } while (cursor.moveToNext());
         }
         if (cnt == 0)
-            Log.e("getAllCompletedTasks", "NO ITEMS FOUND FOR QUERY `"+selectAll+"`");
+            Log.w("getAllCompletedTasks", "NO ITEMS FOUND FOR QUERY `"+selectAll+"`");
         //db.close();
         return taskList;
     }//end getAllCompletedTasks()
