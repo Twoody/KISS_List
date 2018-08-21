@@ -12,12 +12,13 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.util.Log;
 
 public class Pop_tasks extends Activity{
     protected TaskerDBHelper db;
     Button button;
     String category;
-    int catId;
+    String catId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState){
@@ -29,11 +30,11 @@ public class Pop_tasks extends Activity{
         Bundle parentBD = parentIntent.getExtras();
         if (parentBD != null) {
             category = (String) parentBD.get("category");
-            catId    = (int) parentBD.get("catId");
+            catId    = (String) parentBD.get("catId");
         }
         else {
             category = "";
-            catId    = -1;
+            catId    = "";
         }
 
         DisplayMetrics dimensions = new DisplayMetrics();
@@ -79,7 +80,9 @@ public class Pop_tasks extends Activity{
         else {
             int taskCount = db.countTasks(s1);
             int place     = taskCount + 1; //Always append the added item
-            Tasker task   = new Tasker(s1, s2, 0, place, catId);
+            int taskCatId = Integer.parseInt(catId);
+            Log.d("LOG99", "CATID: " + catId);
+            Tasker task   = new Tasker(s1, s2, 0, place, taskCatId);
             db.addTask(task);
             t.setText("");
         }
