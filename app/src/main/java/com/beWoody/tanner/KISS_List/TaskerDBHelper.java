@@ -171,7 +171,6 @@ public class TaskerDBHelper extends SQLiteOpenHelper {
         String whereTask  = " WHERE 1=1";
         whereTask += " AND " + KEY_CATEGORY_ID + " = " + catId + "";
         updateTask += setTask + whereTask;
-        Log.d("LOG88", "QUERY:" + updateTask);
         try {
             db.execSQL(updateCat);
             db.execSQL(updateTask);
