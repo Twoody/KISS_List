@@ -72,6 +72,17 @@ public class TaskerDBHelper extends SQLiteOpenHelper {
         //db.close();
         //add_catId_to_task();
         //updateTasksTable_catId();
+        //TODO: Add column catid to each task table;
+        //      catid needs to match
+        String addColumnCatid = "ALTER TABLE "+TABLE_TASKS+"" +
+                "  ADD " + KEY_CATEGORY_ID + " TEXT";
+        String updateCatid = "UPDATE " + TABLE_TASKS +
+                " SET " + KEY_CATEGORY_ID + " = (" +
+                " SELECT " + KEY_ID + " FROM " + TABLE_CATEGORIES +
+                " WHERE " + TABLE_CATEGORIES + "." + KEY_CATEGORY + " = " +
+                TABLE_TASKS + "." + KEY_CATEGORY + ")";
+        db.execSQL(addColumnCatid);
+        db.execSQL(updateCatid);
     }
 
     /*
