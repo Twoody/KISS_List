@@ -66,35 +66,7 @@ public class TaskerDBHelper extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldV, int newV) {
-        //db.execSQL("DROP TABLE IF EXISTS " + TABLE_TASKS);
-        //db.execSQL("DROP TABLE IF EXISTS " + TABLE_CATEGORIES);
-        //onCreate(db); // Create tables again
-        //db.close();
-        //add_catId_to_task();
-        //updateTasksTable_catId();
-        //TODO: Add column catid to each task table;
-        //      catid needs to match
-        String addColumnCatid = "ALTER TABLE "+TABLE_TASKS+"" +
-                "  ADD " + KEY_CATEGORY_ID + " TEXT";
-        String updateCatid = "UPDATE " + TABLE_TASKS +
-                " SET " + KEY_CATEGORY_ID + " = (" +
-                " SELECT " + KEY_ID + " FROM " + TABLE_CATEGORIES +
-                " WHERE " + TABLE_CATEGORIES + "." + KEY_CATEGORY + " = " +
-                TABLE_TASKS + "." + KEY_CATEGORY + ")";
-        db.execSQL(addColumnCatid);
-        db.execSQL(updateCatid);
-    }
 
-    /*
-    *  This has almost no reason to be here.
-    *  It is strictly to wipe out the databases when we are starting new.
-    */
-    public void reinstateTables(){
-        SQLiteDatabase db = this.getWritableDatabase();
-        db.execSQL("DROP TABLE IF EXISTS " + TABLE_TASKS);
-        db.execSQL("DROP TABLE IF EXISTS " + TABLE_CATEGORIES);
-        onCreate(db);
-        //db.close();
     }
 
     public void addCat(Categories category) {
