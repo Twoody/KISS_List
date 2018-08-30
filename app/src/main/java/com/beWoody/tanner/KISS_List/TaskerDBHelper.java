@@ -8,6 +8,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 
@@ -421,14 +422,65 @@ public class TaskerDBHelper extends SQLiteOpenHelper {
         return ret;
     }//end updateTaskPlace()
 
+    public static List<String> splitEqually(String text, int size) {
+        // Give the list the right capacity to start with. You could use an array
+        // instead if you wanted.
+        List<String> ret = new ArrayList<String>((text.length() + size - 1) / size);
+
+        for (int start = 0; start < text.length(); start += size) {
+            ret.add(text.substring(start, Math.min(text.length(), start + size)));
+        }
+        return ret;
+    }
+
+    public String processInput(String content){
+        /*
+        *  String builder to inject a newline at last space found before breaking 80 characters;
+        *  If word is more than 80 characters, break word;
+        */
+        String[] _words       = content.split("\\s+");
+        List<String> words    = Arrays.asList(_words);
+        String customcontent  = "";
+        int charsBeforeBreak = 20; //Max length of word with no breaks; Max we inject \n at;
+        int currCount        = 0;
+
+        for(int i = 0; i < words.size(); i++){
+            String word = words.get(i);
+            currCount += 1 + word.length();
+            if (currCount > charsBeforeBreak) {
+                if (currCount == 1 + word.length()) {
+                    //Word is way to big for our purpose;
+                    List<String> splitwords = splitEqually(word, charsBeforeBreak);
+                    String moddedWord = String.join("\n", splitwords);
+                    //.join takes AP 26; We are running min of API 21...
+                    customcontent += moddedWord;
+                } else {
+                    //We will exceed our limited amount of characters on this run;
+                    //Insert newline to start new count
+                    customcontent += '\n' + word;
+                }
+                currCount = 0;
+            }
+            else{
+                //We still have room before newline is needed
+                if (i == 0) //Do Not initialize Prior string with a space
+                    customcontent += " ";
+                customcontent += word;
+            }
+        }//end for
+        return customcontent;
+    }//end processInput
 
     public void addTask(Tasker tasker) {
         //Add `task` to the database listed in `DATABASE_NAME`
         //Tanner 20180717
-        SQLiteDatabase db    = this.getWritableDatabase();
-        ContentValues values = new ContentValues();
+        SQLiteDatabase db       = this.getWritableDatabase();
+        ContentValues values    = new ContentValues();
+        String myContent        = tasker.getContent();
+        String formattedContent = processInput(myContent);
+
         values.put(KEY_CATEGORY, tasker.getCategory());
-        values.put(KEY_CONTENT, tasker.getContent());
+        values.put(KEY_CONTENT, formattedContent);
 
         // status of task- can be 0 for not done and 1 for done
         values.put(KEY_STATUS, tasker.getStatus());
