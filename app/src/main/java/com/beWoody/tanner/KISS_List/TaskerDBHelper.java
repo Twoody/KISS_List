@@ -435,6 +435,7 @@ public class TaskerDBHelper extends SQLiteOpenHelper {
 
     public String processInput(String content){
         /*
+        * TODO: NEED TO TEST!!!
         *  String builder to inject a newline at last space found before breaking 80 characters;
         *  If word is more than 80 characters, break word;
         */
