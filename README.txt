@@ -24,6 +24,53 @@ Purpose:
 	Completed items will go into the green zone, where they are marked complete.
 	Added items will always be appended to the end of the list.
 
+Functionality:
+	Categories:
+		Purpose:
+			Create a button with user inputted text;
+			Add custom categories.
+			Character limit set to not exceed 40.
+		View:
+			A button in the middle of the screen filled with user inputted text;
+			The button will also display number of completed tasks vs. total number of tasks for this category.
+		Functionality:
+			Each button will open the same activity.
+			Each button will submit a unique `id` associated with that `category` in the `categories` table.
+			New activity will be populated by category's `id` from the `tasks` table.$a
+		Long Press Menu:
+			Select:
+				Select the entry currently does nothing.
+				TODO: Init a drag, drop menu
+			Rename:
+				Rename the entry if a typo exists.
+				Renames the `category` for each associated task.
+			Delete:
+				Remove the cateogry.
+				Delete all associated tasks connected to this category's `id`.
+	Tasks:
+		Purpose:
+			Create a checkbox 
+			Populate categories with custom task.
+			Character limit set to not exceed 100.
+		View:
+			Two listviews each occupying 50% of the screen and a FAB at the bottom.
+			Top listview will show incompleted tasks.
+			Bottom listview will dispaly completed tasks.
+		Functionality:
+			FAB will append items to the end of the list.
+			Newly added items will be marked as incomplete.
+			Clicking on the the tasks text and checkbox will mark the task complete.
+			Long pressing the white space associated with the task will open the long press menu.
+		Long Press Menu:
+			Select:
+				Select the entry currently does nothing.
+				TODO: Init a drag, drop menu
+			Rename:
+				Rename the task if a typo exists.
+			Delete:
+				Remove the task.
+				Delete task by `id`.
+
 (Not yet implemented & TODO)
 	A. The user should be able to `select` an item.
 		1. Selecting an item will open a new activity, designed for editing.
