@@ -114,19 +114,18 @@ public class TaskerDBHelper extends SQLiteOpenHelper {
          *  Tanner 20180816
          *  Update item in Task table with `newContent` via `id`
          */
-        boolean ret         = false;
-        Tasker task         = getTask(taskId);
-        String update       = "UPDATE " + TABLE_TASKS;
-        String set          = " SET " + KEY_CONTENT + "='" + newContent + "'";
-        String where        = " WHERE 1=1";
+        boolean ret              = false;
+        String prcocessedContent = processInput(newContent);
+        Tasker task              = getTask(taskId);
+        String update            = "UPDATE " + TABLE_TASKS;
+        String set               = " SET " + KEY_CONTENT + "='" + prcocessedContent + "'";
+        String where             = " WHERE 1=1";
         where += " AND " + KEY_ID + "='" + taskId + "'";
         update += set + where;
         SQLiteDatabase db = this.getWritableDatabase();
-        Log.d("updateTaskContent", "SQL: `" + update + "`");
         try {
             db.execSQL(update);
             ret = true;
-            //Log.d("updateTaskContent()", "UPDATED `" + taskId + "` content TO `" + newContent + "`");
         }
         catch (SQLException e){
             Log.e("TDBH: updateTaskPlace", "ISSUE WITH QUERY `" + update + "`");
@@ -464,7 +463,7 @@ public class TaskerDBHelper extends SQLiteOpenHelper {
             }
             else{
                 //We still have room before newline is needed
-                if (i == 0) //Do Not initialize Prior string with a space
+                if (i != 0) //Do Not initialize Prior string with a space
                     customcontent += " ";
                 customcontent += word;
             }
