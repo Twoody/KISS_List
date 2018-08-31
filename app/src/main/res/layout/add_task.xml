@@ -15,6 +15,7 @@
         android:layout_marginTop="8dp"
         android:ems="10"
         android:gravity="top"
+        android:maxLength="100"
         android:hint="@string/fillable"
         android:imeOptions="actionDone"
         android:inputType="textMultiLine"
