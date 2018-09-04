@@ -7,9 +7,12 @@ import android.content.Intent;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +20,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -64,6 +68,22 @@ public class activity_manage_tasks extends AppCompatActivity {
             category = db.getCategoryFromId(catId);
         else
             category = "";
+
+        // my_child_toolbar is defined in the layout file
+        Toolbar taskToolbar = (Toolbar) findViewById(R.id.toolbar_tasks);
+        setSupportActionBar(taskToolbar);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+
+        // Get a support ActionBar corresponding to this toolbar
+        ActionBar ab = getSupportActionBar();
+
+        // Enable the Up button
+        ab.setDisplayHomeAsUpEnabled(true);
+
+        // Text to be displayed in toolbar
+        TextView toolbarTitle = (TextView) taskToolbar.findViewById(R.id.toolbar_taskTitle);
+        toolbarTitle.setText(category);
+
         list1     = db.getAllNoncompletedTasks(category);
         adapt1    = new TaskAdapter(this, R.layout.list_inner_view, list1);
         listTask1 = findViewById(R.id.listView_tasks);
@@ -95,6 +115,31 @@ public class activity_manage_tasks extends AppCompatActivity {
         super.onResume();
         db = new TaskerDBHelper(this);
         refreshUIThread();
+    }
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.actionbar, menu);
+        return true;
+    }
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_settings:
+                // User chose the "Settings" item, show the app settings UI...
+                Toast.makeText(this, "Clicked on Settings", Toast.LENGTH_LONG).show();
+                return true;
+
+            case R.id.action_organize:
+                // User chose the "Organize" action;
+                // Start new activity designed to organize tasks;
+                Toast.makeText(this, "Clicked on Organize", Toast.LENGTH_LONG).show();
+                return true;
+
+            default:
+                // If we got here, the user's action was not recognized.
+                // Invoke the superclass to handle it.
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     public void refreshUIThread(){
