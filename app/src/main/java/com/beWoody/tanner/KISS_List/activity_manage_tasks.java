@@ -27,14 +27,9 @@ public class activity_manage_tasks extends AppCompatActivity {
     *  Author:  Tanner Woody
     *  Date:    20180816
     *  TODO:
-    *       0. TEST TEST TEST!!!
-    *           I MADE CHANGES TO ADD NEW COLUMN catId AND TO ALTER TABLES WHEN
-    *           CATEGORY IS RENAMED IN activity_manage_categories;
-    *           NO TESTING DONE YET;
     *       1. Enable activity for changing `place` of items
     *            This should use `getAllTasks` and only have one listview
-    *       2. Set the character limit allowed in the text box.
-    *       3.
+    *       2.
     */
     protected TaskerDBHelper db;
     TaskAdapter adapt1;
