@@ -11,11 +11,11 @@ import android.widget.CheckBox;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MyAdapter extends ArrayAdapter<Tasker> {
+public class TaskAdapter extends ArrayAdapter<Tasker> {
     Context context;
     List<Tasker> taskList = new ArrayList<Tasker>();
     int layoutResourceId;
-    public MyAdapter(Context context, int layoutResourceId, List<Tasker> objects){
+    public TaskAdapter(Context context, int layoutResourceId, List<Tasker> objects){
         super(context, layoutResourceId, objects);
         this.layoutResourceId = layoutResourceId;
         this.taskList = objects;
