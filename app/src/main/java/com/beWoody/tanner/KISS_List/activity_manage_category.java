@@ -28,11 +28,10 @@ public class activity_manage_category extends AppCompatActivity {
      *  TODO:
      *       1. Enable activity for changing `place` of items
      *            This should use `getAllCategories` and only have one listview
-     *       2. Set the character limit for the editText
-     *            Make the editText attribute responsive to characters being filled in;
+     *       2. Make the editText attribute responsive to characters being filled in;
      *            i.e. "Make toast" has 10 characters; Tell user they have used 10 out of 100
      *                  characters;
-     *       3. Test renaming of lists
+     *       3. Make `select` in contextmenu a `copy to clipboard option instead;
      */
     protected TaskerDBHelper db;
     CatAdapter adapt;
