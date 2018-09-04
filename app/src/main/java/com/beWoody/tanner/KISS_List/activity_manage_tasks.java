@@ -1,5 +1,7 @@
 package com.beWoody.tanner.KISS_List;
 
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
@@ -35,8 +37,8 @@ public class activity_manage_tasks extends AppCompatActivity {
     *       3.
     */
     protected TaskerDBHelper db;
-    MyAdapter adapt1;
-    MyAdapter adapt2;
+    TaskAdapter adapt1;
+    TaskAdapter adapt2;
     List<Tasker> list1;
     List<Tasker> list2;
     private FloatingActionButton fab_add_task;
@@ -44,9 +46,9 @@ public class activity_manage_tasks extends AppCompatActivity {
     ListView listTask2;
     String catId;
     String category;
-    final int NCT_SELECT = 0; //NOT COMPLETED TASKS
+    final int NCT_COPY = 0; //NOT COMPLETED TASKS
     final int NCT_DELETE = 1; //NOT COMPLETED TASKS
-    final int CT_SELECT  = 2; //COMPLETED TASKS
+    final int CT_COPY  = 2; //COMPLETED TASKS
     final int CT_DELETE  = 3; //COMPLETED TASKS
     final int CT_RENAME  = 4; //COMPLETED TASKS
     final int NCT_RENAME = 5; //NOT COMPLETED TASKS
@@ -68,12 +70,12 @@ public class activity_manage_tasks extends AppCompatActivity {
         else
             category = "";
         list1     = db.getAllNoncompletedTasks(category);
-        adapt1    = new MyAdapter(this, R.layout.list_inner_view, list1);
+        adapt1    = new TaskAdapter(this, R.layout.list_inner_view, list1);
         listTask1 = findViewById(R.id.listView_tasks);
         listTask1.setAdapter(adapt1);
 
         list2    = db.getAllCompletedTasks(category);
-        adapt2    = new MyAdapter(this, R.layout.list_inner_view, list2);
+        adapt2    = new TaskAdapter(this, R.layout.list_inner_view, list2);
         listTask2 = findViewById(R.id.listView_completedTasks);
         listTask2.setAdapter(adapt2);
 
@@ -142,14 +144,14 @@ public class activity_manage_tasks extends AppCompatActivity {
         super.onCreateContextMenu(menu, v, menuInfo);
         String foo = Integer.toString(v.getId());
         Tasker obj;
-        String SELECT = "Select";
-        String DELETE = "Delete";
-        String RENAME = "Edit content";
+        String COPY = getString(R.string.menu_copyTask);
+        String DELETE = getString(R.string.menu_deleteTask);
+        String RENAME = getString(R.string.menu_renameTask);
         if(v.getId() == R.id.listView_tasks){
             ListView catView = (ListView) v;
             AdapterView.AdapterContextMenuInfo acmi = (AdapterView.AdapterContextMenuInfo) menuInfo;
             obj = (Tasker) catView.getItemAtPosition(acmi.position);
-            menu.add(0, NCT_SELECT, 0, SELECT);
+            menu.add(0, NCT_COPY,   0, COPY);
             menu.add(0, NCT_DELETE, 0, DELETE);
             menu.add(0, NCT_RENAME, 0, RENAME);
         }
@@ -157,7 +159,7 @@ public class activity_manage_tasks extends AppCompatActivity {
             ListView catView = (ListView) v;
             AdapterView.AdapterContextMenuInfo acmi = (AdapterView.AdapterContextMenuInfo) menuInfo;
             obj = (Tasker) catView.getItemAtPosition(acmi.position);
-            menu.add(0, CT_SELECT, 0, SELECT);
+            menu.add(0, CT_COPY,   0, COPY);
             menu.add(0, CT_DELETE, 0, DELETE);
             menu.add(0, CT_RENAME, 0, RENAME);
         }
@@ -170,14 +172,12 @@ public class activity_manage_tasks extends AppCompatActivity {
     @Override
     public boolean onContextItemSelected(MenuItem item){
         Tasker obj;
-        Resources res = getResources();
-        boolean debug = res.getBoolean(R.bool.debug);
         int item_id   = item.getItemId();
         ContextMenu.ContextMenuInfo CMI = item.getMenuInfo();
         AdapterView.AdapterContextMenuInfo acmi = (AdapterView.AdapterContextMenuInfo) CMI;
-        if(item_id == NCT_SELECT || item_id == NCT_DELETE || item_id == NCT_RENAME)
+        if(item_id == NCT_COPY || item_id == NCT_DELETE || item_id == NCT_RENAME)
             obj = adapt1.getItem(acmi.position);
-        else if(item_id == CT_SELECT || item_id == CT_DELETE || item_id == CT_RENAME)
+        else if(item_id == CT_COPY || item_id == CT_DELETE || item_id == CT_RENAME)
             obj = adapt2.getItem(acmi.position);
         else
             return false;
@@ -189,8 +189,14 @@ public class activity_manage_tasks extends AppCompatActivity {
         db               = new TaskerDBHelper(this);
         boolean ret      = true;
         String toastText = "";
-        if (item_id == CT_SELECT || item_id == NCT_SELECT)
-            toastText += "Selected " + content;
+        if (item_id == CT_COPY || item_id == NCT_COPY) {
+            //Copy list name to clipboard;
+            ClipboardManager clipboard;
+            clipboard = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
+            ClipData clip = ClipData.newPlainText("simple text", content);
+            clipboard.setPrimaryClip(clip);
+            toastText += "Copied \"" + content +"\" to Clipboard";
+        }
         else if(item_id == NCT_DELETE || item_id == CT_DELETE){
             Boolean didDelete = db.deleteTask(id);
             if (didDelete)
@@ -213,11 +219,11 @@ public class activity_manage_tasks extends AppCompatActivity {
         return ret;
     }//end onContextItemSelected
 
-    private class MyAdapter extends ArrayAdapter<Tasker> {
+    private class TaskAdapter extends ArrayAdapter<Tasker> {
         Context context;
         List<Tasker> taskList = new ArrayList<Tasker>();
         int layoutResourceId;
-        private MyAdapter(Context context,
+        private TaskAdapter(Context context,
                           int layoutResourceId,
                           List<Tasker> objects
                           )
