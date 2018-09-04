@@ -9,4 +9,7 @@
     <string name="menu_copyCat">Copy Text</string>
     <string name="menu_deleteCat">Delete List</string>
     <string name="menu_renameCat">Rename List</string>
+    <string name="menu_copyTask">Copy task text</string>
+    <string name="menu_deleteTask">Delete task</string>
+    <string name="menu_renameTask">Edit text</string>
 </resources>
