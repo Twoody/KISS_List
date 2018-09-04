@@ -2,12 +2,12 @@
 <menu xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android">
     <item
-        android:id="@+id/select_cat"
-        android:title="Select"/>
-    <item
-        android:id="@+id/delete_cat"
-        android:title="Delete" />
+        android:id="@+id/copy_cat"
+        android:title="@string/menu_copyCat"/>
     <item
         android:id="@+id/rename_cat"
-        android:title="Rename List" />
+        android:title="@string/menu_renameCat" />
+    <item
+        android:id="@+id/delete_cat"
+        android:title="@string/menu_deleteCat" />
 </menu>
