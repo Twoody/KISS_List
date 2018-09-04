@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.view.ContextMenu;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -49,6 +50,9 @@ public class activity_manage_category extends AppCompatActivity {
         adapt    = new CatAdapter(this, R.layout.list_categories, list2);
         listTask = findViewById(R.id.listView_categories);
         listTask.setAdapter(adapt);
+
+        Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
+        setSupportActionBar(myToolbar);
 
         registerForContextMenu(listTask);
 
