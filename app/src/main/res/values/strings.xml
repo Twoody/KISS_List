@@ -3,4 +3,6 @@
     <string name="fillable">Enter Text Here</string>
     <string name="button1_add">Add</string>
     <string name="button1_submit">Submit</string>
+    <string name="action_organize">Move Lists Around</string>
+    <string name="action_settings">Settings</string>
 </resources>
