@@ -53,7 +53,20 @@ public class activity_manage_category extends AppCompatActivity{
         // set up the RecyclerView
         RecyclerView recyclerView = findViewById(R.id.rvCategories);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        adapter = new RVCatAdapter(this, list2);
+        adapter = new RVCatAdapter(
+                           this,
+                           list2,
+                           new ClickListener() {
+                               @Override
+                               public void onPositionClicked(int position) {
+                                   // callback performed on click
+                               }
+
+                               @Override
+                               public void onLongClicked(int position) {
+                                   // callback performed on click
+                               }
+                           });
         //adapter.setClickListener(this);
         recyclerView.setAdapter(adapter);
 
