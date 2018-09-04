@@ -1,5 +1,7 @@
 package com.beWoody.tanner.KISS_List;
 
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.support.design.widget.FloatingActionButton;
@@ -130,8 +132,13 @@ public class activity_manage_category extends AppCompatActivity {
         db               = new TaskerDBHelper(this);
         boolean ret      = true;
         String toastText = "";
-        if (item_id == R.id.select_cat)
-            toastText += "Selected " + category;
+        if (item_id == R.id.copy_cat) {
+            //Copy list name to clipboard;
+            ClipboardManager clipboard;
+            clipboard = (ClipboardManager)getSystemService(CLIPBOARD_SERVICE);
+            ClipData clip = ClipData.newPlainText("simple text", category);
+            clipboard.setPrimaryClip(clip);
+        }
         else if(item_id == R.id.delete_cat){
             Boolean didDelete = db.deleteCat(category);
             if (didDelete)
