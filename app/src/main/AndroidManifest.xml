@@ -23,22 +23,28 @@
         </activity>
         <activity
             android:name=".Pop"
+            android:parentActivityName="com.beWoody.tanner.KISS_List.activity_manage_category"
             android:theme="@style/AppTheme.categoryPopup">
         </activity>
         <activity
             android:name=".Pop_tasks"
+            android:parentActivityName="com.beWoody.tanner.KISS_List.activity_manage_tasks"
             android:theme="@style/AppTheme.categoryPopup">
         </activity>
         <activity
             android:name=".Pop_renameContent"
+            android:parentActivityName="com.beWoody.tanner.KISS_List.activity_manage_tasks"
             android:theme="@style/AppTheme.categoryPopup">
         </activity>
         <activity
             android:name=".Pop_renameContent_cat"
+            android:parentActivityName="com.beWoody.tanner.KISS_List.activity_manage_category"
             android:theme="@style/AppTheme.categoryPopup">
         </activity>
         <activity
-            android:name=".activity_manage_tasks">
+            android:name=".activity_manage_tasks"
+            android:parentActivityName="com.beWoody.tanner.KISS_List.activity_manage_category"
+            >
         </activity>
     </application>
 
