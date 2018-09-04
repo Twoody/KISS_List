@@ -53,6 +53,7 @@ public class activity_manage_category extends AppCompatActivity{
         // set up the RecyclerView
         RecyclerView recyclerView = findViewById(R.id.rvCategories);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        registerForContextMenu(recyclerView);
         adapter = new RVCatAdapter(
                            this,
                            list2,
@@ -64,6 +65,11 @@ public class activity_manage_category extends AppCompatActivity{
 
                                @Override
                                public void onLongClicked(int position) {
+                                   // callback performed on click
+                               }
+
+                               @Override
+                               public void OnCreateContextMenuListener(int position) {
                                    // callback performed on click
                                }
                            });
@@ -97,8 +103,48 @@ public class activity_manage_category extends AppCompatActivity{
             Log.d("MEAT22", foo.getCategory());
         }
         adapter.notifyDataSetChanged();
-
     }//end refreshUIThread
+
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+        int item_id   = item.getItemId();
+        ContextMenu.ContextMenuInfo CMI = item.getMenuInfo();
+        AdapterView.AdapterContextMenuInfo acmi = (AdapterView.AdapterContextMenuInfo) CMI;
+        Categories obj   = adapter.getItem(acmi.position);
+        String category  = obj.getCategory();
+        String catId     = Integer.toString(obj.getId());
+        db               = new TaskerDBHelper(this);
+        boolean ret      = true;
+        String toastText = "";
+
+
+        if (item_id == R.id.select_cat)
+            toastText += "Selected " + category;
+        else if(item_id == R.id.delete_cat){
+            Boolean didDelete = db.deleteCat(category);
+            if (didDelete)
+                toastText += "Deleted " + category;
+            else
+                toastText += "\nERROR: DID NOT DELETE `" + category + ";\n\tCATEGORY COULD NOT BE FOUND";
+        }
+        else if(item_id == R.id.rename_cat){
+            //Open a popup window;
+            //autofill editTest with exiting `content`
+            //update table with new `content`
+            //make toast
+            Intent renamePopup = new Intent(activity_manage_category2.this, Pop_renameContent_cat.class);
+            renamePopup.putExtra("catId", catId);
+            startActivity(renamePopup);
+            toastText += "Edited task";
+        }
+        else{
+            toastText += "ERROR: NOTHING SELECTED";
+            ret = super.onContextItemSelected(item);
+        }
+        Toast.makeText( this, toastText, Toast.LENGTH_SHORT).show();
+        refreshUIThread();//BUG: NEED A BOOLEAN CHECK IF DATA WAS CHANGED OR NOT
+        return ret;
+    }//end onContextItemSelected
 }
 
 
