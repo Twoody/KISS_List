@@ -30,7 +30,9 @@
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_marginTop="8dp"
-        tools:layout_editor_absoluteX="0dp"></ListView>
+        tools:layout_editor_absoluteX="0dp">
+
+    </ListView>
 
     <android.support.design.widget.FloatingActionButton
         xmlns:app="http://schemas.android.com/apk/res-auto"
