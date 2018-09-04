@@ -70,6 +70,27 @@ public class activity_manage_category extends AppCompatActivity {
         refreshUIThread();
     }
 
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_settings:
+                // User chose the "Settings" item, show the app settings UI...
+                Toast.makeText(this, "Clicked on Settings", Toast.LENGTH_LONG).show();
+                return true;
+
+            case R.id.action_organize:
+                // User chose the "Organize" action;
+                // Start new activity designed to organize tasks;
+                Toast.makeText(this, "Clicked on Organize", Toast.LENGTH_LONG).show();
+                return true;
+
+            default:
+                // If we got here, the user's action was not recognized.
+                // Invoke the superclass to handle it.
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
         super.onCreateContextMenu(menu, v, menuInfo);
