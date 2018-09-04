@@ -14,6 +14,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 public class Pop_renameContent_cat extends Activity{
+    /*
+    *  Tanner 201808??
+    *  Rename Category;
+    *  Opened via AMC.java and contextmenu;
+    */
     protected TaskerDBHelper db;
     Button button;
     String catId;
