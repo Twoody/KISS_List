@@ -29,6 +29,7 @@ public class UserDBHelper extends SQLiteOpenHelper {
     private static final String KEY_COLORSECONDARY = "colorSecondary"; //txt
     private static final String KEY_FONTCOLOR      = "fontcolor";      //txt
     private static final String KEY_FONTSIZE       = "fontsize";       //int
+    private static final String KEY_ISAPPENDING    = "isAppending";    //bool as int
 
 
     public UserDBHelper(Context context) {
@@ -41,17 +42,19 @@ public class UserDBHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_USER);
         String create_sql = "CREATE TABLE IF NOT EXISTS " + TABLE_USER + " ( "
                 + KEY_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
                 + KEY_FONT + " TEXT, "
                 + KEY_COLORPRIMARY + " TEXT, "
                 + KEY_FONTCOLOR + " TEXT, "
                 + KEY_COLORSECONDARY + " INTEGER, "
-                + KEY_FONTSIZE + " INTEGER "
+                + KEY_FONTSIZE + " INTEGER, "
+                + KEY_ISAPPENDING + " INTEGER "
                 + ")";
         db.execSQL(create_sql);
-        int entries = getCount();
-        if (entries == -1) {
+        int entries = getCount(db);
+        if (entries == -1 || entries == 0) {
             //We need a default user to add to
             addDefaultUser(db);
         }
@@ -71,6 +74,7 @@ public class UserDBHelper extends SQLiteOpenHelper {
         newuser.setFont("roboto");            //Default for android
         newuser.setFontcolor("808080");       //Default for textViews
         newuser.setFontsize(14);              //Default for android `small`
+        newuser.setIsAppending(1);            //Default is to append lists and items
 
         ContentValues values = new ContentValues();
         values.put(KEY_COLORPRIMARY, newuser.getColorPrimary());
@@ -78,24 +82,48 @@ public class UserDBHelper extends SQLiteOpenHelper {
         values.put(KEY_FONT, newuser.getFont());
         values.put(KEY_FONTCOLOR, newuser.getFontcolor());
         values.put(KEY_FONTSIZE, newuser.getFontsize());
+        values.put(KEY_ISAPPENDING, newuser.getIsAppending());
         long newRowId = db.insert(TABLE_USER, null, values);
         if (newRowId == -1)
-            Log.e("cat: TBDH", "CATEGORY NOT INSERTED INTO DB");
+            Log.e("UDBH", "USER NOT INSERTED INTO DB");
         else
             newuser.setId((int)newRowId);
     }
-    public int getCount(){
+    public int getCount(SQLiteDatabase db){
         //Return the number of entries in the table;
         int count;
-        String query      = "SELECT count(*) FROM " + TABLE_USER;
-        SQLiteDatabase db = this.getWritableDatabase();
-        Cursor cursor     = db.rawQuery(query, null);
+        String query       = "SELECT count(*) FROM " + TABLE_USER;
+        Cursor cursor      = db.rawQuery(query, null);
         if (cursor.moveToNext())
             count = cursor.getInt(0);
         else
             count = -1;
         cursor.close();
-        //db.close();
         return count;
+    }
+    public User getUser(){
+        User retUser       = new User();
+        SQLiteDatabase _db = this.getWritableDatabase();
+        String selectAll   = "SELECT * FROM " + TABLE_USER;
+        Cursor cursor      = _db.rawQuery(selectAll, null);
+        int cnt = 0;
+        if (cursor.moveToNext()) {
+            do {
+                retUser.setId(cursor.getInt(0));
+                retUser.setFont(cursor.getString(1));
+                retUser.setColorPrimary(cursor.getString(2));
+                retUser.setColorSecondary(cursor.getString(3));
+                retUser.setFontcolor(cursor.getString(4));
+                retUser.setFontsize(cursor.getInt(5));
+                retUser.setIsAppending(cursor.getInt(6));
+                cnt++;
+            } while (cursor.moveToNext());
+        }
+        if (cnt == 0) {
+            Log.w("UDBH", "NO ITEMS FOUND FOR QUERY `" + selectAll + "`");
+            retUser = null;
+        }
+        //_db.close();
+        return retUser;
     }
 }
