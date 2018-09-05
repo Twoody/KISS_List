@@ -46,6 +46,12 @@
             android:parentActivityName="com.beWoody.tanner.KISS_List.activity_manage_category"
             >
         </activity>
+        <activity
+            android:name=".Settings"
+            android:parentActivityName="com.beWoody.tanner.KISS_List.activity_manage_category"
+            >
+        </activity>
+
     </application>
 
 </manifest>
