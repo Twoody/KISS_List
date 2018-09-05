@@ -8,6 +8,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.ContextMenu;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -42,6 +43,7 @@ public class activity_manage_category extends AppCompatActivity {
      *       3. Make `select` in contextmenu a `copy to clipboard option instead;
      */
     protected TaskerDBHelper db;
+    protected UserDBHelper userdb;
     CatAdapter adapt;
     List<Categories> list2;
     private FloatingActionButton fab;
@@ -50,13 +52,22 @@ public class activity_manage_category extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Context context = getApplicationContext();
+        context.deleteDatabase("userDB");
         setContentView(R.layout.activity_manage_category);
 
-        db       = new TaskerDBHelper(this);
-        list2    = db.getAllCategories();
-        adapt    = new CatAdapter(this, R.layout.list_categories, list2);
-        listTask = findViewById(R.id.listView_categories);
+        db        = new TaskerDBHelper(this);
+        userdb    = new UserDBHelper(this);
+        User user = userdb.getUser();
+        list2     = db.getAllCategories();
+        adapt     = new CatAdapter(this, R.layout.list_categories, list2);
+        listTask  = findViewById(R.id.listView_categories);
         listTask.setAdapter(adapt);
+
+        if(user != null)
+            logUser(user);
+        else
+            Log.e("AMC.java", "ERROR: USER NOT BEING CREATED");
 
         Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
         setSupportActionBar(myToolbar);
@@ -74,7 +85,14 @@ public class activity_manage_category extends AppCompatActivity {
             }
         });
     }//end onCreate()
-
+    public void logUser(User user){
+        Log.d("MEAT22", user.getColorPrimary());
+        Log.d("MEAT22", user.getColorSecondary());
+        Log.d("MEAT22", user.getFont());
+        Log.d("MEAT22", user.getFontcolor());
+        Log.d("MEAT22", Integer.toString(user.getFontsize()));
+        Log.d("MEAT22", Integer.toString(user.getIsAppending()));
+    }
     @Override
     public void onResume(){
         super.onResume();
