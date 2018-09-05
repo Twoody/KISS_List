@@ -6,6 +6,7 @@ public class User {
     private String colorSecondary;
     private String fontcolor;
     private int fontsize;
+    private int isAppending; //Boolean
     private int id;
     public User() {
         this.font           = null; //1
@@ -13,14 +14,16 @@ public class User {
         this.colorSecondary = null; //3
         this.fontcolor      = null; //4
         this.fontsize       = 0;    //5
+        this.isAppending    = 0;    //6
     }
-    public User(String font, String colorPrimary, String colorSecondary, String fontcolor, int fontsize) {
+    public User(String font, String colorPrimary, String colorSecondary, String fontcolor, int fontsize, int isAppending) {
         super();
         this.font           = font;
         this.colorPrimary   = colorPrimary;
         this.colorSecondary = colorSecondary;
         this.fontcolor      = fontcolor;
         this.fontsize       = fontsize;
+        this.isAppending    = isAppending;
     }
     public int getId() {
         return id;
@@ -28,7 +31,12 @@ public class User {
     public void setId(int id) {
         this.id = id;
     }
-
+    public int getIsAppending(){
+        return isAppending;
+    }
+    public int setIsAppending(int isAppending){
+        return this.isAppending = isAppending;
+    }
     public String getFontcolor() {
         return fontcolor;
     }
