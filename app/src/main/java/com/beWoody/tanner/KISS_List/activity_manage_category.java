@@ -91,6 +91,7 @@ public class activity_manage_category extends AppCompatActivity {
             case R.id.action_settings:
                 // User chose the "Settings" item, show the app settings UI...
                 Toast.makeText(this, "Clicked on Settings", Toast.LENGTH_LONG).show();
+                startActivity(new Intent(activity_manage_category.this, Settings.class));
                 return true;
 
             case R.id.action_organize:
@@ -255,5 +256,5 @@ public class activity_manage_category extends AppCompatActivity {
             intent.putExtra("catId", catId);
             startActivity(intent);
         }//end openTasksActivity
-    }//end MyAdaper
+    }//end CatAdaper
 }//end activity_manage_category
