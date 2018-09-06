@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.res.Resources;
 import android.database.Cursor;
+import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
@@ -32,7 +33,7 @@ public class UserDBHelper extends SQLiteOpenHelper {
     private static final String KEY_FONTCOLOR      = "fontcolor";      //int
     private static final String KEY_FONTSIZE       = "fontsize";       //int
     private static final String KEY_ISAPPENDING    = "isAppending";    //bool as int
-
+    private static final String USERID             = "1"; //This should never change;
 
     public UserDBHelper(Context context) {
         //constuctor
@@ -129,7 +130,26 @@ public class UserDBHelper extends SQLiteOpenHelper {
             Log.w("UDBH", "NO ITEMS FOUND FOR QUERY `" + selectAll + "`");
             retUser = null;
         }
-        //_db.close();
+        _db.close();
         return retUser;
+    }
+    public boolean updateIsAppending(int isappending){
+        Boolean ret = false;
+        String update            = "UPDATE " + TABLE_USER;
+        String set               = " SET " + KEY_ISAPPENDING + "='" + isappending + "'";
+        String where             = " WHERE 1=1";
+        where += " AND " + KEY_ID + "='" + USERID + "'";
+        update += set + where;
+        SQLiteDatabase db = this.getWritableDatabase();
+        try {
+            db.execSQL(update);
+            ret = true;
+        }
+        catch (SQLException e){
+            Log.e("UDBH: updateTaskPlace", "ISSUE WITH QUERY `" + update + "`");
+            Log.e("UDBH: updateTaskPlace", e.getMessage());
+        }
+        db.close();
+        return ret;
     }
 }
