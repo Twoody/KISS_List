@@ -45,6 +45,7 @@
         android:id="@+id/switch_isAppending"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginRight="8dp"
         android:layout_alignParentEnd="true"
         android:layout_below="@+id/textView_listBehavior"
         android:layout_marginEnd="8dp" />
@@ -56,35 +57,169 @@
         android:layout_alignParentStart="true"
         android:layout_below="@+id/textView_switch"
         android:layout_gravity="center"
+        android:layout_marginTop="8dp"
         android:background="#808080">
-
     </View>
 
+    <TextView
+        android:id="@+id/textView_fontBehavior"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/vertbar"
+        android:layout_marginStart="8dp"
+        android:layout_marginRight="8dp"
+        android:text="Font behaviour" />
     <Button
         android:id="@+id/button_chooseFont"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
         android:layout_alignStart="@+id/textView_listBehavior"
-        android:layout_below="@+id/vertbar"
+        android:layout_below="@+id/textView_fontBehavior"
         android:text="@string/settings_font" />
 
     <TextView
         android:id="@+id/textView_currentFont"
-        android:layout_width="250dp"
-        android:layout_height="44dp"
-        android:layout_alignBottom="@+id/button_chooseFont"
-        android:layout_alignEnd="@+id/switch_isAppending"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/textView_fontBehavior"
+        android:layout_toRightOf="@+id/button_chooseFont"
+        android:layout_alignBottom="@id/button_chooseFont"
+        android:layout_marginTop="8dp"
+        android:gravity="right|center"
         android:text="Current Font"
+        android:textSize="20dp" />
+
+    <TextView
+        android:id="@+id/fontColorCircle"
+        android:layout_marginTop="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/button_chooseFont"
+        android:background="@drawable/circle" />
+    <TextView
+        android:id="@+id/textView_currentFontColor"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_below="@+id/button_chooseFont"
+        android:layout_toRightOf="@id/fontColorCircle"
+        android:layout_alignBottom="@+id/fontColorCircle"
+        android:gravity="right|center"
         android:textSize="20dp"
-        android:gravity="right|center"/>
+        android:text="Font Color" />
+
+    <Button
+        android:id="@+id/button_fontsize"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_below="@+id/fontColorCircle"
+        android:text="Font Size"
+        />
+    <TextView
+        android:id="@+id/textview_fontsize"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_below="@id/textView_currentFontColor"
+        android:layout_toRightOf="@id/button_fontsize"
+        android:layout_alignBottom="@+id/button_fontsize"
+        android:gravity="right|center"
+        android:textSize="20dp"
+        android:text="Font Size"
+        />
+
     <View
         android:id="@+id/vertbar2"
         android:layout_width="match_parent"
         android:layout_height="5dp"
         android:layout_alignParentStart="true"
-        android:layout_below="@+id/button_chooseFont"
+        android:layout_below="@+id/button_fontsize"
+        android:layout_marginTop="8dp"
         android:layout_gravity="center"
         android:background="#808080">
     </View>
+
+    <TextView
+        android:id="@+id/textview_otherBehavior"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_below="@id/vertbar2"
+        android:text="Others"/>
+
+    <TextView
+        android:id="@+id/backgroundColorCircle"
+        android:layout_marginTop="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/textview_otherBehavior"
+        android:background="@drawable/circle" />
+    <TextView
+        android:id="@+id/textView_primaryColor"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_below="@+id/textview_otherBehavior"
+        android:layout_toRightOf="@id/backgroundColorCircle"
+        android:layout_alignBottom="@+id/backgroundColorCircle"
+        android:gravity="right|center"
+        android:textSize="20dp"
+        android:text="Primary Color" />
+
+    <TextView
+        android:id="@+id/secondaryColorCircle"
+        android:layout_marginTop="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/backgroundColorCircle"
+        android:background="@drawable/circle" />
+    <TextView
+        android:id="@+id/textView_secondaryColor"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_below="@+id/textView_primaryColor"
+        android:layout_toRightOf="@id/secondaryColorCircle"
+        android:layout_alignBottom="@+id/secondaryColorCircle"
+        android:gravity="right|center"
+        android:textSize="20dp"
+        android:text="Secondary Color" />
+
+    <TextView
+        android:id="@+id/listColorCircle"
+        android:layout_marginTop="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/secondaryColorCircle"
+        android:background="@drawable/circle" />
+    <TextView
+        android:id="@+id/textView_listColor"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_below="@+id/textView_secondaryColor"
+        android:layout_toRightOf="@id/listColorCircle"
+        android:layout_alignBottom="@+id/listColorCircle"
+        android:gravity="right|center"
+        android:textSize="20dp"
+        android:text="List Color" />
 
 </RelativeLayout>
