@@ -62,7 +62,7 @@ public class activity_manage_category extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Context context = getApplicationContext();
-        context.deleteDatabase("userDB");
+        //context.deleteDatabase("userDB");
         setContentView(R.layout.activity_manage_category);
 
         db              = new TaskerDBHelper(this);
