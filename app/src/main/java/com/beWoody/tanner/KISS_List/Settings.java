@@ -102,18 +102,26 @@ public class Settings extends AppCompatActivity {
             }
         });
 
-        Drawable _primary = colorcircle;
-        _primary.setColorFilter(backgroundcolor, PorterDuff.Mode.ADD);
+        Drawable _primary   = colorcircle;
+        Drawable _secondary = colorcircle;
+        Drawable _fontcolor = colorcircle;
+        Drawable _listcolor = colorcircle;
+
+//BUG: All colors are the same;
+        _primary.setColorFilter(backgroundcolor, PorterDuff.Mode.MULTIPLY);
+        _secondary.setColorFilter(secondarycolor, PorterDuff.Mode.MULTIPLY);
+        _fontcolor.setColorFilter(fontcolor, PorterDuff.Mode.MULTIPLY);
+        _listcolor.setColorFilter(listcolor, PorterDuff.Mode.MULTIPLY);
 
         TextView primarycolorcircle   = findViewById(R.id.backgroundColorCircle);
         TextView secondarycolorcircle = findViewById(R.id.secondaryColorCircle);
         TextView listcolorcircle      = findViewById(R.id.listColorCircle);
         TextView fontcolorcircle      = findViewById(R.id.fontColorCircle);
+
         primarycolorcircle.setBackground(_primary);
-        //primarycolorcircle.setBackgroundColor(backgroundcolor);
-        secondarycolorcircle.setBackgroundColor(secondarycolor);
-        listcolorcircle.setBackgroundColor(secondarycolor);
-        fontcolorcircle.setBackgroundColor(fontcolor);
+        secondarycolorcircle.setBackground(_secondary);
+        fontcolorcircle.setBackground(_fontcolor);
+        listcolorcircle.setBackground(_listcolor);
     }
 
     public boolean onCreateOptionsMenu(Menu menu) {
