@@ -1,11 +1,13 @@
 package com.beWoody.tanner.KISS_List;
 
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.View;
+import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.Switch;
 import android.widget.TextView;
@@ -74,6 +76,18 @@ public class Settings extends AppCompatActivity {
                 }
                 Toast.makeText(getApplicationContext(), toast, Toast.LENGTH_LONG).show();
                 userdb.updateIsAppending(isAppending);
+            }
+        });
+        Typeface face = Typeface.create(font, Typeface.NORMAL);
+        TextView currentfont = findViewById(R.id.textView_currentFont);
+        currentfont.setText(font);
+        currentfont.setTypeface(face);
+
+        Button changefont = findViewById(R.id.button_chooseFont);
+        changefont.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(getApplicationContext(), "COMING SOON!", Toast.LENGTH_LONG).show();
             }
         });
 
