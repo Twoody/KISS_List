@@ -2,6 +2,7 @@ package com.beWoody.tanner.KISS_List;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.res.Resources;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
@@ -25,9 +26,10 @@ public class UserDBHelper extends SQLiteOpenHelper {
     // User Table Columns names
     private static final String KEY_ID             = "id";             //key
     private static final String KEY_FONT           = "font";           //txt
-    private static final String KEY_COLORPRIMARY   = "colorPrimary";   //txt
-    private static final String KEY_COLORSECONDARY = "colorSecondary"; //txt
-    private static final String KEY_FONTCOLOR      = "fontcolor";      //txt
+    private static final String KEY_COLORPRIMARY   = "colorPrimary";   //int
+    private static final String KEY_COLORSECONDARY = "colorSecondary"; //int
+    private static final String KEY_LISTCOLOR      = "listcolor";      //int
+    private static final String KEY_FONTCOLOR      = "fontcolor";      //int
     private static final String KEY_FONTSIZE       = "fontsize";       //int
     private static final String KEY_ISAPPENDING    = "isAppending";    //bool as int
 
@@ -46,9 +48,10 @@ public class UserDBHelper extends SQLiteOpenHelper {
         String create_sql = "CREATE TABLE IF NOT EXISTS " + TABLE_USER + " ( "
                 + KEY_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
                 + KEY_FONT + " TEXT, "
-                + KEY_COLORPRIMARY + " TEXT, "
-                + KEY_FONTCOLOR + " TEXT, "
+                + KEY_COLORPRIMARY + " INTEGER, "
                 + KEY_COLORSECONDARY + " INTEGER, "
+                + KEY_LISTCOLOR + " INTEGER, "
+                + KEY_FONTCOLOR + " INTEGER, "
                 + KEY_FONTSIZE + " INTEGER, "
                 + KEY_ISAPPENDING + " INTEGER "
                 + ")";
@@ -69,17 +72,19 @@ public class UserDBHelper extends SQLiteOpenHelper {
         //Add a default for settings
         //Should only be called once;
         User newuser = new User();
-        newuser.setColorPrimary("#3F51B5");   //Default for KISS_List v1.0.3
-        newuser.setColorSecondary("#228B22"); //Popup default
         newuser.setFont("roboto");            //Default for android
-        newuser.setFontcolor("808080");       //Default for textViews
+        newuser.setColorPrimary(Resources.getSystem().getColor(android.R.color.holo_orange_light));
+        newuser.setColorSecondary(Resources.getSystem().getColor(android.R.color.holo_purple));
+        newuser.setListcolor(Resources.getSystem().getColor(android.R.color.holo_green_light));
+        newuser.setFontcolor(Resources.getSystem().getColor(android.R.color.black));
         newuser.setFontsize(14);              //Default for android `small`
         newuser.setIsAppending(1);            //Default is to append lists and items
 
         ContentValues values = new ContentValues();
+        values.put(KEY_FONT, newuser.getFont());
         values.put(KEY_COLORPRIMARY, newuser.getColorPrimary());
         values.put(KEY_COLORSECONDARY, newuser.getColorSecondary());
-        values.put(KEY_FONT, newuser.getFont());
+        values.put(KEY_LISTCOLOR, newuser.getListcolor());
         values.put(KEY_FONTCOLOR, newuser.getFontcolor());
         values.put(KEY_FONTSIZE, newuser.getFontsize());
         values.put(KEY_ISAPPENDING, newuser.getIsAppending());
@@ -111,11 +116,12 @@ public class UserDBHelper extends SQLiteOpenHelper {
             do {
                 retUser.setId(cursor.getInt(0));
                 retUser.setFont(cursor.getString(1));
-                retUser.setColorPrimary(cursor.getString(2));
-                retUser.setColorSecondary(cursor.getString(3));
-                retUser.setFontcolor(cursor.getString(4));
-                retUser.setFontsize(cursor.getInt(5));
-                retUser.setIsAppending(cursor.getInt(6));
+                retUser.setColorPrimary(cursor.getInt(2));
+                retUser.setColorSecondary(cursor.getInt(3));
+                retUser.setListcolor(cursor.getInt(4));
+                retUser.setFontcolor(cursor.getInt(5));
+                retUser.setFontsize(cursor.getInt(6));
+                retUser.setIsAppending(cursor.getInt(7));
                 cnt++;
             } while (cursor.moveToNext());
         }
