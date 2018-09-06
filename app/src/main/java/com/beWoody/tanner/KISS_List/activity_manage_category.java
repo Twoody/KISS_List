@@ -20,6 +20,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -48,6 +49,14 @@ public class activity_manage_category extends AppCompatActivity {
     List<Categories> list2;
     private FloatingActionButton fab;
     ListView listTask;
+    private int fontsize;
+    private String font;
+    private int fontcolor;
+    private int backgroundcolor;
+    private int secondarycolor;
+    private int listcolor;
+    private int isAppending;           //bool as int;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,23 +65,31 @@ public class activity_manage_category extends AppCompatActivity {
         context.deleteDatabase("userDB");
         setContentView(R.layout.activity_manage_category);
 
-        db        = new TaskerDBHelper(this);
-        userdb    = new UserDBHelper(this);
-        User user = userdb.getUser();
-        list2     = db.getAllCategories();
-        adapt     = new CatAdapter(this, R.layout.list_categories, list2);
-        listTask  = findViewById(R.id.listView_categories);
+        db              = new TaskerDBHelper(this);
+        userdb          = new UserDBHelper(this);
+        User user       = userdb.getUser();
+        font            = user.getFont();
+        fontsize        = user.getFontsize();
+        fontcolor       = user.getFontcolor();
+        secondarycolor  = user.getColorSecondary();
+        backgroundcolor = user.getColorPrimary();
+        listcolor       = user.getListcolor();
+        isAppending     = user.getIsAppending();
+        list2           = db.getAllCategories();
+        adapt           = new CatAdapter(this, R.layout.list_categories, list2);
+        listTask        = findViewById(R.id.listView_categories);
         listTask.setAdapter(adapt);
 
-        if(user != null)
-            logUser(user);
-        else
-            Log.e("AMC.java", "ERROR: USER NOT BEING CREATED");
-
+        RelativeLayout foo = findViewById(R.id.activity_manage_category);
         Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
         setSupportActionBar(myToolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         TextView mTitle = (TextView) myToolbar.findViewById(R.id.toolbar_title);
+        //mTitle.setTextColor(getResources().getColor(R.color.yellow_900));
+        mTitle.setTextColor(fontcolor);
+        foo.setBackgroundColor(backgroundcolor);
+        mTitle.setBackgroundColor(secondarycolor);
+        myToolbar.setBackgroundColor(secondarycolor);
         //myToolbar.setTitle(mTitle.getText());
 
         registerForContextMenu(listTask);
@@ -85,14 +102,7 @@ public class activity_manage_category extends AppCompatActivity {
             }
         });
     }//end onCreate()
-    public void logUser(User user){
-        Log.d("MEAT22", user.getColorPrimary());
-        Log.d("MEAT22", user.getColorSecondary());
-        Log.d("MEAT22", user.getFont());
-        Log.d("MEAT22", user.getFontcolor());
-        Log.d("MEAT22", Integer.toString(user.getFontsize()));
-        Log.d("MEAT22", Integer.toString(user.getIsAppending()));
-    }
+
     @Override
     public void onResume(){
         super.onResume();
@@ -264,6 +274,8 @@ public class activity_manage_category extends AppCompatActivity {
             display += Integer.toString(numberOfTasks) + ")";
             catbut.setText(display);
             catbut.setTag(current);
+            catbut.setTextColor(fontcolor);
+            catbut.setBackgroundColor(listcolor);
             return convertView;
         }//end getView
 
