@@ -2,25 +2,28 @@ package com.beWoody.tanner.KISS_List;
 
 public class User {
     private String font;
-    private String colorPrimary;
-    private String colorSecondary;
-    private String fontcolor;
+    private int colorPrimary;
+    private int colorSecondary;
+    private int fontcolor;
     private int fontsize;
     private int isAppending; //Boolean
+    private int listcolor;
     private int id;
     public User() {
         this.font           = null; //1
-        this.colorPrimary   = null; //2
-        this.colorSecondary = null; //3
-        this.fontcolor      = null; //4
-        this.fontsize       = 0;    //5
-        this.isAppending    = 0;    //6
+        this.colorPrimary   = 0; //2
+        this.colorSecondary = 0; //3
+        this.listcolor      = 0; //4
+        this.fontcolor      = 0; //5
+        this.fontsize       = 0; //6
+        this.isAppending    = 0; //7
     }
-    public User(String font, String colorPrimary, String colorSecondary, String fontcolor, int fontsize, int isAppending) {
+    public User(String font, int colorPrimary, int colorSecondary, int listcolor, int fontcolor, int fontsize, int isAppending) {
         super();
         this.font           = font;
         this.colorPrimary   = colorPrimary;
         this.colorSecondary = colorSecondary;
+        this.listcolor      = listcolor;
         this.fontcolor      = fontcolor;
         this.fontsize       = fontsize;
         this.isAppending    = isAppending;
@@ -31,16 +34,20 @@ public class User {
     public void setId(int id) {
         this.id = id;
     }
+    public void setListcolor(int listcolor){
+        this.listcolor = listcolor;
+    }
+    public int getListcolor(){return listcolor;}
     public int getIsAppending(){
         return isAppending;
     }
     public int setIsAppending(int isAppending){
         return this.isAppending = isAppending;
     }
-    public String getFontcolor() {
+    public int getFontcolor() {
         return fontcolor;
     }
-    public String setFontcolor(String fontcolor){
+    public int setFontcolor(int fontcolor){
         return this.fontcolor = fontcolor;
     }
     public int getFontsize() {
@@ -49,16 +56,16 @@ public class User {
     public int setFontsize(int fontsize) {
         return this.fontsize = fontsize;
     }
-    public String getColorPrimary() {
+    public int getColorPrimary() {
         return colorPrimary;
     }
-    public void setColorPrimary(String colorPrimary) {
+    public void setColorPrimary(int colorPrimary) {
         this.colorPrimary = colorPrimary;
     }
-    public String getColorSecondary() {
+    public int getColorSecondary() {
         return colorSecondary;
     }
-    public void setColorSecondary(String colorSecondary){
+    public void setColorSecondary(int colorSecondary){
         this.colorSecondary = colorSecondary;
     }
     public String getFont() {
