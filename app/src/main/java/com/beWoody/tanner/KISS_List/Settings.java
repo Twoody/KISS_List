@@ -1,7 +1,11 @@
 package com.beWoody.tanner.KISS_List;
 
+import android.content.res.Resources;
+import android.graphics.PorterDuff;
 import android.graphics.Typeface;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -28,11 +32,13 @@ public class Settings extends AppCompatActivity {
     private int secondarycolor;
     private int listcolor;
     private int isAppending;           //bool as int;
+    Drawable colorcircle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.settings);
+        Resources res = getResources();
 
         userdb          = new UserDBHelper(this);
         User user       = userdb.getUser();
@@ -43,6 +49,8 @@ public class Settings extends AppCompatActivity {
         backgroundcolor = user.getColorPrimary();
         listcolor       = user.getListcolor();
         isAppending     = user.getIsAppending();
+
+        colorcircle = ResourcesCompat.getDrawable(res, R.drawable.circle, getTheme());
 
         Toolbar taskToolbar = (Toolbar) findViewById(R.id.toolbar_settings);
         setSupportActionBar(taskToolbar);
@@ -94,7 +102,20 @@ public class Settings extends AppCompatActivity {
             }
         });
 
+        Drawable _primary = colorcircle;
+        _primary.setColorFilter(backgroundcolor, PorterDuff.Mode.ADD);
+
+        TextView primarycolorcircle   = findViewById(R.id.backgroundColorCircle);
+        TextView secondarycolorcircle = findViewById(R.id.secondaryColorCircle);
+        TextView listcolorcircle      = findViewById(R.id.listColorCircle);
+        TextView fontcolorcircle      = findViewById(R.id.fontColorCircle);
+        primarycolorcircle.setBackground(_primary);
+        //primarycolorcircle.setBackgroundColor(backgroundcolor);
+        secondarycolorcircle.setBackgroundColor(secondarycolor);
+        listcolorcircle.setBackgroundColor(secondarycolor);
+        fontcolorcircle.setBackgroundColor(fontcolor);
     }
+
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         //getMenuInflater().inflate(R.menu.actionbar, menu);
