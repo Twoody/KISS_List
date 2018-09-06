@@ -7,6 +7,8 @@ import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.content.res.ResourcesCompat;
 import android.util.Log;
 
 public class UserDBHelper extends SQLiteOpenHelper {
@@ -20,9 +22,9 @@ public class UserDBHelper extends SQLiteOpenHelper {
     *   1. TEST TEST TEST
     *       I just created this and have not up
     */
-    private static final int DATABASE_VERSION    = 1;
-    private static final String DATABASE_NAME    = "userDB";
-    public static final String TABLE_USER       = "userTable";
+    private static final int DATABASE_VERSION      = 1;
+    private static final String DATABASE_NAME      = "userDB";
+    public static final String TABLE_USER          = "userTable";
 
     // User Table Columns names
     private static final String KEY_ID             = "id";             //key
@@ -74,10 +76,10 @@ public class UserDBHelper extends SQLiteOpenHelper {
         //Should only be called once;
         User newuser = new User();
         newuser.setFont("roboto");            //Default for android
-        newuser.setColorPrimary(Resources.getSystem().getColor(android.R.color.holo_orange_light));
-        newuser.setColorSecondary(Resources.getSystem().getColor(android.R.color.holo_purple));
-        newuser.setListcolor(Resources.getSystem().getColor(android.R.color.holo_green_light));
-        newuser.setFontcolor(Resources.getSystem().getColor(android.R.color.black));
+        newuser.setColorPrimary(Resources.getSystem().getColor(android.R.color.holo_orange_light, null));
+        newuser.setColorSecondary(Resources.getSystem().getColor(android.R.color.holo_purple, null));
+        newuser.setListcolor(Resources.getSystem().getColor(android.R.color.holo_green_light, null));
+        newuser.setFontcolor(Resources.getSystem().getColor(android.R.color.black, null));
         newuser.setFontsize(14);              //Default for android `small`
         newuser.setIsAppending(1);            //Default is to append lists and items
 
