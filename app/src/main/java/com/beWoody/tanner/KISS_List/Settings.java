@@ -108,7 +108,7 @@ public class Settings extends AppCompatActivity {
                     isAppending = 1;
                 }
                 else {
-                    toast += "New items will be shown at the top";
+                    toast += "New items will be shown at the top -- COMING SOON!";
                     isAppending = 0;
                 }
                 Toast.makeText(getApplicationContext(), toast, Toast.LENGTH_LONG).show();
@@ -123,7 +123,7 @@ public class Settings extends AppCompatActivity {
                 //Open new activity with available fonts
                 //update font in db from that selected in activity;
                 //Close activity;
-                Toast.makeText(getApplicationContext(), "COMING SOON!", Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(), "FONTS COMING SOON!", Toast.LENGTH_LONG).show();
                 //Intent popup = new Intent(activity_manage_tasks.this, Pop_tasks.class);
                 //popup.putExtra("category", category);
                 //popup.putExtra("catId", catId);
@@ -147,7 +147,7 @@ public class Settings extends AppCompatActivity {
                 //Open colorpicking activity;
                 //Save instance of selected color there in userdb
                 //close activity;
-                Toast.makeText(getApplicationContext(), "COMING SOON!", Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(), "BACKGROUND COLORS COMING SOON!", Toast.LENGTH_LONG).show();
                 //Intent popup = new Intent(activity_manage_tasks.this, Pop_tasks.class);
                 //popup.putExtra("category", category);
                 //popup.putExtra("catId", catId);
@@ -160,7 +160,7 @@ public class Settings extends AppCompatActivity {
                 //Open colorpicking activity;
                 //Save instance of selected color there in userdb
                 //close activity;
-                Toast.makeText(getApplicationContext(), "COMING SOON!", Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(), "SECONDARY COLORS COMING SOON!", Toast.LENGTH_LONG).show();
                 //Intent popup = new Intent(activity_manage_tasks.this, Pop_tasks.class);
                 //popup.putExtra("category", category);
                 //popup.putExtra("catId", catId);
@@ -173,7 +173,7 @@ public class Settings extends AppCompatActivity {
                 //Open colorpicking activity;
                 //Save instance of selected color there in userdb
                 //close activity;
-                Toast.makeText(getApplicationContext(), "COMING SOON!", Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(), "FONT COLORS COMING SOON!", Toast.LENGTH_LONG).show();
                 //Intent popup = new Intent(activity_manage_tasks.this, Pop_tasks.class);
                 //popup.putExtra("category", category);
                 //popup.putExtra("catId", catId);
@@ -186,7 +186,7 @@ public class Settings extends AppCompatActivity {
                 //Open colorpicking activity;
                 //Save instance of selected color there in userdb
                 //close activity;
-                Toast.makeText(getApplicationContext(), "COMING SOON!", Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(), "LIST COLORS COMING SOON!", Toast.LENGTH_LONG).show();
                 //Intent popup = new Intent(activity_manage_tasks.this, Pop_tasks.class);
                 //popup.putExtra("category", category);
                 //popup.putExtra("catId", catId);
