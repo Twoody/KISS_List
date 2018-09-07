@@ -109,6 +109,23 @@ public class UserDBHelper extends SQLiteOpenHelper {
         cursor.close();
         return count;
     }
+    public int getFontsize() {
+        int fontsize;
+        SQLiteDatabase db = this.getReadableDatabase();
+        String query = "SELECT " + KEY_FONTSIZE + " FROM " + TABLE_USER;
+        Cursor cursor = db.rawQuery(query, null);
+        if (cursor.moveToNext()){
+            do {
+                fontsize = cursor.getInt(0);
+            } while (cursor.moveToNext());
+            cursor.close();
+        }
+        else
+            fontsize = 14; //Default small
+
+        db.close();
+        return fontsize;
+    }
     public User getUser(){
         User retUser       = new User();
         SQLiteDatabase _db = this.getWritableDatabase();
@@ -128,6 +145,7 @@ public class UserDBHelper extends SQLiteOpenHelper {
                 cnt++;
             } while (cursor.moveToNext());
         }
+        cursor.close();
         if (cnt == 0) {
             Log.w("UDBH", "NO ITEMS FOUND FOR QUERY `" + selectAll + "`");
             retUser = null;
@@ -139,6 +157,25 @@ public class UserDBHelper extends SQLiteOpenHelper {
         Boolean ret = false;
         String update            = "UPDATE " + TABLE_USER;
         String set               = " SET " + KEY_ISAPPENDING + "='" + isappending + "'";
+        String where             = " WHERE 1=1";
+        where += " AND " + KEY_ID + "='" + USERID + "'";
+        update += set + where;
+        SQLiteDatabase db = this.getWritableDatabase();
+        try {
+            db.execSQL(update);
+            ret = true;
+        }
+        catch (SQLException e){
+            Log.e("UDBH: updateTaskPlace", "ISSUE WITH QUERY `" + update + "`");
+            Log.e("UDBH: updateTaskPlace", e.getMessage());
+        }
+        db.close();
+        return ret;
+    }
+    public boolean updateFontsize(int fontsize){
+        Boolean ret = false;
+        String update            = "UPDATE " + TABLE_USER;
+        String set               = " SET " + KEY_FONTSIZE + "='" + fontsize + "'";
         String where             = " WHERE 1=1";
         where += " AND " + KEY_ID + "='" + USERID + "'";
         update += set + where;
