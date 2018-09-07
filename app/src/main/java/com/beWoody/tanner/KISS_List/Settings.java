@@ -50,8 +50,6 @@ public class Settings extends AppCompatActivity {
         listcolor       = user.getListcolor();
         isAppending     = user.getIsAppending();
 
-        colorcircle = ResourcesCompat.getDrawable(res, R.drawable.circle, getTheme());
-
         Toolbar taskToolbar = (Toolbar) findViewById(R.id.toolbar_settings);
         setSupportActionBar(taskToolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
@@ -102,16 +100,15 @@ public class Settings extends AppCompatActivity {
             }
         });
 
-        Drawable _primary   = colorcircle;
-        Drawable _secondary = colorcircle;
-        Drawable _fontcolor = colorcircle;
-        Drawable _listcolor = colorcircle;
+        Drawable _primary   = ResourcesCompat.getDrawable(res, R.drawable.circle, getTheme());
+        Drawable _secondary = ResourcesCompat.getDrawable(res, R.drawable.circle, getTheme());
+        Drawable _fontcolor = ResourcesCompat.getDrawable(res, R.drawable.circle, getTheme());
+        Drawable _listcolor = ResourcesCompat.getDrawable(res, R.drawable.circle, getTheme());
 
-//BUG: All colors are the same;
-        _primary.setColorFilter(backgroundcolor, PorterDuff.Mode.MULTIPLY);
-        _secondary.setColorFilter(secondarycolor, PorterDuff.Mode.MULTIPLY);
-        _fontcolor.setColorFilter(fontcolor, PorterDuff.Mode.MULTIPLY);
-        _listcolor.setColorFilter(listcolor, PorterDuff.Mode.MULTIPLY);
+        _primary.mutate().setColorFilter(backgroundcolor, PorterDuff.Mode.SRC);
+        _secondary.mutate().setColorFilter(secondarycolor, PorterDuff.Mode.SRC);
+        _fontcolor.mutate().setColorFilter(fontcolor, PorterDuff.Mode.SRC);
+        _listcolor.mutate().setColorFilter(listcolor, PorterDuff.Mode.SRC);
 
         TextView primarycolorcircle   = findViewById(R.id.backgroundColorCircle);
         TextView secondarycolorcircle = findViewById(R.id.secondaryColorCircle);
@@ -122,6 +119,43 @@ public class Settings extends AppCompatActivity {
         secondarycolorcircle.setBackground(_secondary);
         fontcolorcircle.setBackground(_fontcolor);
         listcolorcircle.setBackground(_listcolor);
+
+        primarycolorcircle.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view){
+                //Open colorpicking activity;
+                //Save instance of selected color there in userdb
+                //close activity;
+                Toast.makeText(getApplicationContext(), "COMING SOON!", Toast.LENGTH_LONG).show();
+            }
+        });
+        secondarycolorcircle.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view){
+                //Open colorpicking activity;
+                //Save instance of selected color there in userdb
+                //close activity;
+                Toast.makeText(getApplicationContext(), "COMING SOON!", Toast.LENGTH_LONG).show();
+            }
+        });
+        fontcolorcircle.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view){
+                //Open colorpicking activity;
+                //Save instance of selected color there in userdb
+                //close activity;
+                Toast.makeText(getApplicationContext(), "COMING SOON!", Toast.LENGTH_LONG).show();
+            }
+        });
+        listcolorcircle.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view){
+                //Open colorpicking activity;
+                //Save instance of selected color there in userdb
+                //close activity;
+                Toast.makeText(getApplicationContext(), "COMING SOON!", Toast.LENGTH_LONG).show();
+            }
+        });
     }
 
     public boolean onCreateOptionsMenu(Menu menu) {
