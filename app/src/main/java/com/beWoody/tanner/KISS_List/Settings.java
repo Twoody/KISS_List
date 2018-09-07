@@ -10,6 +10,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CompoundButton;
@@ -22,7 +23,10 @@ public class Settings extends AppCompatActivity {
      *  Author:  Tanner Woody
      *  Date:    20180904
      *  TODO:
-     *       0. Everything
+     *      0. Everything
+     *  BUGS:
+     *      Up arrow sends back to android.R.id.home instead of
+     *          previous activity;
      */
     protected UserDBHelper userdb;
     private int fontsize;
@@ -178,4 +182,14 @@ public class Settings extends AppCompatActivity {
         super.onBackPressed();
         this.finish();
     }//end onBackPressed()
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            //To go to the previous activity in the stack
+            super.onBackPressed();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
 }
