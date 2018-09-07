@@ -126,13 +126,14 @@ public class activity_manage_tasks extends AppCompatActivity {
         switch (item.getItemId()) {
             case R.id.action_settings:
                 // User chose the "Settings" item, show the app settings UI...
-                Toast.makeText(this, "Clicked on Settings", Toast.LENGTH_LONG).show();
+                Toast.makeText(this, "Opening Settings", Toast.LENGTH_LONG).show();
+                startActivity(new Intent(activity_manage_tasks.this, Settings.class));
                 return true;
 
             case R.id.action_organize:
                 // User chose the "Organize" action;
                 // Start new activity designed to organize tasks;
-                Toast.makeText(this, "Clicked on Organize", Toast.LENGTH_LONG).show();
+                Toast.makeText(this, "Coming Soon!", Toast.LENGTH_LONG).show();
                 return true;
 
             default:
