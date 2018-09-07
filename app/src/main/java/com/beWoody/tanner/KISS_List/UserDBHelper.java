@@ -76,9 +76,9 @@ public class UserDBHelper extends SQLiteOpenHelper {
         //Should only be called once;
         User newuser = new User();
         newuser.setFont("roboto");            //Default for android
-        newuser.setColorPrimary(Resources.getSystem().getColor(android.R.color.holo_orange_light, null));
-        newuser.setColorSecondary(Resources.getSystem().getColor(android.R.color.holo_purple, null));
-        newuser.setListcolor(Resources.getSystem().getColor(android.R.color.holo_green_light, null));
+        newuser.setColorPrimary(Resources.getSystem().getColor(android.R.color.white, null));
+        newuser.setColorSecondary(Resources.getSystem().getColor(android.R.color.white, null));
+        newuser.setListcolor(Resources.getSystem().getColor(android.R.color.darker_gray, null));
         newuser.setFontcolor(Resources.getSystem().getColor(android.R.color.black, null));
         newuser.setFontsize(14);              //Default for android `small`
         newuser.setIsAppending(1);            //Default is to append lists and items
