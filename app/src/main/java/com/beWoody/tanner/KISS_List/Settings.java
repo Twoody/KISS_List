@@ -22,11 +22,29 @@ public class Settings extends AppCompatActivity {
     /*
      *  Author:  Tanner Woody
      *  Date:    20180904
+     *  Functionality:
+     *      Change the font size
+     *          SUPPORTED and TESTED.
+     *          Open new activity to change font size.
+     *          Display selected fontsize on activity#finish()
+     *      Change the font typeface
+     *      *          NOT SUPPORTED
+     *      Change the font color
+     *      *          NOT SUPPORTED
+     *      Change the background color
+     *      *          NOT SUPPORTED
+     *      Change the secondary colors
+     *      *          NOT SUPPORTED
+     *      change the list colors
+     *      *          NOT SUPPORTED
+     *      change the font colors
+     *      *          NOT SUPPORTED
+     *
      *  TODO:
-     *      0. Everything
-     *  BUGS:
-     *      Up arrow sends back to android.R.id.home instead of
-     *          previous activity;
+     *      1. Font face activity
+     *      2. Colors activity
+     *          One activity that will use `putextra` for which color to change;
+     *          New activity should not allow already used colors in the list;
      */
     protected UserDBHelper userdb;
     private Resources res;
