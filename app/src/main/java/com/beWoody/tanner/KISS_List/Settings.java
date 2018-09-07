@@ -32,7 +32,6 @@ public class Settings extends AppCompatActivity {
     private int secondarycolor;
     private int listcolor;
     private int isAppending;           //bool as int;
-    Drawable colorcircle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -173,4 +172,10 @@ public class Settings extends AppCompatActivity {
         //getMenuInflater().inflate(R.menu.actionbar, menu);
         return true;
     }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        this.finish();
+    }//end onBackPressed()
 }
