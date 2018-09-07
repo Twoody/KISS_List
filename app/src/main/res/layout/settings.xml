@@ -92,8 +92,17 @@
         android:textSize="20dp" />
 
     <TextView
-        android:id="@+id/fontColorCircle"
+        android:id="@+id/fontColorCircleOutline"
         android:layout_marginTop="8dp"
+        android:layout_marginStart="7dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/button_chooseFont"
+        android:background="@drawable/circleoutline" />
+    <TextView
+        android:id="@+id/fontColorCircle"
+        android:layout_marginTop="9dp"
         android:layout_marginStart="8dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -157,8 +166,17 @@
         android:text="Others"/>
 
     <TextView
-        android:id="@+id/backgroundColorCircle"
+        android:id="@+id/backgroundColorCircleOutline"
         android:layout_marginTop="8dp"
+        android:layout_marginStart="7dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/textview_otherBehavior"
+        android:background="@drawable/circleoutline" />
+    <TextView
+        android:id="@+id/backgroundColorCircle"
+        android:layout_marginTop="9dp"
         android:layout_marginStart="8dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -179,8 +197,17 @@
         android:text="Primary Color" />
 
     <TextView
-        android:id="@+id/secondaryColorCircle"
+        android:id="@+id/secondaryColorCircleOutline"
         android:layout_marginTop="8dp"
+        android:layout_marginStart="7dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/backgroundColorCircle"
+        android:background="@drawable/circleoutline" />
+    <TextView
+        android:id="@+id/secondaryColorCircle"
+        android:layout_marginTop="9dp"
         android:layout_marginStart="8dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -201,8 +228,17 @@
         android:text="Secondary Color" />
 
     <TextView
-        android:id="@+id/listColorCircle"
+        android:id="@+id/listColorCircleOutline"
         android:layout_marginTop="8dp"
+        android:layout_marginStart="7dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/secondaryColorCircle"
+        android:background="@drawable/circleoutline" />
+    <TextView
+        android:id="@+id/listColorCircle"
+        android:layout_marginTop="9dp"
         android:layout_marginStart="8dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
