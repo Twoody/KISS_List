@@ -99,6 +99,16 @@ public class Settings extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(), "COMING SOON!", Toast.LENGTH_LONG).show();
             }
         });
+        Button changefontsize = findViewById(R.id.button_fontsize);
+        changefontsize.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //Open new activity with available fonts
+                //update font in db from that selected in activity;
+                //Close activity;
+                Toast.makeText(getApplicationContext(), "COMING SOON!", Toast.LENGTH_LONG).show();
+            }
+        });
 
         Drawable _primary   = ResourcesCompat.getDrawable(res, R.drawable.circle, getTheme());
         Drawable _secondary = ResourcesCompat.getDrawable(res, R.drawable.circle, getTheme());
