@@ -1,5 +1,6 @@
 package com.beWoody.tanner.KISS_List;
 
+import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.PorterDuff;
 import android.graphics.Typeface;
@@ -9,7 +10,6 @@ import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -29,29 +29,37 @@ public class Settings extends AppCompatActivity {
      *          previous activity;
      */
     protected UserDBHelper userdb;
+    private Resources res;
+
+    private User user;
     private int fontsize;
     private String font;
     private int fontcolor;
     private int backgroundcolor;
     private int secondarycolor;
     private int listcolor;
-    private int isAppending;           //bool as int;
+    private int isAppending;            //bool as int;
+    private TextView dFontsize;         //Font size display;
+    private TextView dFont;             //Font face display;
+    private Typeface face;              //Font typeface;
+
+    private Drawable _primary;
+    private Drawable _secondary;
+    private Drawable _fontcolor;
+    private Drawable _listcolor;
+
+    private TextView primarycolorcircle;
+    private TextView secondarycolorcircle;
+    private TextView listcolorcircle;
+    private TextView fontcolorcircle;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.settings);
-        Resources res = getResources();
-
-        userdb          = new UserDBHelper(this);
-        User user       = userdb.getUser();
-        font            = user.getFont();
-        fontsize        = user.getFontsize();
-        fontcolor       = user.getFontcolor();
-        secondarycolor  = user.getColorSecondary();
-        backgroundcolor = user.getColorPrimary();
-        listcolor       = user.getListcolor();
-        isAppending     = user.getIsAppending();
+        res    = getResources();
+        userdb = new UserDBHelper(this);
 
         Toolbar taskToolbar = (Toolbar) findViewById(R.id.toolbar_settings);
         setSupportActionBar(taskToolbar);
@@ -66,6 +74,8 @@ public class Settings extends AppCompatActivity {
         // Text to be displayed in toolbar
         TextView toolbarTitle = (TextView) taskToolbar.findViewById(R.id.toolbar_settingsTitle);
         toolbarTitle.setText("Settings");
+
+        setInterface(); //Set all of the colors and types as currently defined;
 
         final Switch switch_isappending = (Switch) findViewById(R.id.switch_isAppending);
         if (isAppending==1)
@@ -87,10 +97,6 @@ public class Settings extends AppCompatActivity {
                 userdb.updateIsAppending(isAppending);
             }
         });
-        Typeface face = Typeface.create(font, Typeface.NORMAL);
-        TextView currentfont = findViewById(R.id.textView_currentFont);
-        currentfont.setText(font);
-        currentfont.setTypeface(face);
 
         Button changefont = findViewById(R.id.button_chooseFont);
         changefont.setOnClickListener(new View.OnClickListener() {
@@ -100,38 +106,22 @@ public class Settings extends AppCompatActivity {
                 //update font in db from that selected in activity;
                 //Close activity;
                 Toast.makeText(getApplicationContext(), "COMING SOON!", Toast.LENGTH_LONG).show();
+                //Intent popup = new Intent(activity_manage_tasks.this, Pop_tasks.class);
+                //popup.putExtra("category", category);
+                //popup.putExtra("catId", catId);
+                //startActivity(popup);
             }
         });
         Button changefontsize = findViewById(R.id.button_fontsize);
         changefontsize.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //Open new activity with available fonts
-                //update font in db from that selected in activity;
-                //Close activity;
-                Toast.makeText(getApplicationContext(), "COMING SOON!", Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(), "Font Size Options", Toast.LENGTH_LONG).show();
+                Intent popup = new Intent(Settings.this, Pop_settings_fontsize.class);
+                startActivity(popup);
+                //Should call onResume() next;
             }
         });
-
-        Drawable _primary   = ResourcesCompat.getDrawable(res, R.drawable.circle, getTheme());
-        Drawable _secondary = ResourcesCompat.getDrawable(res, R.drawable.circle, getTheme());
-        Drawable _fontcolor = ResourcesCompat.getDrawable(res, R.drawable.circle, getTheme());
-        Drawable _listcolor = ResourcesCompat.getDrawable(res, R.drawable.circle, getTheme());
-
-        _primary.mutate().setColorFilter(backgroundcolor, PorterDuff.Mode.SRC);
-        _secondary.mutate().setColorFilter(secondarycolor, PorterDuff.Mode.SRC);
-        _fontcolor.mutate().setColorFilter(fontcolor, PorterDuff.Mode.SRC);
-        _listcolor.mutate().setColorFilter(listcolor, PorterDuff.Mode.SRC);
-
-        TextView primarycolorcircle   = findViewById(R.id.backgroundColorCircle);
-        TextView secondarycolorcircle = findViewById(R.id.secondaryColorCircle);
-        TextView listcolorcircle      = findViewById(R.id.listColorCircle);
-        TextView fontcolorcircle      = findViewById(R.id.fontColorCircle);
-
-        primarycolorcircle.setBackground(_primary);
-        secondarycolorcircle.setBackground(_secondary);
-        fontcolorcircle.setBackground(_fontcolor);
-        listcolorcircle.setBackground(_listcolor);
 
         primarycolorcircle.setOnClickListener(new View.OnClickListener(){
             @Override
@@ -140,6 +130,10 @@ public class Settings extends AppCompatActivity {
                 //Save instance of selected color there in userdb
                 //close activity;
                 Toast.makeText(getApplicationContext(), "COMING SOON!", Toast.LENGTH_LONG).show();
+                //Intent popup = new Intent(activity_manage_tasks.this, Pop_tasks.class);
+                //popup.putExtra("category", category);
+                //popup.putExtra("catId", catId);
+                //startActivity(popup);
             }
         });
         secondarycolorcircle.setOnClickListener(new View.OnClickListener(){
@@ -149,6 +143,10 @@ public class Settings extends AppCompatActivity {
                 //Save instance of selected color there in userdb
                 //close activity;
                 Toast.makeText(getApplicationContext(), "COMING SOON!", Toast.LENGTH_LONG).show();
+                //Intent popup = new Intent(activity_manage_tasks.this, Pop_tasks.class);
+                //popup.putExtra("category", category);
+                //popup.putExtra("catId", catId);
+                //startActivity(popup);
             }
         });
         fontcolorcircle.setOnClickListener(new View.OnClickListener(){
@@ -158,6 +156,10 @@ public class Settings extends AppCompatActivity {
                 //Save instance of selected color there in userdb
                 //close activity;
                 Toast.makeText(getApplicationContext(), "COMING SOON!", Toast.LENGTH_LONG).show();
+                //Intent popup = new Intent(activity_manage_tasks.this, Pop_tasks.class);
+                //popup.putExtra("category", category);
+                //popup.putExtra("catId", catId);
+                //startActivity(popup);
             }
         });
         listcolorcircle.setOnClickListener(new View.OnClickListener(){
@@ -167,21 +169,27 @@ public class Settings extends AppCompatActivity {
                 //Save instance of selected color there in userdb
                 //close activity;
                 Toast.makeText(getApplicationContext(), "COMING SOON!", Toast.LENGTH_LONG).show();
+                //Intent popup = new Intent(activity_manage_tasks.this, Pop_tasks.class);
+                //popup.putExtra("category", category);
+                //popup.putExtra("catId", catId);
+                //startActivity(popup);
             }
         });
-    }
-
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        //getMenuInflater().inflate(R.menu.actionbar, menu);
-        return true;
     }
 
     @Override
     public void onBackPressed() {
         super.onBackPressed();
+        userdb.close();
         this.finish();
     }//end onBackPressed()
+
+    @Override
+    public void onDestroy(){
+        userdb.close();
+        super.onDestroy();
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
@@ -192,4 +200,67 @@ public class Settings extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    public void onResume(){
+        super.onResume();
+        res = getResources();
+        setInterface();
+    }
+
+    public void setInterface(){
+        //Get updated user obj and fill user variables;
+        user            = userdb.getUser();
+        font            = user.getFont();
+        fontsize        = user.getFontsize();
+        fontcolor       = user.getFontcolor();
+        secondarycolor  = user.getColorSecondary();
+        backgroundcolor = user.getColorPrimary();
+        listcolor       = user.getListcolor();
+        isAppending     = user.getIsAppending();
+
+        //Current typeface
+        face = Typeface.create(font, Typeface.NORMAL);
+        dFont = findViewById(R.id.textView_currentFont);
+        dFont.setText(font);
+        dFont.setTypeface(face);
+
+        //Current font size
+        String curText = "Font size is ";
+        if (fontsize == 14)
+            curText += "small";
+        else if (fontsize == 18)
+            curText += "medium";
+        else if (fontsize == 22)
+            curText += "large";
+        dFontsize = findViewById(R.id.textview_fontsize);
+        dFontsize.setText(curText);
+        dFontsize.setTextSize(fontsize);
+
+        _primary   = ResourcesCompat.getDrawable(res, R.drawable.circle, getTheme());
+        _secondary = ResourcesCompat.getDrawable(res, R.drawable.circle, getTheme());
+        _fontcolor = ResourcesCompat.getDrawable(res, R.drawable.circle, getTheme());
+        _listcolor = ResourcesCompat.getDrawable(res, R.drawable.circle, getTheme());
+
+        primarycolorcircle   = findViewById(R.id.backgroundColorCircle);
+        secondarycolorcircle = findViewById(R.id.secondaryColorCircle);
+        listcolorcircle      = findViewById(R.id.listColorCircle);
+        fontcolorcircle      = findViewById(R.id.fontColorCircle);
+
+
+        //Current font color
+        _fontcolor.mutate().setColorFilter(fontcolor, PorterDuff.Mode.SRC);
+        fontcolorcircle.setBackground(_fontcolor);
+
+        //Current background color
+        _primary.mutate().setColorFilter(backgroundcolor, PorterDuff.Mode.SRC);
+        primarycolorcircle.setBackground(_primary);
+
+        //Current list color
+        _listcolor.mutate().setColorFilter(listcolor, PorterDuff.Mode.SRC);
+        listcolorcircle.setBackground(_listcolor);
+
+        //Current secondary color
+        _secondary.mutate().setColorFilter(secondarycolor, PorterDuff.Mode.SRC);
+        secondarycolorcircle.setBackground(_secondary);
+    }
 }
