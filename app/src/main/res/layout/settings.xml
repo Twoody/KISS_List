@@ -87,6 +87,7 @@
         android:layout_toRightOf="@+id/button_chooseFont"
         android:layout_alignBottom="@id/button_chooseFont"
         android:layout_marginTop="8dp"
+        android:layout_marginRight="8dp"
         android:gravity="right|center"
         android:text="Current Font"
         android:textSize="20dp" />
