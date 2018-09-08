@@ -5,6 +5,7 @@ import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.ActionBar;
@@ -36,6 +37,16 @@ public class activity_manage_tasks extends AppCompatActivity {
     *       2.
     */
     protected TaskerDBHelper db;
+    protected UserDBHelper userdb;
+    private User user;
+    private int fontsize;
+    private String font;
+    private int fontcolor;
+    private int backgroundcolor;
+    private int secondarycolor;
+    private int listcolor;
+    private int isAppending;
+
     TaskAdapter adapt1;
     TaskAdapter adapt2;
     List<Tasker> list1;
@@ -56,7 +67,17 @@ public class activity_manage_tasks extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_manage_tasks);
-        db = new TaskerDBHelper(this);
+        db              = new TaskerDBHelper(this);
+        userdb          = new UserDBHelper(this);
+        User user       = userdb.getUser();
+        font            = user.getFont();
+        fontsize        = user.getFontsize();
+        fontcolor       = user.getFontcolor();
+        secondarycolor  = user.getColorSecondary();
+        backgroundcolor = user.getColorPrimary();
+        listcolor       = user.getListcolor();
+        isAppending     = user.getIsAppending();
+
         Intent parentIntent = getIntent();
         Bundle parentBD     = parentIntent.getExtras();
 
@@ -314,6 +335,11 @@ public class activity_manage_tasks extends AppCompatActivity {
             chk.setText(display);
             chk.setChecked(current.getStatus() == 1 ? true:false);
             chk.setTag(current);
+            chk.setTypeface(Typeface.create(font, Typeface.NORMAL));
+            chk.setTextSize(fontsize);
+            chk.setTextColor(fontcolor);
+            if(current.getStatus() == 0)
+                chk.setBackgroundColor(secondarycolor);
             return convertView;
         }//end getView
     }//end MyAdaper
