@@ -28,7 +28,10 @@ public class Settings extends AppCompatActivity {
      *          Open new activity to change font size.
      *          Display selected fontsize on activity#finish()
      *      Change the font typeface
-     *      *          NOT SUPPORTED
+     *          SUPPORTED AND 1/2 TESTED
+     *              TEST on text throughout cat and task adapters;
+     *          Open new activity to choose 1 of 5 fonts;
+     *          Display selected font on activity#finish();
      *      Change the font color
      *      *          NOT SUPPORTED
      *      Change the background color
@@ -41,8 +44,7 @@ public class Settings extends AppCompatActivity {
      *      *          NOT SUPPORTED
      *
      *  TODO:
-     *      1. Font face activity
-     *      2. Colors activity
+     *      1. Colors activity
      *          One activity that will use `putextra` for which color to change;
      *          New activity should not allow already used colors in the list;
      */
