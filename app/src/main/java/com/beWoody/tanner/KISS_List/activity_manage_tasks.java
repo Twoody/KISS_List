@@ -226,7 +226,7 @@ public class activity_manage_tasks extends AppCompatActivity {
             menu.add(0, CT_RENAME, 0, RENAME);
         }
         else{
-            Toast.makeText(this, "Tough shootin', Tex.", Toast.LENGTH_LONG).show();
+            //Toast.makeText(this, "Tough shootin', Tex.", Toast.LENGTH_LONG).show();
         }
         getMenuInflater().inflate(R.menu.task_menu, menu);
     }//end onCreateContextMenu()
@@ -312,6 +312,8 @@ public class activity_manage_tasks extends AppCompatActivity {
                         R.layout.list_inner_view,
                         parent,
                         false);
+                if(current.getStatus() == 0)
+                    convertView.setBackgroundColor(secondarycolor);
                 chk = convertView.findViewById(
                         R.id.checkbox_task);
                 convertView.setTag(chk);
@@ -330,7 +332,7 @@ public class activity_manage_tasks extends AppCompatActivity {
             else{
                 chk = (CheckBox) convertView.getTag();
             }
-            String display   = "";
+            String display = "";
             display += current.getContent();
             chk.setText(display);
             chk.setChecked(current.getStatus() == 1 ? true:false);
@@ -340,6 +342,7 @@ public class activity_manage_tasks extends AppCompatActivity {
             chk.setTextColor(fontcolor);
             if(current.getStatus() == 0)
                 chk.setBackgroundColor(secondarycolor);
+            registerForContextMenu(chk);
             return convertView;
         }//end getView
     }//end MyAdaper
