@@ -56,9 +56,9 @@ public class activity_manage_tasks extends AppCompatActivity {
     ListView listTask2;
     String catId;
     String category;
-    final int NCT_COPY = 0; //NOT COMPLETED TASKS
+    final int NCT_COPY   = 0; //NOT COMPLETED TASKS
     final int NCT_DELETE = 1; //NOT COMPLETED TASKS
-    final int CT_COPY  = 2; //COMPLETED TASKS
+    final int CT_COPY    = 2; //COMPLETED TASKS
     final int CT_DELETE  = 3; //COMPLETED TASKS
     final int CT_RENAME  = 4; //COMPLETED TASKS
     final int NCT_RENAME = 5; //NOT COMPLETED TASKS
@@ -202,9 +202,15 @@ public class activity_manage_tasks extends AppCompatActivity {
     }//end onBackPressed()
 
     @Override
+    public void onDestroy(){
+        userdb.close();
+        db.close();
+        super.onDestroy();
+    }
+
+    @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
         super.onCreateContextMenu(menu, v, menuInfo);
-        String foo = Integer.toString(v.getId());
         Tasker obj;
         String COPY = getString(R.string.menu_copyTask);
         String DELETE = getString(R.string.menu_deleteTask);
@@ -226,6 +232,8 @@ public class activity_manage_tasks extends AppCompatActivity {
             menu.add(0, CT_RENAME, 0, RENAME);
         }
         else{
+            //BUG: Why is this called when `chk` long pressed?
+            //      Full functionality exists, still. DNMS!
             //Toast.makeText(this, "Tough shootin', Tex.", Toast.LENGTH_LONG).show();
         }
         getMenuInflater().inflate(R.menu.task_menu, menu);
