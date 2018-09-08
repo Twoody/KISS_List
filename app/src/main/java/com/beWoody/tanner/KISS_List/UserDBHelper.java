@@ -109,6 +109,23 @@ public class UserDBHelper extends SQLiteOpenHelper {
         cursor.close();
         return count;
     }
+    public String getFont(){
+        String font;
+        SQLiteDatabase db = this.getReadableDatabase();
+        String query = "SELECT " + KEY_FONT + " FROM " + TABLE_USER;
+        Cursor cursor = db.rawQuery(query, null);
+        if (cursor.moveToNext()){
+            do {
+                font = cursor.getString(0);
+            } while (cursor.moveToNext());
+            cursor.close();
+        }
+        else
+            font = "roboto"; //Default small
+
+        db.close();
+        return font;
+    }
     public int getFontsize() {
         int fontsize;
         SQLiteDatabase db = this.getReadableDatabase();
@@ -157,6 +174,25 @@ public class UserDBHelper extends SQLiteOpenHelper {
         Boolean ret = false;
         String update            = "UPDATE " + TABLE_USER;
         String set               = " SET " + KEY_ISAPPENDING + "='" + isappending + "'";
+        String where             = " WHERE 1=1";
+        where += " AND " + KEY_ID + "='" + USERID + "'";
+        update += set + where;
+        SQLiteDatabase db = this.getWritableDatabase();
+        try {
+            db.execSQL(update);
+            ret = true;
+        }
+        catch (SQLException e){
+            Log.e("UDBH: updateTaskPlace", "ISSUE WITH QUERY `" + update + "`");
+            Log.e("UDBH: updateTaskPlace", e.getMessage());
+        }
+        db.close();
+        return ret;
+    }
+    public boolean updateFont(String font){
+        Boolean ret = false;
+        String update            = "UPDATE " + TABLE_USER;
+        String set               = " SET " + KEY_FONT + "='" + font + "'";
         String where             = " WHERE 1=1";
         where += " AND " + KEY_ID + "='" + USERID + "'";
         update += set + where;
