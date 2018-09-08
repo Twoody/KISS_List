@@ -21,6 +21,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -104,6 +105,10 @@ public class activity_manage_tasks extends AppCompatActivity {
         // Text to be displayed in toolbar
         TextView toolbarTitle = (TextView) taskToolbar.findViewById(R.id.toolbar_taskTitle);
         toolbarTitle.setText(category);
+        toolbarTitle.setBackgroundColor(secondarycolor);
+
+        RelativeLayout foo = findViewById(R.id.layout_amt_notcompleted);
+        foo.setBackgroundColor(backgroundcolor);
 
         list1     = db.getAllNoncompletedTasks(category);
         adapt1    = new TaskAdapter(this, R.layout.list_inner_view, list1);
