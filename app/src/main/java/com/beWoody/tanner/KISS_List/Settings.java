@@ -120,14 +120,9 @@ public class Settings extends AppCompatActivity {
         changefont.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //Open new activity with available fonts
-                //update font in db from that selected in activity;
-                //Close activity;
-                Toast.makeText(getApplicationContext(), "FONTS COMING SOON!", Toast.LENGTH_LONG).show();
-                //Intent popup = new Intent(activity_manage_tasks.this, Pop_tasks.class);
-                //popup.putExtra("category", category);
-                //popup.putExtra("catId", catId);
-                //startActivity(popup);
+                Toast.makeText(getApplicationContext(), "Font Options", Toast.LENGTH_LONG).show();
+                Intent popup = new Intent(Settings.this, Pop_settings_font.class);
+                startActivity(popup);
             }
         });
         Button changefontsize = findViewById(R.id.button_fontsize);
@@ -237,7 +232,7 @@ public class Settings extends AppCompatActivity {
         isAppending     = user.getIsAppending();
 
         //Current typeface
-        face = Typeface.create(font, Typeface.NORMAL);
+        face  = Typeface.create(font, Typeface.NORMAL);
         dFont = findViewById(R.id.textView_currentFont);
         dFont.setText(font);
         dFont.setTypeface(face);
@@ -252,6 +247,7 @@ public class Settings extends AppCompatActivity {
             curText += "large";
         dFontsize = findViewById(R.id.textview_fontsize);
         dFontsize.setText(curText);
+        dFontsize.setTypeface(Typeface.create(font, Typeface.NORMAL));
         dFontsize.setTextSize(fontsize);
 
         _primary   = ResourcesCompat.getDrawable(res, R.drawable.circle, getTheme());
