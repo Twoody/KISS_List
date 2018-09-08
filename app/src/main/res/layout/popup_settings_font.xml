@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    android:id="@+id/layout_popup_settings_font"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activity_manage_category"
+    >
+
+    <Button
+        android:id="@+id/button_font_casual"
+        android:layout_marginTop="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:gravity="center"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:textSize="14dp"
+        android:textAllCaps="false"
+        android:fontFamily="casual"
+        android:text="Casual"
+    />
+    <Button
+        android:id="@+id/button_font_cursive"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_below="@id/button_font_casual"
+        android:gravity="center"
+        android:textAllCaps="false"
+        android:textSize="14dp"
+        android:text="Cursive"/>
+
+    <Button
+        android:id="@+id/button_font_monospace"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_below="@id/button_font_cursive"
+        android:gravity="center"
+        android:fontFamily="monospace"
+        android:textAllCaps="false"
+        android:textSize="14dp"
+        android:text="Monospace"/>
+    <Button
+        android:id="@+id/button_font_roboto"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_below="@id/button_font_monospace"
+        android:gravity="center"
+        android:fontFamily="Roboto"
+        android:textAllCaps="false"
+        android:textSize="14dp"
+        android:text="Roboto"/>
+    <Button
+        android:id="@+id/button_font_sans-serif"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_below="@id/button_font_roboto"
+        android:gravity="center"
+        android:fontFamily="sans-serif"
+        android:textAllCaps="false"
+        android:textSize="14dp"
+        android:text="Sans Serif"/>
+
+
+</RelativeLayout>
