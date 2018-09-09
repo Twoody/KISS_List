@@ -63,6 +63,11 @@
             android:parentActivityName="com.beWoody.tanner.KISS_List.Settings">
 
         </activity>
+        <activity android:name=".Pop_settings_colors"
+            android:theme="@style/AppTheme.categoryPopup"
+            android:parentActivityName="com.beWoody.tanner.KISS_List.Settings">
+
+        </activity>
 
     </application>
 
