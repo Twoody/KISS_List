@@ -27,15 +27,15 @@ public class UserDBHelper extends SQLiteOpenHelper {
     public static final String TABLE_USER          = "userTable";
 
     // User Table Columns names
-    private static final String KEY_ID             = "id";             //key
-    private static final String KEY_FONT           = "font";           //txt
-    private static final String KEY_COLORPRIMARY   = "colorPrimary";   //int
-    private static final String KEY_COLORSECONDARY = "colorSecondary"; //int
-    private static final String KEY_LISTCOLOR      = "listcolor";      //int
-    private static final String KEY_FONTCOLOR      = "fontcolor";      //int
-    private static final String KEY_FONTSIZE       = "fontsize";       //int
-    private static final String KEY_ISAPPENDING    = "isAppending";    //bool as int
-    private static final String USERID             = "1"; //This should never change;
+    public static final String KEY_ID             = "id";             //key
+    public static final String KEY_FONT           = "font";           //txt
+    public static final String KEY_COLORPRIMARY   = "colorPrimary";   //int
+    public static final String KEY_COLORSECONDARY = "colorSecondary"; //int
+    public static final String KEY_LISTCOLOR      = "listcolor";      //int
+    public static final String KEY_FONTCOLOR      = "fontcolor";      //int
+    public static final String KEY_FONTSIZE       = "fontsize";       //int
+    public static final String KEY_ISAPPENDING    = "isAppending";    //bool as int
+    public static final String USERID             = "1"; //This should never change;
 
     public UserDBHelper(Context context) {
         //constuctor
