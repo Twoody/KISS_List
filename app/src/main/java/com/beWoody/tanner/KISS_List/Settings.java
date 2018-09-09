@@ -141,53 +141,33 @@ public class Settings extends AppCompatActivity {
         primarycolorcircle.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view){
-                //Open colorpicking activity;
-                //Save instance of selected color there in userdb
-                //close activity;
-                Toast.makeText(getApplicationContext(), "BACKGROUND COLORS COMING SOON!", Toast.LENGTH_LONG).show();
-                //Intent popup = new Intent(activity_manage_tasks.this, Pop_tasks.class);
-                //popup.putExtra("category", category);
-                //popup.putExtra("catId", catId);
-                //startActivity(popup);
+                Intent popup = new Intent(Settings.this, Pop_settings_colors.class);
+                popup.putExtra("changethis", userdb.KEY_COLORPRIMARY);
+                startActivity(popup);
             }
         });
         secondarycolorcircle.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view){
-                //Open colorpicking activity;
-                //Save instance of selected color there in userdb
-                //close activity;
-                Toast.makeText(getApplicationContext(), "SECONDARY COLORS COMING SOON!", Toast.LENGTH_LONG).show();
-                //Intent popup = new Intent(activity_manage_tasks.this, Pop_tasks.class);
-                //popup.putExtra("category", category);
-                //popup.putExtra("catId", catId);
-                //startActivity(popup);
+                Intent popup = new Intent(Settings.this, Pop_settings_colors.class);
+                popup.putExtra("changethis", userdb.KEY_COLORSECONDARY);
+                startActivity(popup);
             }
         });
         fontcolorcircle.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view){
-                //Open colorpicking activity;
-                //Save instance of selected color there in userdb
-                //close activity;
-                Toast.makeText(getApplicationContext(), "FONT COLORS COMING SOON!", Toast.LENGTH_LONG).show();
-                //Intent popup = new Intent(activity_manage_tasks.this, Pop_tasks.class);
-                //popup.putExtra("category", category);
-                //popup.putExtra("catId", catId);
-                //startActivity(popup);
+                Intent popup = new Intent(Settings.this, Pop_settings_colors.class);
+                popup.putExtra("changethis", userdb.KEY_FONTCOLOR);
+                startActivity(popup);
             }
         });
         listcolorcircle.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view){
-                //Open colorpicking activity;
-                //Save instance of selected color there in userdb
-                //close activity;
-                Toast.makeText(getApplicationContext(), "LIST COLORS COMING SOON!", Toast.LENGTH_LONG).show();
-                //Intent popup = new Intent(activity_manage_tasks.this, Pop_tasks.class);
-                //popup.putExtra("category", category);
-                //popup.putExtra("catId", catId);
-                //startActivity(popup);
+                Intent popup = new Intent(Settings.this, Pop_settings_colors.class);
+                popup.putExtra("changethis", userdb.KEY_LISTCOLOR);
+                startActivity(popup);
             }
         });
     }
@@ -195,7 +175,6 @@ public class Settings extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        userdb.close();
         this.finish();
     }//end onBackPressed()
 
