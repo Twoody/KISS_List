@@ -1,313 +1,146 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    android:id="@+id/layout_popup_settings_color"
+<ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="10dp"
+    android:fillViewport="false"
+    >
 
-    <!-- #8DB600 -->
-    <TextView
-        android:id="@+id/outline_color_apple"
-        android:layout_marginTop="8dp"
-        android:layout_marginStart="7dp"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:id="@+id/layout_popup_settings_color"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
+        android:orientation="vertical"
+        android:baselineAligned="false"
         android:gravity="center"
-        android:background="@drawable/circleoutline" />
+        >
+    <!-- #8DB600 -->
     <TextView
         android:id="@+id/color_apple"
         android:layout_marginTop="9dp"
-        android:layout_marginStart="8dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
         android:gravity="center"
         android:background="@drawable/circle" />
 
     <!-- #00FFFF -->
     <TextView
-        android:id="@+id/outline_color_aqua"
-        android:layout_marginTop="8dp"
-        android:layout_marginStart="7dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_below="@+id/color_apple"
-        android:gravity="center"
-        android:background="@drawable/circleoutline" />
-    <TextView
         android:id="@+id/color_aqua"
         android:layout_marginTop="9dp"
-        android:layout_marginStart="8dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_below="@+id/color_apple"
         android:gravity="center"
         android:background="@drawable/circle" />
 
     <!-- #FF007F -->
     <TextView
-        android:id="@+id/outline_color_barbie"
-        android:layout_marginTop="8dp"
-        android:layout_marginStart="7dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_below="@+id/color_aqua"
-        android:gravity="center"
-        android:background="@drawable/circleoutline" />
-    <TextView
         android:id="@+id/color_barbie"
         android:layout_marginTop="9dp"
-        android:layout_marginStart="8dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_below="@+id/color_aqua"
         android:gravity="center"
         android:background="@drawable/circle" />
 
     <!-- #000000 -->
     <TextView
-        android:id="@+id/outline_color_black"
-        android:layout_marginTop="8dp"
-        android:layout_marginStart="7dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_below="@+id/color_barbie"
-        android:gravity="center"
-        android:background="@drawable/circleoutline" />
-    <TextView
         android:id="@+id/color_black"
         android:layout_marginTop="9dp"
-        android:layout_marginStart="8dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_below="@+id/color_barbie"
         android:gravity="center"
         android:background="@drawable/circle" />
 
     <!-- #0247FE -->
     <TextView
-        android:id="@+id/outline_color_blue"
-        android:layout_marginTop="8dp"
-        android:layout_marginStart="7dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_below="@+id/color_black"
-        android:gravity="center"
-        android:background="@drawable/circleoutline" />
-    <TextView
         android:id="@+id/color_blue"
         android:layout_marginTop="9dp"
-        android:layout_marginStart="8dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_below="@+id/color_black"
         android:gravity="center"
         android:background="@drawable/circle" />
 
     <!-- #654321 -->
     <TextView
-        android:id="@+id/outline_color_brown"
-        android:layout_marginTop="8dp"
-        android:layout_marginStart="7dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_below="@+id/color_blue"
-        android:gravity="center"
-        android:background="@drawable/circleoutline" />
-    <TextView
         android:id="@+id/color_brown"
         android:layout_marginTop="9dp"
-        android:layout_marginStart="8dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_below="@+id/color_blue"
         android:gravity="center"
         android:background="@drawable/circle" />
 
     <!-- #FF00FF -->
     <TextView
-        android:id="@+id/outline_color_fuschia"
-        android:layout_marginTop="8dp"
-        android:layout_marginStart="7dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_below="@+id/color_brown"
-        android:gravity="center"
-        android:background="@drawable/circleoutline" />
-    <TextView
         android:id="@+id/color_fuschia"
         android:layout_marginTop="9dp"
-        android:layout_marginStart="8dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_below="@+id/color_brown"
         android:gravity="center"
         android:background="@drawable/circle" />
 
     <!-- #FFDF00 -->
     <TextView
-        android:id="@+id/outline_color_gold"
-        android:layout_marginTop="8dp"
-        android:layout_marginStart="7dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_below="@+id/color_fuschia"
-        android:gravity="center"
-        android:background="@drawable/circleoutline" />
-    <TextView
         android:id="@+id/color_gold"
         android:layout_marginTop="9dp"
-        android:layout_marginStart="8dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_below="@+id/color_fuschia"
         android:gravity="center"
+        android:backgroundTint="@color/grey_black_1000"
         android:background="@drawable/circle" />
 
     <!-- #676767 -->
     <TextView
-        android:id="@+id/outline_color_gray"
-        android:layout_marginTop="8dp"
-        android:layout_marginStart="7dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_below="@+id/color_gold"
-        android:gravity="center"
-        android:background="@drawable/circleoutline" />
-    <TextView
         android:id="@+id/color_gray"
         android:layout_marginTop="9dp"
-        android:layout_marginStart="8dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_below="@+id/color_gold"
         android:gravity="center"
         android:background="@drawable/circle" />
 
     <!-- #B57EDC -->
     <TextView
-        android:id="@+id/outline_color_lavender"
-        android:layout_marginTop="8dp"
-        android:layout_marginStart="7dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_below="@+id/color_gray"
-        android:gravity="center"
-        android:background="@drawable/circleoutline" />
-    <TextView
         android:id="@+id/color_lavender"
         android:layout_marginTop="9dp"
-        android:layout_marginStart="8dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_below="@+id/color_gray"
         android:gravity="center"
         android:background="@drawable/circle" />
 
     <!-- #FF6600 -->
     <TextView
-        android:id="@+id/outline_color_orange"
-        android:layout_marginTop="8dp"
-        android:layout_marginStart="7dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_below="@+id/color_lavender"
-        android:gravity="center"
-        android:background="@drawable/circleoutline" />
-    <TextView
         android:id="@+id/color_orange"
         android:layout_marginTop="9dp"
-        android:layout_marginStart="8dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_below="@+id/color_lavender"
         android:gravity="center"
         android:background="@drawable/circle" />
 
     <!-- #5946B2 -->
     <TextView
-        android:id="@+id/outline_color_purple"
-        android:layout_marginTop="8dp"
-        android:layout_marginStart="7dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_below="@+id/color_orange"
-        android:gravity="center"
-        android:background="@drawable/circleoutline" />
-    <TextView
         android:id="@+id/color_purple"
         android:layout_marginTop="9dp"
-        android:layout_marginStart="8dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_below="@+id/color_orange"
         android:gravity="center"
         android:background="@drawable/circle" />
 
     <!-- #FF0000 -->
     <TextView
-        android:id="@+id/outline_color_red"
-        android:layout_marginTop="8dp"
-        android:layout_marginStart="7dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_below="@+id/color_purple"
-        android:gravity="center"
-        android:background="@drawable/circleoutline" />
-    <TextView
         android:id="@+id/color_red"
         android:layout_marginTop="9dp"
-        android:layout_marginStart="8dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_below="@+id/color_purple"
         android:gravity="center"
         android:background="@drawable/circle" />
 
     <!-- #FFFF00 -->
     <TextView
-        android:id="@+id/outline_color_yellow"
-        android:layout_marginTop="8dp"
-        android:layout_marginStart="7dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_below="@+id/color_red"
-        android:gravity="center"
-        android:background="@drawable/circleoutline" />
-    <TextView
         android:id="@+id/color_yellow"
         android:layout_marginTop="9dp"
-        android:layout_marginStart="8dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_below="@+id/color_red"
         android:gravity="center"
         android:background="@drawable/circle" />
-</RelativeLayout>
+    </LinearLayout>
+</ScrollView>
