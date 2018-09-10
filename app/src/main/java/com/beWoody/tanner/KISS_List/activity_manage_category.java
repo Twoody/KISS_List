@@ -50,6 +50,7 @@ public class activity_manage_category extends AppCompatActivity {
     private FloatingActionButton fab;
     ListView listTask;
     private int fontsize;
+    private User user;
     private String font;
     private int fontcolor;
     private int backgroundcolor;
@@ -65,48 +66,21 @@ public class activity_manage_category extends AppCompatActivity {
         //context.deleteDatabase("userDB");
         setContentView(R.layout.activity_manage_category);
 
-        db              = new TaskerDBHelper(this);
-        userdb          = new UserDBHelper(this);
-        User user       = userdb.getUser();
-        font            = user.getFont();
-        fontsize        = user.getFontsize();
-        fontcolor       = user.getFontcolor();
-        secondarycolor  = user.getColorSecondary();
-        backgroundcolor = user.getColorPrimary();
-        listcolor       = user.getListcolor();
-        isAppending     = user.getIsAppending();
-        list2           = db.getAllCategories();
-        adapt           = new CatAdapter(this, R.layout.list_categories, list2);
-        listTask        = findViewById(R.id.listView_categories);
-        listTask.setAdapter(adapt);
 
-        RelativeLayout foo = findViewById(R.id.activity_manage_category);
-        Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
-        setSupportActionBar(myToolbar);
-        getSupportActionBar().setDisplayShowTitleEnabled(false);
-        TextView mTitle = (TextView) myToolbar.findViewById(R.id.toolbar_title);
-        //mTitle.setTextColor(getResources().getColor(R.color.yellow_900));
-        mTitle.setTextColor(fontcolor);
-        foo.setBackgroundColor(backgroundcolor);
-        mTitle.setBackgroundColor(secondarycolor);
-        myToolbar.setBackgroundColor(secondarycolor);
-        //myToolbar.setTitle(mTitle.getText());
-
-        registerForContextMenu(listTask);
-
-        fab = findViewById(R.id.fab_add_category);
-        fab.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View v){
-                startActivity(new Intent(activity_manage_category.this, Pop.class));
-            }
-        });
     }//end onCreate()
+
 
     @Override
     public void onResume(){
         super.onResume();
+        setInterface();
         refreshUIThread();
+    }
+    @Override
+    public void onDestroy(){
+        userdb.close();
+        db.close();
+        super.onDestroy();
     }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -194,6 +168,45 @@ public class activity_manage_category extends AppCompatActivity {
         return ret;
     }//end onContextItemSelected
 
+    public void setInterface(){
+        //Create all dynamic colors and text
+        db              = new TaskerDBHelper(this);
+        userdb          = new UserDBHelper(this);
+        user            = userdb.getUser();
+        font            = user.getFont();
+        fontsize        = user.getFontsize();
+        fontcolor       = user.getFontcolor();
+        secondarycolor  = user.getColorSecondary();
+        backgroundcolor = user.getColorPrimary();
+        listcolor       = user.getListcolor();
+        isAppending     = user.getIsAppending();
+        list2           = db.getAllCategories();
+        adapt           = new CatAdapter(this, R.layout.list_categories, list2);
+        listTask        = findViewById(R.id.listView_categories);
+        listTask.setAdapter(adapt);
+
+        RelativeLayout foo = findViewById(R.id.activity_manage_category);
+        Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
+        setSupportActionBar(myToolbar);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+        TextView mTitle = (TextView) myToolbar.findViewById(R.id.toolbar_title);
+        //mTitle.setTextColor(getResources().getColor(R.color.yellow_900));
+        //mTitle.setTextColor(fontcolor);
+        foo.setBackgroundColor(backgroundcolor);
+        mTitle.setBackgroundColor(secondarycolor);
+        myToolbar.setBackgroundColor(secondarycolor);
+        //myToolbar.setTitle(mTitle.getText());
+
+        registerForContextMenu(listTask);
+
+        fab = findViewById(R.id.fab_add_category);
+        fab.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v){
+                startActivity(new Intent(activity_manage_category.this, Pop.class));
+            }
+        });
+    }
     public void refreshUIThread(){
         /*
         *  Author: Tanner - 20180806
