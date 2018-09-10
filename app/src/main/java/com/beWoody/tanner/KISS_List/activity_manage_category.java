@@ -33,15 +33,12 @@ public class activity_manage_category extends AppCompatActivity {
      *  Date:    20180816
      *  TODO:
      *       0. Init new activities from the new toolbar;
-     *              A settings task;
-     *                  What settings could we have? Colors?
      *              A reordering placement task;
      *       1. Enable activity for changing `place` of items
      *            This should use `getAllCategories` and only have one listview
      *       2. Make the editText attribute responsive to characters being filled in;
      *            i.e. "Make toast" has 10 characters; Tell user they have used 10 out of 100
      *                  characters;
-     *       3. Make `select` in contextmenu a `copy to clipboard option instead;
      */
     protected TaskerDBHelper db;
     protected UserDBHelper userdb;
@@ -58,17 +55,13 @@ public class activity_manage_category extends AppCompatActivity {
     private int listcolor;
     private int isAppending;           //bool as int;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Context context = getApplicationContext();
         //context.deleteDatabase("userDB");
         setContentView(R.layout.activity_manage_category);
-
-
     }//end onCreate()
-
 
     @Override
     public void onResume(){
@@ -108,8 +101,6 @@ public class activity_manage_category extends AppCompatActivity {
                 return super.onOptionsItemSelected(item);
         }
     }
-
-
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
         super.onCreateContextMenu(menu, v, menuInfo);
@@ -143,6 +134,7 @@ public class activity_manage_category extends AppCompatActivity {
             clipboard.setPrimaryClip(clip);
         }
         else if(item_id == R.id.delete_cat){
+            //Delete category
             Boolean didDelete = db.deleteCat(category);
             if (didDelete)
                 toastText += "Deleted " + category;
@@ -150,10 +142,7 @@ public class activity_manage_category extends AppCompatActivity {
                 toastText += "\nERROR: DID NOT DELETE `" + category + ";\n\tCATEGORY COULD NOT BE FOUND";
         }
         else if(item_id == R.id.rename_cat){
-                //Open a popup window;
-                //autofill editTest with exiting `content`
-                //update table with new `content`
-                //make toast
+            //Rename category
             Intent renamePopup = new Intent(activity_manage_category.this, Pop_renameContent_cat.class);
             renamePopup.putExtra("catId", catId);
             startActivity(renamePopup);
@@ -190,12 +179,10 @@ public class activity_manage_category extends AppCompatActivity {
         setSupportActionBar(myToolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         TextView mTitle = (TextView) myToolbar.findViewById(R.id.toolbar_title);
-        //mTitle.setTextColor(getResources().getColor(R.color.yellow_900));
-        //mTitle.setTextColor(fontcolor);
+
         foo.setBackgroundColor(backgroundcolor);
         mTitle.setBackgroundColor(secondarycolor);
         myToolbar.setBackgroundColor(secondarycolor);
-        //myToolbar.setTitle(mTitle.getText());
 
         registerForContextMenu(listTask);
 
