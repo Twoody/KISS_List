@@ -183,8 +183,8 @@ public class UserDBHelper extends SQLiteOpenHelper {
             ret = true;
         }
         catch (SQLException e){
-            Log.e("UDBH: updateTaskPlace", "ISSUE WITH QUERY `" + update + "`");
-            Log.e("UDBH: updateTaskPlace", e.getMessage());
+            Log.e("UDBH", "ISSUE WITH QUERY `" + update + "`");
+            Log.e("UDBH", e.getMessage());
         }
         db.close();
         return ret;
@@ -202,17 +202,36 @@ public class UserDBHelper extends SQLiteOpenHelper {
             ret = true;
         }
         catch (SQLException e){
-            Log.e("UDBH: updateTaskPlace", "ISSUE WITH QUERY `" + update + "`");
-            Log.e("UDBH: updateTaskPlace", e.getMessage());
+            Log.e("UDBH", "ISSUE WITH QUERY `" + update + "`");
+            Log.e("UDBH", e.getMessage());
         }
         db.close();
         return ret;
     }
-    public boolean updateFontsize(int fontsize){
+    public boolean updateFontsize(int fontsize) {
         Boolean ret = false;
-        String update            = "UPDATE " + TABLE_USER;
-        String set               = " SET " + KEY_FONTSIZE + "='" + fontsize + "'";
-        String where             = " WHERE 1=1";
+        String update = "UPDATE " + TABLE_USER;
+        String set = " SET " + KEY_FONTSIZE + "='" + fontsize + "'";
+        String where = " WHERE 1=1";
+        where += " AND " + KEY_ID + "='" + USERID + "'";
+        update += set + where;
+        SQLiteDatabase db = this.getWritableDatabase();
+        try {
+            db.execSQL(update);
+            ret = true;
+        } catch (SQLException e) {
+            Log.e("UDBH", "ISSUE WITH QUERY `" + update + "`");
+            Log.e("UDBH", e.getMessage());
+        }
+        db.close();
+        return ret;
+    }
+    public boolean updateFontcolor(String col, int color){
+        // `col` is pulled from public KEY colors defined in UDBH.java;
+        Boolean ret    = false;
+        String update  = "UPDATE " + TABLE_USER;
+        String set     = " SET " + col + "=" + color + "";
+        String where   = " WHERE 1=1";
         where += " AND " + KEY_ID + "='" + USERID + "'";
         update += set + where;
         SQLiteDatabase db = this.getWritableDatabase();
@@ -221,8 +240,8 @@ public class UserDBHelper extends SQLiteOpenHelper {
             ret = true;
         }
         catch (SQLException e){
-            Log.e("UDBH: updateTaskPlace", "ISSUE WITH QUERY `" + update + "`");
-            Log.e("UDBH: updateTaskPlace", e.getMessage());
+            Log.e("UDBH", "ISSUE WITH QUERY `" + update + "`");
+            Log.e("UDBH", e.getMessage());
         }
         db.close();
         return ret;
