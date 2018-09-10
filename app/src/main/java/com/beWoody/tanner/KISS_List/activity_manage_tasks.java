@@ -53,6 +53,7 @@ public class activity_manage_tasks extends AppCompatActivity {
     List<Tasker> list1;
     List<Tasker> list2;
     private FloatingActionButton fab_add_task;
+    Toolbar taskToolbar;
     ListView listTask1;
     ListView listTask2;
     String catId;
@@ -68,17 +69,9 @@ public class activity_manage_tasks extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_manage_tasks);
-        db              = new TaskerDBHelper(this);
-        userdb          = new UserDBHelper(this);
-        User user       = userdb.getUser();
-        font            = user.getFont();
-        fontsize        = user.getFontsize();
-        fontcolor       = user.getFontcolor();
-        secondarycolor  = user.getColorSecondary();
-        backgroundcolor = user.getColorPrimary();
-        listcolor       = user.getListcolor();
-        isAppending     = user.getIsAppending();
 
+        db                  = new TaskerDBHelper(this);
+        userdb              = new UserDBHelper(this);
         Intent parentIntent = getIntent();
         Bundle parentBD     = parentIntent.getExtras();
 
@@ -91,55 +84,13 @@ public class activity_manage_tasks extends AppCompatActivity {
         else
             category = "";
 
-        // my_child_toolbar is defined in the layout file
-        Toolbar taskToolbar = (Toolbar) findViewById(R.id.toolbar_tasks);
-        setSupportActionBar(taskToolbar);
-        getSupportActionBar().setDisplayShowTitleEnabled(false);
-
-        // Get a support ActionBar corresponding to this toolbar
-        ActionBar ab = getSupportActionBar();
-
-        // Enable the Up button
-        ab.setDisplayHomeAsUpEnabled(true);
-
-        // Text to be displayed in toolbar
-        TextView toolbarTitle = (TextView) taskToolbar.findViewById(R.id.toolbar_taskTitle);
-        toolbarTitle.setText(category);
-        toolbarTitle.setBackgroundColor(secondarycolor);
-
-        RelativeLayout foo = findViewById(R.id.layout_amt_notcompleted);
-        foo.setBackgroundColor(backgroundcolor);
-
-        list1     = db.getAllNoncompletedTasks(category);
-        adapt1    = new TaskAdapter(this, R.layout.list_inner_view, list1);
-        listTask1 = findViewById(R.id.listView_tasks);
-        listTask1.setAdapter(adapt1);
-
-        list2    = db.getAllCompletedTasks(category);
-        adapt2    = new TaskAdapter(this, R.layout.list_inner_view, list2);
-        listTask2 = findViewById(R.id.listView_completedTasks);
-        listTask2.setAdapter(adapt2);
-
-        registerForContextMenu(listTask1);
-        registerForContextMenu(listTask2);
-
-        fab_add_task = findViewById(R.id.fab_add_task);
-        fab_add_task.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //Start Pop_tasks.java activity
-                Intent popup = new Intent(activity_manage_tasks.this, Pop_tasks.class);
-                popup.putExtra("category", category);
-                popup.putExtra("catId", catId);
-                startActivity(popup);
-            }//end onClick()
-        });//end setOnClickListener()
+        setInterface();
     }//end onCreate()
 
     @Override
     public void onResume(){
         super.onResume();
-        db = new TaskerDBHelper(this);
+        setInterface();
         refreshUIThread();
     }
     @Override
@@ -169,11 +120,62 @@ public class activity_manage_tasks extends AppCompatActivity {
         }
     }
 
+    public void setInterface(){
+        user            = userdb.getUser();
+        font            = user.getFont();
+        fontsize        = user.getFontsize();
+        fontcolor       = user.getFontcolor();
+        secondarycolor  = user.getColorSecondary();
+        backgroundcolor = user.getColorPrimary();
+        listcolor       = user.getListcolor();
+        isAppending     = user.getIsAppending();
+        taskToolbar     = (Toolbar) findViewById(R.id.toolbar_tasks);
+
+        setSupportActionBar(taskToolbar);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+
+        // Text to be displayed in toolbar
+        TextView toolbarTitle = taskToolbar.findViewById(R.id.toolbar_taskTitle);
+        toolbarTitle.setText(category);
+
+        // Get a support ActionBar corresponding to this toolbar
+        ActionBar ab = getSupportActionBar();
+
+        // Enable the Up button
+        ab.setDisplayHomeAsUpEnabled(true);
+
+        RelativeLayout foo = findViewById(R.id.layout_amt_notcompleted);
+        foo.setBackgroundColor(backgroundcolor);
+//TODO: MAJOR BUG FIX
+        list1     = db.getAllNoncompletedTasks(category);//BUG: Need to be using catid;
+        adapt1    = new TaskAdapter(this, R.layout.list_inner_view, list1);
+        listTask1 = findViewById(R.id.listView_tasks);
+        listTask1.setAdapter(adapt1);
+        registerForContextMenu(listTask1);
+
+//TODO: MAJOR BUG FIX
+        list2     = db.getAllCompletedTasks(category);//BUG: Need to be using catid;
+        adapt2    = new TaskAdapter(this, R.layout.list_inner_view, list2);
+        listTask2 = findViewById(R.id.listView_completedTasks);
+        listTask2.setAdapter(adapt2);
+        registerForContextMenu(listTask2);
+
+        fab_add_task = findViewById(R.id.fab_add_task);
+        fab_add_task.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //Start Pop_tasks.java activity
+                Intent popup = new Intent(activity_manage_tasks.this, Pop_tasks.class);
+                popup.putExtra("category", category);
+                popup.putExtra("catId", catId);
+                startActivity(popup);
+            }//end onClick()
+        });//end setOnClickListener()
+    }
     public void refreshUIThread(){
         refreshUIThread_notcompleted();
         refreshUIThread_completed();
     }
-
     public void refreshUIThread_completed(){
         /*
          *  Author: Tanner - 20180806
@@ -214,24 +216,19 @@ public class activity_manage_tasks extends AppCompatActivity {
     }
 
     @Override
-    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo){
         super.onCreateContextMenu(menu, v, menuInfo);
-        Tasker obj;
-        String COPY = getString(R.string.menu_copyTask);
+        String COPY   = getString(R.string.menu_copyTask);
         String DELETE = getString(R.string.menu_deleteTask);
         String RENAME = getString(R.string.menu_renameTask);
         if(v.getId() == R.id.listView_tasks){
-            ListView catView = (ListView) v;
             AdapterView.AdapterContextMenuInfo acmi = (AdapterView.AdapterContextMenuInfo) menuInfo;
-            obj = (Tasker) catView.getItemAtPosition(acmi.position);
             menu.add(0, NCT_COPY,   0, COPY);
             menu.add(0, NCT_DELETE, 0, DELETE);
             menu.add(0, NCT_RENAME, 0, RENAME);
         }
         else if(v.getId() == R.id.listView_completedTasks) {
-            ListView catView = (ListView) v;
             AdapterView.AdapterContextMenuInfo acmi = (AdapterView.AdapterContextMenuInfo) menuInfo;
-            obj = (Tasker) catView.getItemAtPosition(acmi.position);
             menu.add(0, CT_COPY,   0, COPY);
             menu.add(0, CT_DELETE, 0, DELETE);
             menu.add(0, CT_RENAME, 0, RENAME);
@@ -247,7 +244,7 @@ public class activity_manage_tasks extends AppCompatActivity {
     @Override
     public boolean onContextItemSelected(MenuItem item){
         Tasker obj;
-        int item_id   = item.getItemId();
+        int item_id = item.getItemId();
         ContextMenu.ContextMenuInfo CMI = item.getMenuInfo();
         AdapterView.AdapterContextMenuInfo acmi = (AdapterView.AdapterContextMenuInfo) CMI;
         if(item_id == NCT_COPY || item_id == NCT_DELETE || item_id == NCT_RENAME)
@@ -257,11 +254,9 @@ public class activity_manage_tasks extends AppCompatActivity {
         else
             return false;
 
-        int taskId       = obj.getId();
         String category  = obj.getCategory();
         String content   = obj.getContent();
         String id        = Integer.toString(obj.getId());
-        db               = new TaskerDBHelper(this);
         boolean ret      = true;
         String toastText = "";
         if (item_id == CT_COPY || item_id == NCT_COPY) {
@@ -273,24 +268,27 @@ public class activity_manage_tasks extends AppCompatActivity {
             toastText += "Copied \"" + content +"\" to Clipboard";
         }
         else if(item_id == NCT_DELETE || item_id == CT_DELETE){
+            //Delete item from table
             Boolean didDelete = db.deleteTask(id);
             if (didDelete)
                 toastText += "Deleted " + content;
             else
                 toastText += "\nERROR: DID NOT DELETE `" + content + ";\n\tCONTENT COULD NOT BE FOUND";
+            refreshUIThread();
         }
         else if(item_id == CT_RENAME || item_id == NCT_RENAME){
+            //Edit inputted text;
             Intent renamePopup = new Intent(activity_manage_tasks.this, Pop_renameContent.class);
             renamePopup.putExtra("taskId", id);
             startActivity(renamePopup);
             toastText += "Edited task";
+            refreshUIThread();
         }
         else{
             toastText += "ERROR: NOTHING SELECTED";
             ret = super.onContextItemSelected(item);
         }
         Toast.makeText( this, toastText, Toast.LENGTH_SHORT).show();
-        refreshUIThread();//BUG: NEED A BOOLEAN CHECK IF DATA WAS CHANGED OR NOT
         return ret;
     }//end onContextItemSelected
 
@@ -300,8 +298,7 @@ public class activity_manage_tasks extends AppCompatActivity {
         int layoutResourceId;
         private TaskAdapter(Context context,
                           int layoutResourceId,
-                          List<Tasker> objects
-                          )
+                          List<Tasker> objects)
         {
             super(context, layoutResourceId, objects);
             this.layoutResourceId = layoutResourceId;
