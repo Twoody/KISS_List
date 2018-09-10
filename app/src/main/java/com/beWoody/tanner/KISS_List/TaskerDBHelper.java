@@ -24,8 +24,6 @@ public class TaskerDBHelper extends SQLiteOpenHelper {
                 updateTasksTable_catID()
              , SUCH THAT USERS DATA WILL WORK CORRECTLY WITH NEW UPDATES
     */
-    boolean debug = false;
-    boolean verbose = false;
     private static final int DATABASE_VERSION    = 1;
     private static final String DATABASE_NAME    = "taskappDB";
     public static final String TABLE_TASKS       = "tasksTable";
@@ -70,6 +68,88 @@ public class TaskerDBHelper extends SQLiteOpenHelper {
 
     }
 
+    /**************************** RETIRED FUNCTIONS ****************************/
+    public void add_catId_to_task(){
+        /*
+         *  Tanner 20180819
+         *  SHOULD HAVE ONLY BE CALLED ONCE!
+         *  ONLY EXISTS AS AN EXAMPLE!
+         *  Alter table tasks and add catId
+         */
+        SQLiteDatabase db = this.getWritableDatabase();
+        String newColumn  = "catId";
+        String alter      = "ALTER TABLE " + TABLE_TASKS + " ADD COLUMN " + newColumn;
+        db.execSQL(alter);
+    }//add_catId_to_task()
+    public void updateTasksTable_catId(){
+        /*
+         *  Tanner 20180819
+         *  Set catId to TABLE_CATEGORIES.id;
+         *     --Allows multiple lists with the same name;
+         */
+        SQLiteDatabase db = this.getWritableDatabase();
+        String newColumn  = "catId";
+        String update     = "UPDATE " + TABLE_TASKS;
+        String set        = " SET " + newColumn + " = ";
+        set += "(Select " + KEY_ID + " FFOM " + TABLE_CATEGORIES;
+        set += "  WHERE " + TABLE_CATEGORIES + "." + KEY_CATEGORY + " = " + TABLE_TASKS + "." + KEY_CATEGORY + ")";
+        update += set;
+        db.execSQL(update);
+        db.close();
+    }
+
+    /**************************** HELPER FUNCTIONS ****************************/
+    public static List<String> splitEqually(String text, int size) {
+        // Helper function to split large portions of text into chunks;
+        // Give the list the right capacity to start with.
+
+        List<String> ret = new ArrayList<String>((text.length() + size - 1) / size);
+
+        for (int start = 0; start < text.length(); start += size) {
+            ret.add(text.substring(start, Math.min(text.length(), start + size)));
+        }
+        return ret;
+    }
+    public String processInput(String content){
+        /*
+         * TODO: Make charsBeforeBreak modifiable on textsiz;
+         *           This will require userdb call;
+         *  String builder to inject a newline at last space found before breaking 80 characters;
+         *  If word is more than 80 characters, break word;
+         */
+        String[] _words       = content.split("\\s+");
+        List<String> words    = Arrays.asList(_words);
+        String customcontent  = "";
+        int charsBeforeBreak  = 20; //Max length of word with no breaks; Max we inject \n at;
+        int currCount         = 0;
+
+        for(int i = 0; i < words.size(); i++){
+            String word = words.get(i);
+            currCount += 1 + word.length();
+            if (currCount > charsBeforeBreak) {
+                if (currCount == 1 + word.length()) {
+                    //Word is way to big for our purpose;
+                    List<String> splitwords = splitEqually(word, charsBeforeBreak);
+                    String moddedWord = String.join("\n", splitwords);
+                    customcontent += moddedWord;
+                } else {
+                    //We will exceed our limited amount of characters on this run;
+                    //Insert newline to start new count
+                    customcontent += '\n' + word;
+                }
+                currCount = 0;
+            }
+            else{
+                //We still have room before newline is needed
+                if (i != 0) //Do Not initialize Prior string with a space
+                    customcontent += " ";
+                customcontent += word;
+            }
+        }//end i-for
+        return customcontent;
+    }//end processInput
+
+    /**************************** ADD FUNCTIONS ****************************/
     public void addCat(Categories category) {
         //Add `task` to the database listed in `DATABASE_NAME`
         //Tanner 20180717
@@ -85,391 +165,8 @@ public class TaskerDBHelper extends SQLiteOpenHelper {
             Log.e("cat: TBDH", "CATEGORY NOT INSERTED INTO DB");
         else
             category.setId((int)newRowId);
-        //db.close(); // Closing database connection
+        db.close(); // Closing database connection
     }//end addTask()
-
-    public int getCategoryPlace(String category){
-        /*
-        *  Tanner 20180814
-        *  Get the `place` of the provided `category` from category's table;
-        *  Return -1 if not found;
-        *  Else, return place of category;
-        */
-        int ret = -1;
-        String query = "SELECT * FROM " + TABLE_CATEGORIES;
-        String where = " WHERE 1=1";
-        where += " AND " + KEY_CATEGORY + " = '"+category+"'";
-        query += where;
-        SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor     = db.rawQuery(query, null);
-        if(cursor.moveToNext())
-            ret = cursor.getInt(2);
-        cursor.close();
-        //db.close();
-        return ret;
-    }
-
-    public boolean updateTaskContent(String taskId, String newContent){
-        /*
-         *  Tanner 20180816
-         *  Update item in Task table with `newContent` via `id`
-         */
-        boolean ret              = false;
-        String prcocessedContent = processInput(newContent);
-        Tasker task              = getTask(taskId);
-        String update            = "UPDATE " + TABLE_TASKS;
-        String set               = " SET " + KEY_CONTENT + "='" + prcocessedContent + "'";
-        String where             = " WHERE 1=1";
-        where += " AND " + KEY_ID + "='" + taskId + "'";
-        update += set + where;
-        SQLiteDatabase db = this.getWritableDatabase();
-        try {
-            db.execSQL(update);
-            ret = true;
-        }
-        catch (SQLException e){
-            Log.e("TDBH: updateTaskPlace", "ISSUE WITH QUERY `" + update + "`");
-            Log.e("TDBH: updateTaskPlace", e.getMessage());
-        }
-        //db.close();
-        return ret;
-    }
-    public boolean updateCatCategory(String catId, String newCategory){
-        /*
-         *  Tanner 20180816
-         *  Update item in Categories table with `newCategory` via `catId`
-         *  Update items in taskTable with newCategory;
-         *  TODO: Break up try/catch into two segments;
-         */
-        boolean ret       = false;
-        SQLiteDatabase db = this.getWritableDatabase();
-        String updateCat  = "UPDATE " + TABLE_CATEGORIES;
-        String setCat     = " SET " + KEY_CATEGORY + "='" + newCategory + "'";
-        String whereCat   = " WHERE 1=1";
-        whereCat += " AND " + KEY_ID + "='" + catId + "'";
-        updateCat += setCat + whereCat;
-
-        String updateTask = "UPDATE " + TABLE_TASKS;
-        String setTask    = " Set " + KEY_CATEGORY + " = '" + newCategory + "'";
-        String whereTask  = " WHERE 1=1";
-        whereTask += " AND " + KEY_CATEGORY_ID + " = " + catId + "";
-        updateTask += setTask + whereTask;
-        try {
-            db.execSQL(updateCat);
-            db.execSQL(updateTask);
-            ret = true;
-        }
-        catch (SQLException e){
-            Log.e("TDBH: updateCatCategory", "ISSUE WITH QUERY `" + updateCat + "`");
-            Log.e("TDBH: updateCatCategory", e.getMessage());
-            Log.e("TDBH: updateCatCategory", "ISSUE WITH QUERY `" + updateTask + "`");
-            Log.e("TDBH: updateCatCategory", e.getMessage());
-        }
-        //db.close();
-        return ret;
-    }//end updateCatCategory()
-
-    public Tasker getTask(String taskId){
-        /*
-        * Tanner 20180816
-        * Return the task name depending on the table specified;
-        */
-        Tasker ret   = null;
-        String query = "SELECT * FROM " + TABLE_TASKS;
-        String where = " WHERE 1=1";
-        where += " AND " + KEY_ID + " = '" + taskId + "'";
-        query += where;
-        SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor     = db.rawQuery(query, null);
-        if(cursor.moveToNext()) {
-            String category = cursor.getString(1);
-            String content  = cursor.getString(2);
-            int status      = cursor.getInt(3);
-            int place       = cursor.getInt(4);
-            int catId       = cursor.getInt(5);
-            ret = new Tasker(category, content, status, place, catId);
-        }
-        cursor.close();
-        //Log.d("getTask", "SQL: `" + query + "`");
-        return ret;
-    }//end getTask
-
-    public Categories getCategories(String catId){
-        /*
-         * Tanner 20180816
-         * Return the Categories obj from provided `id`;
-         */
-        Categories ret   = null;
-        String query = "SELECT * FROM " + TABLE_CATEGORIES;
-        String where = " WHERE 1=1";
-        where += " AND " + KEY_ID + " = '" + catId + "'";
-        query += where;
-        Log.d("getCat44", "SQL: `" + query + "`");
-        SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor     = db.rawQuery(query, null);
-        if(cursor.moveToNext()) {
-            String category = cursor.getString(1);
-            int place       = cursor.getInt(2);
-            ret = new Categories(category, place);
-        }
-        cursor.close();
-
-        return ret;
-    }//end getCategories()
-
-    public int getTaskPlace(String id){
-        /*
-         *  Tanner 20180814
-         *  Get the `place` of the provided `task` from tasks table via ID;
-         *  Return -1 if not found;
-         *  Else, return `place` of task;
-         */
-        int ret = -1;
-        Tasker task = getTask(id);
-        if(task != null)
-            ret = task.getPlace();
-        //db.close();
-        return ret;
-    }//end getTaskPlace()
-
-    public int getTaskStatus(String id){
-        /*
-         *  Tanner 20180814
-         *  Get the `status` of the provided `task` from tasks table via ID;
-         *  Return -1 if not found;
-         *  Else, return `place` of task;
-         */
-        int ret = -1;
-        Tasker task = getTask(id);
-        if(task != null)
-            ret = task.getStatus();
-        //db.close();
-        return ret;
-    }//end getTaskStatus()
-
-    public String getTaskCategory(String id){
-        /*
-         *  Tanner 20180814
-         *  Get the `category` of the provided `task` from tasks table via ID;
-         *  Return "" if not found;
-         *  Else, return `category` of task;
-         */
-        String ret = "";
-        Tasker task = getTask(id);
-        if(task != null)
-            ret = task.getCategory();
-        //db.close();
-        return ret;
-    }
-
-    public Boolean deleteCat(String category){
-        /*
-         * Author: Tanner Woody
-         * Date:   20180805
-         * Delete `category` from `categories` table;
-         * Remove all instances of rows in tasksTable that have string `category` == column `category
-         *
-        */
-        SQLiteDatabase db = this.getWritableDatabase();
-        //sqlitedatabase.delete returns total number of rows deleted;
-        int catPlace = getCategoryPlace(category);
-        int suc     = db.delete(TABLE_CATEGORIES, KEY_CATEGORY + " = '" + category +"'", null);
-        int suc2    = db.delete(TABLE_TASKS, KEY_CATEGORY + " = '" + category +"'", null);
-        //Update all other `place` values where `place` > catPlace
-        int rowsUpdated = updateCategoryPlaceOnDelete(catPlace);
-        if(rowsUpdated == 0)
-            Log.w("TDBH: deleteCat", "WARNING: NO ROWS UPDATED WITH NEW `"+KEY_PLACE+"`");
-        Boolean ret = false;
-        if (suc > 0 || suc2 > 0)
-            ret = true;
-        //db.close();
-        return ret;
-    }//end deleteCat()
-
-    public Boolean deleteTask(String id){
-        /*
-         * Author: Tanner Woody
-         * Date:   20180812
-         * Delete `task` from `tasksTable`;
-         * Remove all instances of rows with `id` provided;
-         * Returns false if 0 rows are removed;
-         * * TODO:
-         *      TEST that properly handling `place` of all table entries exceeding `this.place`
-         */
-        SQLiteDatabase db = this.getWritableDatabase();
-        int taskPlace     = getTaskPlace(id);
-        String category   = getTaskCategory(id);
-        int suc           = db.delete(TABLE_TASKS, KEY_ID + " = '" + id +"'", null);
-        //Update all other `place` values where `place` > catPlace
-        int rowsUpdated = updateTaskPlaceOnDelete(category, taskPlace);
-        if(rowsUpdated == 0)
-            Log.w("TDBH: deleteCat", "WARNING: NO ROWS UPDATED WITH NEW `"+KEY_PLACE+"`");
-        Boolean ret = false;
-        if (suc > 0)
-            ret = true;
-        return ret;
-    }//end deleteTask()
-
-    public int updateCategoryPlaceOnDelete(int place){
-        /*
-         *  Tanner 20180814
-         *  Run `upate` statements on all Category items where item.place > place;
-         *  Update statement will set item.place to (item.place - 1);
-         */
-        String query = "SELECT * FROM " + TABLE_CATEGORIES;
-        String where = " WHERE 1=1";
-        where += " AND " + KEY_PLACE + " > " + place + "";
-        query += where;
-        SQLiteDatabase db = this.getWritableDatabase();
-        Cursor cursor     = db.rawQuery(query, null);
-        int updates       = 0;
-        if(cursor.moveToNext()){
-            do{
-                int id       = cursor.getInt(0);
-                int newPlace = cursor.getInt(2)-1;
-                if(updateCategoryPlace(cursor, newPlace))
-                    updates++;
-            } while(cursor.moveToNext());
-        }
-        else
-            Log.w("TDBH: UCPOD", "ISSUE WITH QUERY `" + query + "`");
-        cursor.close();
-        //db.close();
-        return updates;
-    }//end updateCategoryPlaceOnDelete
-
-    public boolean updateCategoryPlace(Cursor catRow, int newPlace){
-        /*
-         *  Tanner 20180814
-         *  Update item in Category table with `newPlace` via `id`
-         */
-        boolean ret         = false;
-        int itemId          = catRow.getInt(0);
-        String itemCategory = catRow.getString(1);
-        String update       = "UPDATE " + TABLE_CATEGORIES;
-        String set          = " SET " + KEY_PLACE + "='"+newPlace+"'";
-        String where        = " WHERE 1=1";
-        where += " AND " + KEY_ID + "='" + itemId + "'";
-        update += set + where;
-        SQLiteDatabase db = this.getWritableDatabase();
-        try {
-            db.execSQL(update);
-            ret = true;
-            //Log.d("updateCategoryPlace()", "UPDATED `"+itemId+"` FROM `"+catRow.getInt(2)+"` TO `"+newPlace+"`");
-        }
-        catch (SQLException e){
-            Log.e("TDBH: UCPOD", "ISSUE WITH QUERY `" + update + "`");
-            Log.e("TDBH: UCPOD", e.getMessage());
-        }
-        //db.close();
-        return ret;
-    }//end updateCategoryPlaceOnDelete()
-
-    public int updateTaskPlaceOnDelete(String category, int place){
-        /*
-         *  Tanner 20180814
-         *  Run `update` statements on all Category items where item.place > place;
-         *  Update statement will set item.place to (item.place - 1);
-         */
-        String query = "SELECT * FROM " + TABLE_TASKS;
-        String where = " WHERE 1=1";
-        where += " AND " + KEY_PLACE + " > " + place + "";
-        where += " AND " + KEY_CATEGORY + "='" + category + "'";
-        query += where;
-        SQLiteDatabase db = this.getWritableDatabase();
-        Cursor cursor     = db.rawQuery(query, null);
-        int updates       = 0;
-        if(cursor.moveToNext()){
-            do{
-                int id       = cursor.getInt(0);
-                int newPlace = cursor.getInt(4)-1;
-                if(updateTaskPlace(cursor, newPlace))
-                    updates++;
-            } while(cursor.moveToNext());
-        }
-        else
-            Log.e("TDBH: UTPOD", "ISSUE WITH QUERY `" + query + "`");
-        cursor.close();
-        //db.close();
-        return updates;
-    }//end updateTaskPlaceOnDelete
-
-    public boolean updateTaskPlace(Cursor taskRow, int newPlace){
-        /*
-         *  Tanner 20180814
-         *  Update item in Category table with `newPlace` via `id`
-         */
-        boolean ret         = false;
-        int itemId          = taskRow.getInt(0);
-        String itemCategory = taskRow.getString(1);
-        String update       = "UPDATE " + TABLE_TASKS;
-        String set          = " SET " + KEY_PLACE + "='"+newPlace+"'";
-        String where        = " WHERE 1=1";
-        where += " AND " + KEY_ID + "='" + itemId + "'";
-        update += set + where;
-        SQLiteDatabase db = this.getWritableDatabase();
-        try {
-            db.execSQL(update);
-            ret = true;
-            //Log.d("updateTaskPlace()", "UPDATED `"+itemId+"` FROM `"+ taskRow.getInt(4) +"` TO `"+newPlace+"`");
-        }
-        catch (SQLException e){
-            Log.e("TDBH: updateTaskPlace", "ISSUE WITH QUERY `" + update + "`");
-            Log.e("TDBH: updateTaskPlace", e.getMessage());
-        }
-        //db.close();
-        return ret;
-    }//end updateTaskPlace()
-
-    public static List<String> splitEqually(String text, int size) {
-        // Give the list the right capacity to start with. You could use an array
-        // instead if you wanted.
-        List<String> ret = new ArrayList<String>((text.length() + size - 1) / size);
-
-        for (int start = 0; start < text.length(); start += size) {
-            ret.add(text.substring(start, Math.min(text.length(), start + size)));
-        }
-        return ret;
-    }
-
-    public String processInput(String content){
-        /*
-        * TODO: NEED TO TEST!!!
-        *  String builder to inject a newline at last space found before breaking 80 characters;
-        *  If word is more than 80 characters, break word;
-        */
-        String[] _words       = content.split("\\s+");
-        List<String> words    = Arrays.asList(_words);
-        String customcontent  = "";
-        int charsBeforeBreak = 20; //Max length of word with no breaks; Max we inject \n at;
-        int currCount        = 0;
-
-        for(int i = 0; i < words.size(); i++){
-            String word = words.get(i);
-            currCount += 1 + word.length();
-            if (currCount > charsBeforeBreak) {
-                if (currCount == 1 + word.length()) {
-                    //Word is way to big for our purpose;
-                    List<String> splitwords = splitEqually(word, charsBeforeBreak);
-                    String moddedWord = String.join("\n", splitwords);
-                    //.join takes AP 26; We are running min of API 21...
-                    customcontent += moddedWord;
-                } else {
-                    //We will exceed our limited amount of characters on this run;
-                    //Insert newline to start new count
-                    customcontent += '\n' + word;
-                }
-                currCount = 0;
-            }
-            else{
-                //We still have room before newline is needed
-                if (i != 0) //Do Not initialize Prior string with a space
-                    customcontent += " ";
-                customcontent += word;
-            }
-        }//end for
-        return customcontent;
-    }//end processInput
 
     public void addTask(Tasker tasker) {
         //Add `task` to the database listed in `DATABASE_NAME`
@@ -493,102 +190,10 @@ public class TaskerDBHelper extends SQLiteOpenHelper {
             Log.e("task:TBDH", "TASK NOT INSERTED INTO DB");
         else
             tasker.setId((int)newRowId);
-        //db.close(); // Closing database connection
+        db.close();
     }//end addTask()
 
-    public List<Tasker> getAllTasks(String category) {
-        List<Tasker> taskList = new ArrayList<Tasker>();
-        String selectAll      = "SELECT * FROM " + TABLE_TASKS;
-        if (category != "") {
-            selectAll += " WHERE " + KEY_CATEGORY + " = '" + category + "' ";
-        }
-        selectAll += " ORDER BY place ";
-        SQLiteDatabase db = this.getWritableDatabase();
-        Cursor cursor = db.rawQuery(selectAll, null);
-        int cnt = 0;
-        if (cursor.moveToNext()) {
-            do {
-                Tasker tasker = new Tasker();
-                tasker.setId(cursor.getInt(0));
-                tasker.setCategory(cursor.getString(1));
-                tasker.setContent(cursor.getString(2));
-                tasker.setStatus(cursor.getInt(3));
-                tasker.setPlace(cursor.getInt(4));
-                taskList.add(tasker);
-                cnt++;
-            } while (cursor.moveToNext());
-        }
-        if (cnt == 0)
-            Log.w("TBDH: getAllTasks", "NO ITEMS FOUND FOR QUERY `"+selectAll+"`");
-        //db.close();
-        return taskList;
-    }//end getAllTasks()
-
-    public List<Tasker> getAllCompletedTasks(String category) {
-        List<Tasker> taskList = new ArrayList<Tasker>();
-        String selectAll      = "SELECT * FROM " + TABLE_TASKS;
-        String whereclause    = "";
-        whereclause += " WHERE 1=1 ";
-        if (category != "") {
-            whereclause += " AND "+ KEY_CATEGORY +" = '" + category + "' ";
-        }
-        whereclause += " AND status = '1' ";
-        selectAll += whereclause;
-        selectAll += " ORDER BY place ";
-        SQLiteDatabase db     = this.getWritableDatabase();
-        Cursor cursor         = db.rawQuery(selectAll, null);
-        int cnt = 0;
-        if (cursor.moveToNext()) {
-            do {
-                Tasker tasker = new Tasker();
-                tasker.setId(cursor.getInt(0));
-                tasker.setCategory(cursor.getString(1));
-                tasker.setContent(cursor.getString(2));
-                tasker.setStatus(cursor.getInt(3));
-                tasker.setPlace(cursor.getInt(4));
-                taskList.add(tasker);
-
-                cnt++;
-            } while (cursor.moveToNext());
-        }
-        if (cnt == 0)
-            Log.w("getAllCompletedTasks", "NO ITEMS FOUND FOR QUERY `"+selectAll+"`");
-        //db.close();
-        return taskList;
-    }//end getAllCompletedTasks()
-
-    public List<Tasker> getAllNoncompletedTasks(String category) {
-        List<Tasker> taskList = new ArrayList<Tasker>();
-        String selectAll      = "SELECT * FROM " + TABLE_TASKS;
-        String whereclause    = "";
-        whereclause += " WHERE 1=1 ";
-        if (category != "") {
-            whereclause += " AND "+ KEY_CATEGORY +" = '" + category + "' ";
-        }
-        whereclause += " AND status = '0' ";
-        selectAll += whereclause;
-        selectAll += " ORDER BY place ";
-        SQLiteDatabase db     = this.getWritableDatabase();
-        Cursor cursor         = db.rawQuery(selectAll, null);
-        int cnt = 0;
-        if (cursor.moveToNext()) {
-            do {
-                Tasker tasker = new Tasker();
-                tasker.setId(cursor.getInt(0));
-                tasker.setCategory(cursor.getString(1));
-                tasker.setContent(cursor.getString(2));
-                tasker.setStatus(cursor.getInt(3));
-                tasker.setPlace(cursor.getInt(4));
-                taskList.add(tasker);
-                cnt++;
-            } while (cursor.moveToNext());
-        }
-        if (cnt == 0)
-            Log.w("getAllNoncompletedTasks", "NO ITEMS FOUND FOR QUERY `"+selectAll+"`");
-        //db.close();
-        return taskList;
-    }//end getAllNoncompletedTasks()
-
+    /**************************** COUNT FUNCTIONS ****************************/
     public int countCategories(){
         /*
          *  Tanner 20180814
@@ -626,37 +231,67 @@ public class TaskerDBHelper extends SQLiteOpenHelper {
         else
             count = -1;
         cursor.close();
-        //db.close();
+        db.close();
         return count;
     }//end countTasks()
 
-    public String getCategoryFromId(String id){
-        String cat = "";
-        Categories categories = getCategories(id);
-        if (categories != null)
-            cat = categories.getCategory();
-        Log.d("getCategoryFromId89", "cat: `"+cat+"`");
-        return cat;
-    }//end getCategoryFromId()
+    /**************************** DELETE FUNCTIONS ****************************/
+    public Boolean deleteCat(String category){
+        /*
+         * Author: Tanner Woody
+         * Date:   20180805
+         * Delete `category` from `categories` table;
+         * Remove all instances of rows in tasksTable that have string `category` == column `category
+         *
+         *sqlitedatabase.delete returns total number of rows deleted;
+         *
+         *
+         * TODO: MAJOR BUG! NEED TO DELETE ON CATID;
+         */
+        int catPlace = getCategoryPlace(category);
+        SQLiteDatabase db = this.getWritableDatabase();
+        int suc     = db.delete(TABLE_CATEGORIES, KEY_CATEGORY + " = '" + category +"'", null);
+        int suc2    = db.delete(TABLE_TASKS, KEY_CATEGORY + " = '" + category +"'", null);
+        //Update all other `place` values where `place` > catPlace
+        db.close();
+        int rowsUpdated = updateCategoryPlaceOnDelete(catPlace);
+        if(rowsUpdated == 0)
+            Log.w("TDBH: deleteCat", "WARNING: NO ROWS UPDATED WITH NEW `"+KEY_PLACE+"`");
+        Boolean ret = false;
+        if (suc > 0 || suc2 > 0)
+            ret = true;
+        return ret;
+    }//end deleteCat()
+    public Boolean deleteTask(String id){
+        /*
+         * Author: Tanner Woody
+         * Date:   20180812
+         * Delete `task` from `tasksTable`;
+         * Remove all instances of rows with `id` provided;
+         * Returns false if 0 rows are removed;
+         * * TODO:
+         *      TEST that properly handling `place` of all table entries exceeding `this.place`
+         */
+        int taskPlace     = getTaskPlace(id);
+        String category   = getTaskCategory(id);
+        SQLiteDatabase db = this.getWritableDatabase();
+        int suc           = db.delete(TABLE_TASKS, KEY_ID + " = '" + id +"'", null);
+        //Update all other `place` values where `place` > catPlace
+        int rowsUpdated = updateTaskPlaceOnDelete(category, taskPlace);
+        if(rowsUpdated == 0)
+            Log.w("TDBH: deleteCat", "WARNING: NO ROWS UPDATED WITH NEW `"+KEY_PLACE+"`");
+        Boolean ret = false;
+        if (suc > 0)
+            ret = true;
+        return ret;
+    }//end deleteTask()
 
-    public Integer getCategoryCount(String category){
-        //BUG: Do not include where clause if category is empty string
-        int numOfCategories = -1;
-        String table          = TABLE_CATEGORIES;
-        String select         = "SELECT count(*) from " + table + " WHERE " +KEY_CATEGORY+ "='" + category +"'";
-        SQLiteDatabase db     = this.getReadableDatabase();
-        Cursor cursor         = db.rawQuery(select, null);
-        if (cursor.moveToNext())
-            numOfCategories = cursor.getInt(0);
-        cursor.close();
-        //db.close();
-        return numOfCategories;
-    }//end getCategoryCount()
-
+    /**************************** GET FUNCTIONS ****************************/
     public List<Categories> getAllCategories() {
+        //Return list of all entries in Categories table;
         List<Categories> catList = new ArrayList<Categories>();
-        String selectAll         = "SELECT * FROM " + TABLE_CATEGORIES + " ORDER BY place ";
         SQLiteDatabase db        = this.getReadableDatabase();
+        String selectAll         = "SELECT * FROM " + TABLE_CATEGORIES + " ORDER BY place ";
         Cursor cursor            = db.rawQuery(selectAll, null);
         if (cursor.moveToNext()) {
             do {
@@ -667,10 +302,303 @@ public class TaskerDBHelper extends SQLiteOpenHelper {
                 catList.add(category);
             } while (cursor.moveToNext());
         }
-        //db.close();
+        cursor.close();
+        db.close();
         return catList;
     }//end getAllCategories()
+    public List<Tasker> getAllCompletedTasks(String category) {
+        //Return all tasks with `status` marked complete (i.e. 1);
+        //TODO: Need to retrieve based off of catid instead!
+        SQLiteDatabase db     = this.getWritableDatabase();
+        List<Tasker> taskList = new ArrayList<Tasker>();
+        String selectAll      = "SELECT * FROM " + TABLE_TASKS;
+        String whereclause    = "";
+        whereclause += " WHERE 1=1 ";
+        if (category != "") {
+            whereclause += " AND "+ KEY_CATEGORY +" = '" + category + "' ";
+        }
+        whereclause += " AND status = '1' ";
+        selectAll += whereclause;
+        selectAll += " ORDER BY place ";
+        Cursor cursor         = db.rawQuery(selectAll, null);
+        int cnt = 0;
+        if (cursor.moveToNext()) {
+            do {
+                Tasker tasker = new Tasker();
+                tasker.setId(cursor.getInt(0));
+                tasker.setCategory(cursor.getString(1));
+                tasker.setContent(cursor.getString(2));
+                tasker.setStatus(cursor.getInt(3));
+                tasker.setPlace(cursor.getInt(4));
+                taskList.add(tasker);
 
+                cnt++;
+            } while (cursor.moveToNext());
+        }
+        if (cnt == 0)
+            Log.w("getAllCompletedTasks", "NO ITEMS FOUND FOR QUERY `"+selectAll+"`");
+        cursor.close();
+        db.close();
+        return taskList;
+    }//end getAllCompletedTasks()
+    public List<Tasker> getAllNoncompletedTasks(String category){
+        //Return all tasks with `status` NOT marked complete (i.e. 0);
+        //TODO: Need to retrieve based off of catid instead!
+        SQLiteDatabase db     = this.getWritableDatabase();
+        List<Tasker> taskList = new ArrayList<Tasker>();
+        String selectAll      = "SELECT * FROM " + TABLE_TASKS;
+        String whereclause    = "";
+        whereclause += " WHERE 1=1 ";
+        if (category != "") {
+            whereclause += " AND "+ KEY_CATEGORY +" = '" + category + "' ";
+        }
+        whereclause += " AND status = '0' ";
+        selectAll += whereclause;
+        selectAll += " ORDER BY place ";
+        Cursor cursor = db.rawQuery(selectAll, null);
+        int cnt = 0;
+        if (cursor.moveToNext()) {
+            do {
+                Tasker tasker = new Tasker();
+                tasker.setId(cursor.getInt(0));
+                tasker.setCategory(cursor.getString(1));
+                tasker.setContent(cursor.getString(2));
+                tasker.setStatus(cursor.getInt(3));
+                tasker.setPlace(cursor.getInt(4));
+                taskList.add(tasker);
+                cnt++;
+            } while (cursor.moveToNext());
+        }
+        if (cnt == 0)
+            Log.w("getAllNoncompletedTasks", "NO ITEMS FOUND FOR QUERY `"+selectAll+"`");
+        cursor.close();
+        db.close();
+        return taskList;
+    }//end getAllNoncompletedTasks()
+    public List<Tasker> getAllTasks(String category) {
+        //Return List of all tasks from given category;
+        //TODO: Need to get list off of catid instead;
+        SQLiteDatabase db     = this.getWritableDatabase();
+        List<Tasker> taskList = new ArrayList<Tasker>();
+        String selectAll      = "SELECT * FROM " + TABLE_TASKS;
+        if (category != "") {
+            selectAll += " WHERE " + KEY_CATEGORY + " = '" + category + "' ";
+        }
+        selectAll += " ORDER BY place ";
+        Cursor cursor = db.rawQuery(selectAll, null);
+        int cnt = 0;
+        if (cursor.moveToNext()) {
+            do {
+                Tasker tasker = new Tasker();
+                tasker.setId(cursor.getInt(0));
+                tasker.setCategory(cursor.getString(1));
+                tasker.setContent(cursor.getString(2));
+                tasker.setStatus(cursor.getInt(3));
+                tasker.setPlace(cursor.getInt(4));
+                taskList.add(tasker);
+                cnt++;
+            } while (cursor.moveToNext());
+        }
+        if (cnt == 0)
+            Log.w("TBDH: getAllTasks", "NO ITEMS FOUND FOR QUERY `"+selectAll+"`");
+        cursor.close();
+        db.close();
+        return taskList;
+    }//end getAllTasks()
+    public Categories getCategories(String catId){
+        /*
+         * Tanner 20180816
+         * Return the Categories obj from provided Cat `id`;
+         */
+        SQLiteDatabase db = this.getReadableDatabase();
+        Categories ret    = null;
+        String query = "SELECT * FROM " + TABLE_CATEGORIES;
+        String where = " WHERE 1=1";
+        where += " AND " + KEY_ID + " = '" + catId + "'";
+        query += where;
+        Log.d("getCat44", "SQL: `" + query + "`");
+        Cursor cursor     = db.rawQuery(query, null);
+        if(cursor.moveToNext()) {
+            String category = cursor.getString(1);
+            int place       = cursor.getInt(2);
+            ret = new Categories(category, place);
+        }
+        cursor.close();
+        db.close();
+        return ret;
+    }//end getCategories()
+    public int getCategoryCount(String category){
+        //TODO: Refractor this to countCategory;
+        //BUG: Do not include where clause if category is empty string
+        int numOfCategories = -1;
+        SQLiteDatabase db     = this.getReadableDatabase();
+        String table          = TABLE_CATEGORIES;
+        String select         = "SELECT count(*) from " + table + " WHERE " +KEY_CATEGORY+ "='" + category +"'";
+        Cursor cursor         = db.rawQuery(select, null);
+        if (cursor.moveToNext())
+            numOfCategories = cursor.getInt(0);
+        cursor.close();
+        db.close();
+        return numOfCategories;
+    }//end getCategoryCount()
+    public String getCategoryFromId(String id){
+        String cat = "";
+        Categories categories = getCategories(id);
+        if (categories != null)
+            cat = categories.getCategory();
+        return cat;
+    }//end getCategoryFromId()
+    public int getCategoryPlace(String category){
+         //Tanner 20180814
+         //Get the `place` of the provided `category` from category's table;
+
+        int ret = -1;
+        SQLiteDatabase db = this.getReadableDatabase();
+        String query = "SELECT * FROM " + TABLE_CATEGORIES;
+        String where = " WHERE 1=1";
+        where += " AND " + KEY_CATEGORY + " = '" + category + "'";
+        query += where;
+        Cursor cursor = db.rawQuery(query, null);
+        if (cursor.moveToNext())
+            ret = cursor.getInt(2);
+        cursor.close();
+        db.close();
+        return ret;
+    }
+    public Tasker getTask(String taskId){
+        /*
+         * Tanner 20180816
+         * Return the task name depending on the table specified;
+         */
+        Tasker ret          = null;
+        SQLiteDatabase db   = this.getReadableDatabase();
+        String query        = "SELECT * FROM " + TABLE_TASKS;
+        String where        = " WHERE 1=1";
+        where += " AND " + KEY_ID + " = '" + taskId + "'";
+        query += where;
+        Cursor cursor = db.rawQuery(query, null);
+        if(cursor.moveToNext()) {
+            String category = cursor.getString(1);
+            String content  = cursor.getString(2);
+            int status      = cursor.getInt(3);
+            int place       = cursor.getInt(4);
+            int catId       = cursor.getInt(5);
+            ret = new Tasker(category, content, status, place, catId);
+        }
+        cursor.close();
+        db.close();
+        return ret;
+    }//end getTask
+    public String getTaskCategory(String id){
+        String ret = "";
+        Tasker task = getTask(id);
+        if(task != null)
+            ret = task.getCategory();
+        return ret;
+    }
+    public int getTaskPlace(String id){
+        int ret = -1;
+        Tasker task = getTask(id);
+        if(task != null)
+            ret = task.getPlace();
+        return ret;
+    }//end getTaskPlace()
+
+    public int getTaskStatus(String id){
+        int ret = -1;
+        Tasker task = getTask(id);
+        if(task != null)
+            ret = task.getStatus();
+        return ret;
+    }//end getTaskStatus()
+
+    /**************************** UPDATE FUNCTIONS ****************************/
+    public boolean updateCatCategory(String catId, String newCategory){
+        /*
+         *  Tanner 20180816
+         *  Update item in Categories table with `newCategory` via `catId`
+         *  Update items in taskTable with newCategory;
+         *  TODO: Break up try/catch into two segments;
+         */
+        boolean ret       = false;
+        SQLiteDatabase db = this.getWritableDatabase();
+        String updateCat  = "UPDATE " + TABLE_CATEGORIES;
+        String setCat     = " SET " + KEY_CATEGORY + "='" + newCategory + "'";
+        String whereCat   = " WHERE 1=1";
+        whereCat += " AND " + KEY_ID + "='" + catId + "'";
+        updateCat += setCat + whereCat;
+
+        String updateTask = "UPDATE " + TABLE_TASKS;
+        String setTask    = " Set " + KEY_CATEGORY + " = '" + newCategory + "'";
+        String whereTask  = " WHERE 1=1";
+        whereTask += " AND " + KEY_CATEGORY_ID + " = " + catId + "";
+        updateTask += setTask + whereTask;
+        try {
+            db.execSQL(updateCat);
+            db.execSQL(updateTask);
+            ret = true;
+        }
+        catch (SQLException e){
+            Log.e("TDBH: updateCatCategory", "ISSUE WITH QUERY `" + updateCat + "`");
+            Log.e("TDBH: updateCatCategory", e.getMessage());
+            Log.e("TDBH: updateCatCategory", "ISSUE WITH QUERY `" + updateTask + "`");
+            Log.e("TDBH: updateCatCategory", e.getMessage());
+        }
+        db.close();
+        return ret;
+    }//end updateCatCategory()
+    public boolean updateCategoryPlace(Cursor catRow, int newPlace){
+        /*
+         *  Tanner 20180814
+         *  Update item in Category table with `newPlace` via `id`
+         */
+        boolean ret         = false;
+        SQLiteDatabase db   = this.getWritableDatabase();
+        int itemId          = catRow.getInt(0);
+        String itemCategory = catRow.getString(1);
+        String update       = "UPDATE " + TABLE_CATEGORIES;
+        String set          = " SET " + KEY_PLACE + "='"+newPlace+"'";
+        String where        = " WHERE 1=1";
+        where += " AND " + KEY_ID + "='" + itemId + "'";
+        update += set + where;
+        try {
+            db.execSQL(update);
+            ret = true;
+        }
+        catch (SQLException e){
+            Log.e("TDBH: UCPOD", "ISSUE WITH QUERY `" + update + "`");
+            Log.e("TDBH: UCPOD", e.getMessage());
+        }
+        db.close();
+        return ret;
+    }//end updateCategoryPlaceOnDelete()
+    public int updateCategoryPlaceOnDelete(int place){
+        /*
+         *  Tanner 20180814
+         *  Run `upate` statements on all Category items where item.place > place;
+         *  Update statement will set item.place to (item.place - 1);
+         */
+        SQLiteDatabase db = this.getWritableDatabase();
+        String query      = "SELECT * FROM " + TABLE_CATEGORIES;
+        String where      = " WHERE 1=1";
+        where += " AND " + KEY_PLACE + " > " + place + "";
+        query += where;
+        Cursor cursor = db.rawQuery(query, null);
+        int updates   = 0;
+        if(cursor.moveToNext()){
+            do{
+                int id       = cursor.getInt(0);
+                int newPlace = cursor.getInt(2)-1;
+                if(updateCategoryPlace(cursor, newPlace))
+                    updates++;
+            } while(cursor.moveToNext());
+        }
+        else
+            Log.w("TDBH: UCPOD", "ISSUE WITH QUERY `" + query + "`");
+        cursor.close();
+        db.close();
+        return updates;
+    }//end updateCategoryPlaceOnDelete
     public void updateTask(Tasker tasker) {
         SQLiteDatabase db    = this.getWritableDatabase();
         ContentValues values = new ContentValues();
@@ -682,35 +610,85 @@ public class TaskerDBHelper extends SQLiteOpenHelper {
         values.put(KEY_PLACE, tasker.getPlace());
 
         db.update(TABLE_TASKS, values, whereclause, _ids);
-        //db.close();
+        db.close();
     }//end updateTask()
 
-    public void add_catId_to_task(){
+    public boolean updateTaskContent(String taskId, String newContent){
         /*
-         *  Tanner 20180819
-         *  SHOULD ONLY BE CALLED ONCE!
-         *  Alter table tasks and add catId
+         *  Tanner 20180816
+         *  Update item in Task table with `newContent` via `id`
+         */
+        boolean ret              = false;
+        String prcocessedContent = processInput(newContent);
+        Tasker task              = getTask(taskId);
+        String update            = "UPDATE " + TABLE_TASKS;
+        String set               = " SET " + KEY_CONTENT + "='" + prcocessedContent + "'";
+        String where             = " WHERE 1=1";
+        where += " AND " + KEY_ID + "='" + taskId + "'";
+        update += set + where;
+        SQLiteDatabase db = this.getWritableDatabase();
+        try {
+            db.execSQL(update);
+            ret = true;
+        }
+        catch (SQLException e){
+            Log.e("TDBH: updateTaskPlace", "ISSUE WITH QUERY `" + update + "`");
+            Log.e("TDBH: updateTaskPlace", e.getMessage());
+        }
+        db.close();
+        return ret;
+    }
+    public boolean updateTaskPlace(Cursor taskRow, int newPlace){
+        /*
+         *  Tanner 20180814
+         *  Update item in Category table with `newPlace` via `id`
+         */
+        boolean ret         = false;
+        SQLiteDatabase db   = this.getWritableDatabase();
+        int itemId          = taskRow.getInt(0);
+        String itemCategory = taskRow.getString(1);
+        String update       = "UPDATE " + TABLE_TASKS;
+        String set          = " SET " + KEY_PLACE + "='"+newPlace+"'";
+        String where        = " WHERE 1=1";
+        where += " AND " + KEY_ID + "='" + itemId + "'";
+        update += set + where;
+        try {
+            db.execSQL(update);
+            ret = true;
+        }
+        catch (SQLException e){
+            Log.e("TDBH: updateTaskPlace", "ISSUE WITH QUERY `" + update + "`");
+            Log.e("TDBH: updateTaskPlace", e.getMessage());
+        }
+        db.close();
+        return ret;
+    }//end updateTaskPlace()
+    public int updateTaskPlaceOnDelete(String category, int place){
+        /*
+         *  Tanner 20180814
+         *  Run `update` statements on all Category items where item.place > place;
+         *  Update statement will set item.place to (item.place - 1);
          */
         SQLiteDatabase db = this.getWritableDatabase();
-        String newColumn  = "catId";
-        String alter      = "ALTER TABLE " + TABLE_TASKS + " ADD COLUMN " + newColumn;
-        db.execSQL(alter);
-
-    }//add_catId_to_task()
-
-    public void updateTasksTable_catId(){
-        /*
-        *  Tanner 20180819
-        *  Set catId to TABLE_CATEGORIES.id;
-        *     --Allows multiple lists with the same name;
-        */
-        SQLiteDatabase db = this.getWritableDatabase();
-        String newColumn  = "catId";
-        String update     = "UPDATE " + TABLE_TASKS;
-        String set        = " SET " + newColumn + " = ";
-        set += "(Select " + KEY_ID + " FFOM " + TABLE_CATEGORIES;
-        set += "  WHERE " + TABLE_CATEGORIES + "." + KEY_CATEGORY + " = " + TABLE_TASKS + "." + KEY_CATEGORY + ")";
-        update += set;
-        db.execSQL(update);
-    }
+        String query = "SELECT * FROM " + TABLE_TASKS;
+        String where = " WHERE 1=1";
+        where += " AND " + KEY_PLACE + " > " + place + "";
+        where += " AND " + KEY_CATEGORY + "='" + category + "'";
+        query += where;
+        Cursor cursor = db.rawQuery(query, null);
+        int updates   = 0;
+        if(cursor.moveToNext()){
+            do{
+                int id       = cursor.getInt(0);
+                int newPlace = cursor.getInt(4)-1;
+                if(updateTaskPlace(cursor, newPlace))
+                    updates++;
+            } while(cursor.moveToNext());
+        }
+        else
+            Log.e("TDBH: UTPOD", "ISSUE WITH QUERY `" + query + "`");
+        cursor.close();
+        db.close();
+        return updates;
+    }//end updateTaskPlaceOnDelete
 }
