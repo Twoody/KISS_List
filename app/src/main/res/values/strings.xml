@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">KISS_List</string>
+    <string name="app_name">KISS List</string>
     <string name="fillable">Enter Text Here</string>
     <string name="button1_add">Add</string>
     <string name="button1_submit">Submit</string>
@@ -15,4 +15,21 @@
     <string name="toolbar_settings">Settings</string>
     <string name="toolbar_moveLists">Reorder Items</string>
     <string name="settings_font">Font</string>
+    <array name="main_items">
+        <item>List - Basic Drag and Swipe</item>
+        <item>Grid - Basic Swipe</item>
+    </array>
+
+    <array name="dummy_items">
+        <item>One</item>
+        <item>Two</item>
+        <item>Three</item>
+        <item>Four</item>
+        <item>Five</item>
+        <item>Six</item>
+        <item>Seven</item>
+        <item>Eight</item>
+        <item>Nine</item>
+        <item>Ten</item>
+    </array>
 </resources>
