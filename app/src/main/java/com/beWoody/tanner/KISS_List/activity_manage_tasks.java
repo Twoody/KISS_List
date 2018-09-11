@@ -4,7 +4,6 @@ import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.Resources;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -56,7 +55,7 @@ public class activity_manage_tasks extends AppCompatActivity {
     Toolbar taskToolbar;
     ListView listTask1;
     ListView listTask2;
-    String catId;
+    int catId;
     String category;
     final int NCT_COPY   = 0; //NOT COMPLETED TASKS
     final int NCT_DELETE = 1; //NOT COMPLETED TASKS
@@ -76,10 +75,10 @@ public class activity_manage_tasks extends AppCompatActivity {
         Bundle parentBD     = parentIntent.getExtras();
 
         if (parentBD != null)
-            catId   = (String) parentBD.get("catId");
+            catId   = (int) parentBD.get("catId");
         else
-            catId = "";
-        if (catId != "")
+            catId = 0;
+        if (catId != 0)
             category = db.getCategoryFromId(catId);
         else
             category = "";
@@ -146,15 +145,14 @@ public class activity_manage_tasks extends AppCompatActivity {
 
         RelativeLayout foo = findViewById(R.id.layout_amt_notcompleted);
         foo.setBackgroundColor(backgroundcolor);
-//TODO: MAJOR BUG FIX
-        list1     = db.getAllNoncompletedTasks(category);//BUG: Need to be using catid;
+
+        list1     = db.getAllNoncompletedTasks(catId);
         adapt1    = new TaskAdapter(this, R.layout.list_inner_view, list1);
         listTask1 = findViewById(R.id.listView_tasks);
         listTask1.setAdapter(adapt1);
         registerForContextMenu(listTask1);
 
-//TODO: MAJOR BUG FIX
-        list2     = db.getAllCompletedTasks(category);//BUG: Need to be using catid;
+        list2     = db.getAllCompletedTasks(catId);
         adapt2    = new TaskAdapter(this, R.layout.list_inner_view, list2);
         listTask2 = findViewById(R.id.listView_completedTasks);
         listTask2.setAdapter(adapt2);
@@ -183,7 +181,7 @@ public class activity_manage_tasks extends AppCompatActivity {
          *  Functions to update UI if data is altered;
          */
         list2.clear();
-        list2.addAll(db.getAllCompletedTasks(category));
+        list2.addAll(db.getAllCompletedTasks(catId));
         adapt2.notifyDataSetChanged();
         listTask2.invalidateViews();
         listTask2.refreshDrawableState();
@@ -196,7 +194,7 @@ public class activity_manage_tasks extends AppCompatActivity {
          *  Functions to update UI if data is altered;
          */
         list1.clear();
-        list1.addAll(db.getAllNoncompletedTasks(category));
+        list1.addAll(db.getAllNoncompletedTasks(catId));
         adapt1.notifyDataSetChanged();
         listTask1.invalidateViews();
         listTask1.refreshDrawableState();
@@ -256,7 +254,7 @@ public class activity_manage_tasks extends AppCompatActivity {
 
         String category  = obj.getCategory();
         String content   = obj.getContent();
-        String id        = Integer.toString(obj.getId());
+        int id           = obj.getId();
         boolean ret      = true;
         String toastText = "";
         if (item_id == CT_COPY || item_id == NCT_COPY) {
