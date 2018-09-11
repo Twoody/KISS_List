@@ -17,7 +17,7 @@ public class Pop_tasks extends Activity{
     protected TaskerDBHelper db;
     Button button;
     String category;
-    String catId;
+    int catId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState){
@@ -29,11 +29,11 @@ public class Pop_tasks extends Activity{
         Bundle parentBD = parentIntent.getExtras();
         if (parentBD != null) {
             category = (String) parentBD.get("category");
-            catId    = (String) parentBD.get("catId");
+            catId    = (int) parentBD.get("catId");
         }
         else {
             category = "";
-            catId    = "";
+            catId    = 0;
         }
 
         DisplayMetrics dimensions = new DisplayMetrics();
@@ -79,11 +79,24 @@ public class Pop_tasks extends Activity{
         else {
             int taskCount = db.countTasks(s1);
             int place     = taskCount + 1; //Always append the added item
-            int taskCatId = Integer.parseInt(catId);
+            int taskCatId = catId;
             Tasker task   = new Tasker(s1, s2, 0, place, taskCatId);
             db.addTask(task);
             t.setText("");
         }
         finish();
     }//end addTaskNow()
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        this.finish();
+    }//end onBackPressed()
+
+    @Override
+    public void onDestroy(){
+        db.close();
+        super.onDestroy();
+    }
+
 }
