@@ -2,7 +2,6 @@ package com.beWoody.tanner.KISS_List;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.content.res.Resources;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.view.KeyEvent;
@@ -17,7 +16,7 @@ import android.widget.Toast;
 public class Pop_renameContent  extends Activity {
     protected TaskerDBHelper db;
     Button button;
-    String taskId;
+    int taskId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState){
@@ -28,9 +27,9 @@ public class Pop_renameContent  extends Activity {
         Intent parentIntent = getIntent();
         Bundle parentBD = parentIntent.getExtras();
         if (parentBD != null)
-            taskId = (String) parentBD.get("taskId");
+            taskId = (int) parentBD.get("taskId");
         else
-            taskId = "";
+            taskId = 0;
 
         DisplayMetrics dimensions = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(dimensions);
@@ -79,4 +78,18 @@ public class Pop_renameContent  extends Activity {
         }
         finish();
     }//end addTaskNow()
+
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        this.finish();
+    }//end onBackPressed()
+
+    @Override
+    public void onDestroy(){
+        db.close();
+        super.onDestroy();
+    }
+
 }
