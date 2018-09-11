@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
@@ -17,6 +16,8 @@ import android.widget.Toast;
 import java.util.List;
 
 public class Pop extends Activity{
+    //Add Category from ACM.java and ACM.xml template;
+    //Original function, so only named Pop...
     protected TaskerDBHelper db;
     CatAdapter adapt;
     List<Categories> list;
@@ -76,11 +77,23 @@ public class Pop extends Activity{
             int place         = categoryCount + 1; //Always append the added item
             Categories cat    = new Categories(s1, place);
             db.addCat(cat);
-            Log.d("cat", s1 + " added");
             t.setText("");
             adapt.add(cat);
             adapt.notifyDataSetChanged();
         }
         finish();
     }//end addTaskNow()
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        this.finish();
+    }//end onBackPressed()
+
+    @Override
+    public void onDestroy(){
+        db.close();
+        super.onDestroy();
+    }
+
 }//end Pop()
