@@ -70,8 +70,18 @@ Functionality:
 			Delete:
 				Remove the task.
 				Delete task by `id`.
+	
+	Settings:
+		Available Options:
+			Fonts
+			Font sizes
+			Font colors
+			Primary Color
+			Secondary Color
+			List Color
 
 (Not yet implemented & TODO)
+	_. REORDER ITEMS in spill menu needs complete!
 	A. The user should be able to `select` an item.
 		1. Selecting an item will open a new activity, designed for editing.
 		2. The user should be able to: 
@@ -81,10 +91,6 @@ Functionality:
 		3. SELECT ALL
 	B. There needs to be CONFIRMATION WINDOWS ensuring the user wants to delete and export.
 	C. The area for completed tasks should only be visible when at least one item is completed.
-	D. Font, sizing, style, and colors need to be configured.
-		1. TEST making the checkbox text link to the checkbox.
-			a. Do not want user to accidentally click items;
-		2. Go over coloring and fonts with design specialist;
 	E. Link to Developer page for user input should be added;
 		1. Developer page might be personal website;
 		2. Developer page might link to Play Store;
@@ -102,7 +108,6 @@ Functionality:
 		3. Back button
 	J. Allow users to pick their own color and font schema;
 	K. Fix database management
-		1. db.close() best practice
 		2. Test data consumption;
 		3. Test storage consumption;
 		4. Test max length of characters that are allowed
