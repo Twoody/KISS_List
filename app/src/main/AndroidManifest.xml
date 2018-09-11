@@ -68,6 +68,8 @@
             android:parentActivityName="com.beWoody.tanner.KISS_List.Settings">
 
         </activity>
+        <activity android:name=".DragAndDrop.DragAndDrop">
+        </activity>
 
     </application>
 
