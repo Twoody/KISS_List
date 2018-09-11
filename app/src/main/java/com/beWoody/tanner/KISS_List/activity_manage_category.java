@@ -122,7 +122,7 @@ public class activity_manage_category extends AppCompatActivity {
         AdapterView.AdapterContextMenuInfo acmi = (AdapterView.AdapterContextMenuInfo) CMI;
         Categories obj   = adapt.getItem(acmi.position);
         String category  = obj.getCategory();
-        String catId     = Integer.toString(obj.getId());
+        int catId        = obj.getId();
         db               = new TaskerDBHelper(this);
         boolean ret      = true;
         String toastText = "";
@@ -135,7 +135,7 @@ public class activity_manage_category extends AppCompatActivity {
         }
         else if(item_id == R.id.delete_cat){
             //Delete category
-            Boolean didDelete = db.deleteCat(category);
+            Boolean didDelete = db.deleteCat(catId);
             if (didDelete)
                 toastText += "Deleted " + category;
             else
@@ -247,7 +247,7 @@ public class activity_manage_category extends AppCompatActivity {
                     public void onClick(View v) {
                         Button but                = (Button) v;
                         Categories changeActivity = (Categories) but.getTag();
-                        String catId              = Integer.toString(changeActivity.getId());
+                        int catId                 = changeActivity.getId();
                         String changeCategory     = changeActivity.getCategory();
                         Toast toast = Toast.makeText(
                                 getApplicationContext(),
@@ -265,8 +265,8 @@ public class activity_manage_category extends AppCompatActivity {
             }
             Categories current    = catList.get(position);
             String display        = current.getCategory();
-            List listOfTasks      = db.getAllTasks(current.getCategory());
-            List completedTasks   = db.getAllCompletedTasks(current.getCategory());
+            List listOfTasks      = db.getAllTasks(current.getId());
+            List completedTasks   = db.getAllCompletedTasks(current.getId());
             int numberOfTasks     = listOfTasks.size();
             int numberOfCompleted = completedTasks.size();
             display += " (" + Integer.toString(numberOfCompleted);
@@ -279,7 +279,7 @@ public class activity_manage_category extends AppCompatActivity {
             return convertView;
         }//end getView
 
-        public void openTasksActivity(String catId){
+        public void openTasksActivity(int catId){
             Intent intent;
             Class foo = activity_manage_tasks.class;
             intent    = new Intent(activity_manage_category.this, foo);
