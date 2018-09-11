@@ -21,7 +21,7 @@ public class Pop_renameContent_cat extends Activity{
     */
     protected TaskerDBHelper db;
     Button button;
-    String catId;
+    int catId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState){
@@ -32,9 +32,9 @@ public class Pop_renameContent_cat extends Activity{
         Intent parentIntent = getIntent();
         Bundle parentBD = parentIntent.getExtras();
         if (parentBD != null)
-            catId = (String) parentBD.get("catId");
+            catId = (int) parentBD.get("catId");
         else
-            catId = "";
+            catId = 0;
 
         DisplayMetrics dimensions = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(dimensions);
@@ -83,4 +83,17 @@ public class Pop_renameContent_cat extends Activity{
         }
         finish();
     }//end addTaskNow()
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        this.finish();
+    }//end onBackPressed()
+
+    @Override
+    public void onDestroy(){
+        db.close();
+        super.onDestroy();
+    }
+
 }
