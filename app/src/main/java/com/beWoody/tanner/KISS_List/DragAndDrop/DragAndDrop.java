@@ -31,6 +31,7 @@ public class DragAndDrop extends AppCompatActivity implements OnStartDragListene
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.drag_and_drop);
 
         Toolbar taskToolbar = (Toolbar) findViewById(R.id.toolbar_drag_and_drop);
         setSupportActionBar(taskToolbar);
