@@ -8,7 +8,6 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.ContextMenu;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -94,7 +93,7 @@ public class activity_manage_category extends AppCompatActivity {
             case R.id.action_organize:
                 // User chose the "Organize" action;
                 // Start new activity designed to organize tasks;
-                Toast.makeText(this, "Coming Soon!", Toast.LENGTH_LONG).show();
+                Toast.makeText(this, "Begin Reordering Items", Toast.LENGTH_LONG).show();
                 startActivity(new Intent(activity_manage_category.this, DragAndDrop.class));
                 return true;
 
