@@ -24,6 +24,9 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.beWoody.tanner.KISS_List.DragAndDrop.DragAndDrop;
+import com.beWoody.tanner.KISS_List.DragAndDrop.DragAndDropTask;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -108,8 +111,9 @@ public class activity_manage_tasks extends AppCompatActivity {
 
             case R.id.action_organize:
                 // User chose the "Organize" action;
-                // Start new activity designed to organize tasks;
-                Toast.makeText(this, "Coming Soon!", Toast.LENGTH_LONG).show();
+                Intent reorder = new Intent(activity_manage_tasks.this, DragAndDropTask.class);
+                reorder.putExtra("catId", catId);
+                startActivity(reorder);
                 return true;
 
             default:
