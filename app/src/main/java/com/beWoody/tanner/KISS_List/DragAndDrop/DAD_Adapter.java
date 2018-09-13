@@ -11,25 +11,30 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.beWoody.tanner.KISS_List.Categories;
 import com.beWoody.tanner.KISS_List.DragHelper.ItemTouchHelperAdapter;
 import com.beWoody.tanner.KISS_List.DragHelper.ItemTouchHelperViewHolder;
 import com.beWoody.tanner.KISS_List.DragHelper.OnStartDragListener;
 import com.beWoody.tanner.KISS_List.R;
-import java.util.ArrayList;
-import java.util.Arrays;
+import com.beWoody.tanner.KISS_List.TaskerDBHelper;
+
 import java.util.Collections;
 import java.util.List;
 
 public class DAD_Adapter extends RecyclerView.Adapter<DAD_Adapter.ItemViewHolder>
         implements ItemTouchHelperAdapter {
 
-    private final List<String> mItems = new ArrayList<>();
+    protected TaskerDBHelper db;
+    List<Categories> list2;
+
     private final OnStartDragListener mDragStartListener;
 
     // Provide a suitable constructor (depends on the kind of dataset)
     public DAD_Adapter(Context context, OnStartDragListener dragStartListener) {
         mDragStartListener = dragStartListener;
-        mItems.addAll(Arrays.asList(context.getResources().getStringArray(R.array.dummy_items)));
+        db                 = new TaskerDBHelper(context);
+        list2              = db.getAllCategories();
+        db.close();
     }
 
     // Create new views (invoked by the layout manager)
@@ -48,9 +53,12 @@ public class DAD_Adapter extends RecyclerView.Adapter<DAD_Adapter.ItemViewHolder
     // Replace the contents of a view (invoked by the layout manager)
     @Override
     public void onBindViewHolder(final ItemViewHolder holder, int position) {
-        holder.textView.setText(mItems.get(position));
+        Categories cat     = list2.get(position);
+        String catCategory = cat.getCategory();
+        holder.textView.setText(catCategory);
+        holder.textView.setTag(cat.getId());
 
-        // Start a drag whenever the handle view it touched
+        // Start a drag whenever the handle view is touched
         holder.handleView.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -64,19 +72,26 @@ public class DAD_Adapter extends RecyclerView.Adapter<DAD_Adapter.ItemViewHolder
 
     @Override
     public void onItemDismiss(int position) {
-        mItems.remove(position);
+        list2.remove(position);
         notifyItemRemoved(position);
     }
 
     // Return the size of your dataset (invoked by the layout manager)
     @Override
     public int getItemCount() {
-        return mItems.size();
+        return list2.size();
+    }
+
+    public List<Categories> getList2() {
+        return list2;
+    }
+    public Categories getCategories(int position){
+        return list2.get(position);
     }
 
     @Override
     public Boolean onItemMove(int fromPosition, int toPosition) {
-        Collections.swap(mItems, fromPosition, toPosition);
+        Collections.swap(list2, fromPosition, toPosition);
         notifyItemMoved(fromPosition, toPosition);
         return true;
     }
