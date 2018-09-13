@@ -33,20 +33,10 @@ public class Settings extends AppCompatActivity {
      *          Open new activity to choose 1 of 5 fonts;
      *          Display selected font on activity#finish();
      *      Change the font color
-     *      *          NOT SUPPORTED
      *      Change the background color
-     *      *          NOT SUPPORTED
      *      Change the secondary colors
-     *      *          NOT SUPPORTED
      *      change the list colors
-     *      *          NOT SUPPORTED
      *      change the font colors
-     *      *          NOT SUPPORTED
-     *
-     *  TODO:
-     *      1. Colors activity
-     *          One activity that will use `putextra` for which color to change;
-     *          New activity should not allow already used colors in the list;
      */
     protected UserDBHelper userdb;
     private Resources res;
