@@ -6,7 +6,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".DragAndDrop.DragAndDrop">
+    tools:context=".DragAndDrop.DragAndDrop"
+    android:weightSum="10">
+
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar_drag_and_drop"
@@ -28,8 +30,41 @@
     </android.support.v7.widget.Toolbar>
     <!-- A RecyclerView with some commonly used attributes -->
     <android.support.v7.widget.RecyclerView
+        android:layout_weight = "8.5"
         android:id="@+id/my_recycler_view"
+        android:layout_below="@+id/toolbar_drag_and_drop"
+        android:layout_margin="8dp"
         android:scrollbars="vertical"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="0dp"
+        />
+    <RelativeLayout
+        android:layout_weight = "1.5"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        >
+    <Button
+        android:id="@+id/button_dad_submit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginBottom="8dp"
+        android:gravity="left"
+        android:text="@string/button1_submit"
+        />
+    <Button
+        android:id="@+id/button_dad_cancel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignRight="@+id/button_dad_submit"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginRight="8dp"
+        android:gravity="right"
+        android:text="@string/button1_cancel"
+        />
+    </RelativeLayout>
 </LinearLayout>
