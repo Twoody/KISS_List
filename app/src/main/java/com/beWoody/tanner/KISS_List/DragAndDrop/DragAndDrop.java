@@ -42,7 +42,7 @@ public class DragAndDrop extends AppCompatActivity implements OnStartDragListene
         mRecyclerView.setLayoutManager(mLayoutManager);
 
         // specify an adapter (see also next example)
-        MyAdapter mAdapter = new MyAdapter(getApplicationContext(), this);
+        DAD_Adapter mAdapter = new DAD_Adapter(getApplicationContext(), this);
         mRecyclerView.setAdapter(mAdapter);
 
         ItemTouchHelper.Callback callback = new SimpleItemTouchHelperCallback(mAdapter);
