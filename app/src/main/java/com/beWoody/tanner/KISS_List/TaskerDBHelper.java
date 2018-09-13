@@ -248,15 +248,11 @@ public class TaskerDBHelper extends SQLiteOpenHelper {
          *
          * TODO: MAJOR BUG! NEED TO DELETE ON CATID;
          */
-        int catPlace = getCategoryPlace(catid);
         SQLiteDatabase db = this.getWritableDatabase();
         int suc     = db.delete(TABLE_CATEGORIES, KEY_ID + " = " + catid +"", null);
         int suc2    = db.delete(TABLE_TASKS, KEY_CATEGORY_ID + " = " + catid +"", null);
         //Update all other `place` values where `place` > catPlace
         db.close();
-        int rowsUpdated = updateCategoryPlaceOnDelete(catPlace);
-        if(rowsUpdated == 0)
-            Log.w("TDBH: deleteCat", "WARNING: NO ROWS UPDATED WITH NEW `"+KEY_PLACE+"`");
         Boolean ret = false;
         if (suc > 0 || suc2 > 0)
             ret = true;
@@ -311,7 +307,6 @@ public class TaskerDBHelper extends SQLiteOpenHelper {
     }//end getAllCategories()
     public List<Tasker> getAllCompletedTasks(int catid) {
         //Return all tasks with `status` marked complete (i.e. 1);
-        //TODO: Need to retrieve based off of catid instead!
         SQLiteDatabase db     = this.getWritableDatabase();
         List<Tasker> taskList = new ArrayList<Tasker>();
         String selectAll      = "SELECT * FROM " + TABLE_TASKS;
@@ -346,7 +341,6 @@ public class TaskerDBHelper extends SQLiteOpenHelper {
     }//end getAllCompletedTasks()
     public List<Tasker> getAllNoncompletedTasks(int catid){
         //Return all tasks with `status` NOT marked complete (i.e. 0);
-        //TODO: Need to retrieve based off of catid instead!
         SQLiteDatabase db     = this.getWritableDatabase();
         List<Tasker> taskList = new ArrayList<Tasker>();
         String selectAll      = "SELECT * FROM " + TABLE_TASKS;
@@ -536,30 +530,29 @@ public class TaskerDBHelper extends SQLiteOpenHelper {
         db.close();
         return ret;
     }//end updateCatCategory()
-    public boolean updateCategoryPlace(Cursor catRow, int newPlace){
+    public boolean updateCategoryPlace(int catid, int newPlace){
         /*
          *  Tanner 20180814
          *  Update item in Category table with `newPlace` via `id`
          */
         boolean ret         = false;
         SQLiteDatabase db   = this.getWritableDatabase();
-        int itemId          = catRow.getInt(0);
         String update       = "UPDATE " + TABLE_CATEGORIES;
         String set          = " SET " + KEY_PLACE + "='"+newPlace+"'";
         String where        = " WHERE 1=1";
-        where += " AND " + KEY_ID + "=" + Integer.toString(itemId) + "";
+        where += " AND " + KEY_ID + "=" + Integer.toString(catid) + "";
         update += set + where;
         try {
             db.execSQL(update);
             ret = true;
         }
         catch (SQLException e){
-            Log.e("TDBH: UCPOD", "ISSUE WITH QUERY `" + update + "`");
-            Log.e("TDBH: UCPOD", e.getMessage());
+            Log.e("TDBH: updateCategoryPlace", "ISSUE WITH QUERY `" + update + "`");
+            Log.e("TDBH: updateCategoryPlace", e.getMessage());
         }
         db.close();
         return ret;
-    }//end updateCategoryPlaceOnDelete()
+    }//end updateCategoryPlace()
     public int updateCategoryPlaceOnDelete(int place){
         /*
          *  Tanner 20180814
@@ -577,7 +570,7 @@ public class TaskerDBHelper extends SQLiteOpenHelper {
             do{
                 int id       = cursor.getInt(0);
                 int newPlace = cursor.getInt(2)-1;
-                if(updateCategoryPlace(cursor, newPlace))
+                if(updateCategoryPlace(id, newPlace))
                     updates++;
             } while(cursor.moveToNext());
         }
