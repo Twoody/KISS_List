@@ -71,6 +71,7 @@ public class UserDBHelper extends SQLiteOpenHelper {
 
     }
 
+    /**************************** HELPER FUNCTIONS ****************************/
     public void addDefaultUser(SQLiteDatabase db){
         //Add a default for settings
         //Should only be called once;
@@ -97,6 +98,8 @@ public class UserDBHelper extends SQLiteOpenHelper {
         else
             newuser.setId((int)newRowId);
     }
+
+    /**************************** GET FUNCTIONS ****************************/
     public int getCount(SQLiteDatabase db){
         //Return the number of entries in the table;
         int count;
@@ -170,6 +173,8 @@ public class UserDBHelper extends SQLiteOpenHelper {
         _db.close();
         return retUser;
     }
+
+    /**************************** UPDATE FUNCTIONS ****************************/
     public boolean updateIsAppending(int isappending){
         Boolean ret = false;
         String update            = "UPDATE " + TABLE_USER;
