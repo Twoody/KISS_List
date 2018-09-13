@@ -67,6 +67,7 @@ public class activity_manage_category extends AppCompatActivity {
     @Override
     public void onResume(){
         super.onResume();
+
         setInterface();
         refreshUIThread();
     }
@@ -122,10 +123,11 @@ public class activity_manage_category extends AppCompatActivity {
         int item_id   = item.getItemId();
         ContextMenu.ContextMenuInfo CMI = item.getMenuInfo();
         AdapterView.AdapterContextMenuInfo acmi = (AdapterView.AdapterContextMenuInfo) CMI;
+        db               = new TaskerDBHelper(this);
         Categories obj   = adapt.getItem(acmi.position);
         String category  = obj.getCategory();
         int catId        = obj.getId();
-        db               = new TaskerDBHelper(this);
+        int catPlace     = obj.getPlace();
         boolean ret      = true;
         String toastText = "";
         if (item_id == R.id.copy_cat) {
@@ -138,6 +140,8 @@ public class activity_manage_category extends AppCompatActivity {
         else if(item_id == R.id.delete_cat){
             //Delete category
             Boolean didDelete = db.deleteCat(catId);
+            int rowsUpdated   = db.updateCategoryPlaceOnDelete(catPlace);
+
             if (didDelete)
                 toastText += "Deleted " + category;
             else
@@ -204,6 +208,8 @@ public class activity_manage_category extends AppCompatActivity {
         */
         list2.clear();
         list2.addAll(db.getAllCategories());
+
+        //list2 = db.getAllCategories();
         adapt.notifyDataSetChanged();
         listTask.invalidateViews();
         listTask.refreshDrawableState();
