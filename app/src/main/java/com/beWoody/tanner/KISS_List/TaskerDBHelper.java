@@ -268,20 +268,13 @@ public class TaskerDBHelper extends SQLiteOpenHelper {
          * * TODO:
          *      TEST that properly handling `place` of all table entries exceeding `this.place`
          */
-        Tasker task       = getTask(id);
-        int taskPlace     = task.getPlace();
-        String category   = task.getCategory();
-        int catid         = task.getCatId();
-
         SQLiteDatabase db = this.getWritableDatabase();
         int suc           = db.delete(TABLE_TASKS, KEY_ID + " = '" + id +"'", null);
         //Update all other `place` values where `place` > catPlace
-        int rowsUpdated = updateTaskPlaceOnDelete(catid, taskPlace);
-        if(rowsUpdated == 0)
-            Log.w("TDBH: deleteCat", "WARNING: NO ROWS UPDATED WITH NEW `"+KEY_PLACE+"`");
         Boolean ret = false;
         if (suc > 0)
             ret = true;
+        db.close();
         return ret;
     }//end deleteTask()
 
@@ -612,25 +605,23 @@ public class TaskerDBHelper extends SQLiteOpenHelper {
             ret = true;
         }
         catch (SQLException e){
-            Log.e("TDBH: updateTaskPlace", "ISSUE WITH QUERY `" + update + "`");
-            Log.e("TDBH: updateTaskPlace", e.getMessage());
+            Log.e("TDBH: updateTaskContent", "ISSUE WITH QUERY `" + update + "`");
+            Log.e("TDBH: updateTaskContent", e.getMessage());
         }
         db.close();
         return ret;
     }
-    public boolean updateTaskPlace(Cursor taskRow, int newPlace){
+    public boolean updateTaskPlace(int taskId, int newPlace){
         /*
          *  Tanner 20180814
          *  Update item in Category table with `newPlace` via `id`
          */
         boolean ret         = false;
         SQLiteDatabase db   = this.getWritableDatabase();
-        int itemId          = taskRow.getInt(0);
-        String itemCategory = taskRow.getString(1);
         String update       = "UPDATE " + TABLE_TASKS;
         String set          = " SET " + KEY_PLACE + "='"+newPlace+"'";
         String where        = " WHERE 1=1";
-        where += " AND " + KEY_ID + "='" + itemId + "'";
+        where += " AND " + KEY_ID + "='" + taskId + "'";
         update += set + where;
         try {
             db.execSQL(update);
@@ -661,7 +652,7 @@ public class TaskerDBHelper extends SQLiteOpenHelper {
             do{
                 int id       = cursor.getInt(0);
                 int newPlace = cursor.getInt(4)-1;
-                if(updateTaskPlace(cursor, newPlace))
+                if(updateTaskPlace(id, newPlace))
                     updates++;
             } while(cursor.moveToNext());
         }

@@ -259,6 +259,7 @@ public class activity_manage_tasks extends AppCompatActivity {
         String category  = obj.getCategory();
         String content   = obj.getContent();
         int id           = obj.getId();
+        int taskPlace    = obj.getPlace();
         boolean ret      = true;
         String toastText = "";
         if (item_id == CT_COPY || item_id == NCT_COPY) {
@@ -272,6 +273,7 @@ public class activity_manage_tasks extends AppCompatActivity {
         else if(item_id == NCT_DELETE || item_id == CT_DELETE){
             //Delete item from table
             Boolean didDelete = db.deleteTask(id);
+            int rowsUpdated = db.updateTaskPlaceOnDelete(id, taskPlace);
             if (didDelete)
                 toastText += "Deleted " + content;
             else
