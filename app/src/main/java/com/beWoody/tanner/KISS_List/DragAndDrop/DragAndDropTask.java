@@ -95,18 +95,18 @@ public class DragAndDropTask extends AppCompatActivity implements OnStartDragLis
                 for(int i=0; i<tasklist.size(); i++){
                     //Delete items that were swiped out of view;
                     Boolean didfinditem = false;
-                    Tasker cur = tasklist.get(i);
-                    int curCatid   = cur.getId();
+                    Tasker cur          = tasklist.get(i);
+                    int curTaskId       = cur.getId();
                     for (int j=0; j<mAdapter.getItemCount(); j++){
                         Tasker listedItem = mAdapter.getTasker(j);
                         int listedItemTaskid   = listedItem.getId();
-                        if (curCatid == listedItemTaskid) {
+                        if (curTaskId == listedItemTaskid) {
                             didfinditem = true;
                             break;
                         }
                     }//end j-for
                     if (didfinditem == false)
-                        db.deleteCat(curCatid);
+                        db.deleteCat(curTaskId);
                 }//end i-for
                 finish();
             }
