@@ -8,11 +8,11 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.support.v7.widget.helper.ItemTouchHelper;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.beWoody.tanner.KISS_List.Categories;
 import com.beWoody.tanner.KISS_List.DragHelper.OnStartDragListener;
 import com.beWoody.tanner.KISS_List.DragHelper.SimpleItemTouchHelperCallback;
 import com.beWoody.tanner.KISS_List.R;
@@ -35,6 +35,7 @@ public class DragAndDropTask extends AppCompatActivity implements OnStartDragLis
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.drag_and_drop_task);
+        db                  = new TaskerDBHelper(this);
         Intent parentIntent = getIntent();
         Bundle parentBD     = parentIntent.getExtras();
 
@@ -42,7 +43,7 @@ public class DragAndDropTask extends AppCompatActivity implements OnStartDragLis
             catId   = (int) parentBD.get("catId");
         else
             catId = 0;
-
+        String cat = db.getCategoryFromId(catId);
         Toolbar taskToolbar = (Toolbar) findViewById(R.id.toolbar_task_drag_and_drop);
         setSupportActionBar(taskToolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
@@ -55,9 +56,8 @@ public class DragAndDropTask extends AppCompatActivity implements OnStartDragLis
 
         // Text to be displayed in toolbar
         TextView toolbarTitle = (TextView) taskToolbar.findViewById(R.id.toolbar_title_task_drag_and_drop);
-        toolbarTitle.setText("Simplify Categories");
+        toolbarTitle.setText("Simplify " + cat);
 
-        db      = new TaskerDBHelper(this);
         tasklist = db.getAllTasks(catId);
 
         mRecyclerView = (RecyclerView) findViewById(R.id.my_recycler_view);
@@ -129,6 +129,21 @@ public class DragAndDropTask extends AppCompatActivity implements OnStartDragLis
         db.close();
         super.onDestroy();
     }
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        this.finish();
+    }//end onBackPressed()
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            //To go to the previous activity in the stack
+            super.onBackPressed();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
     @Override
     public void onStartDrag(RecyclerView.ViewHolder viewHolder) {
         mItemTouchHelper.startDrag(viewHolder);
