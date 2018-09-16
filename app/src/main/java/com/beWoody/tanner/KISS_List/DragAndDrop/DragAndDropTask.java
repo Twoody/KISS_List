@@ -43,7 +43,7 @@ public class DragAndDropTask extends AppCompatActivity implements OnStartDragLis
         else
             catId = 0;
 
-        Toolbar taskToolbar = (Toolbar) findViewById(R.id.toolbar_drag_and_drop);
+        Toolbar taskToolbar = (Toolbar) findViewById(R.id.toolbar_task_drag_and_drop);
         setSupportActionBar(taskToolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
 
@@ -54,7 +54,7 @@ public class DragAndDropTask extends AppCompatActivity implements OnStartDragLis
         ab.setDisplayHomeAsUpEnabled(true);
 
         // Text to be displayed in toolbar
-        TextView toolbarTitle = (TextView) taskToolbar.findViewById(R.id.toolbar_title_drag_and_drop);
+        TextView toolbarTitle = (TextView) taskToolbar.findViewById(R.id.toolbar_title_task_drag_and_drop);
         toolbarTitle.setText("Simplify Categories");
 
         db      = new TaskerDBHelper(this);
