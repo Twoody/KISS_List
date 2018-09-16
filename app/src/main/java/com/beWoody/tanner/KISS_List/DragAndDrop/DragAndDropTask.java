@@ -106,7 +106,7 @@ public class DragAndDropTask extends AppCompatActivity implements OnStartDragLis
                         }
                     }//end j-for
                     if (didfinditem == false)
-                        db.deleteCat(curTaskId);
+                        db.deleteTask(curTaskId);
                 }//end i-for
                 finish();
             }
