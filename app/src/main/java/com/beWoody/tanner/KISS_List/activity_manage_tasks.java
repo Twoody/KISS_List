@@ -96,6 +96,31 @@ public class activity_manage_tasks extends AppCompatActivity {
         refreshUIThread();
     }
     @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        int copyToNewListId = 101;
+        if(menu.findItem(copyToNewListId) == null){
+            MenuItem copyToNewList = menu.add(
+                    menu.NONE,          //groupid
+                    copyToNewListId,    //itemid
+                    2,              // order
+                    "Copy Incomplete Tasks to New");
+            copyToNewList.setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
+            copyToNewList.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+                @Override
+                public boolean onMenuItemClick(MenuItem menuItem) {
+                    Intent createNewList = new Intent(
+                            activity_manage_tasks.this,
+                            Pop.class);
+                    finish();
+                    startActivity(createNewList);
+                    return true;
+                }
+            });
+        }
+
+        return super.onPrepareOptionsMenu(menu);
+    }
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.actionbar, menu);
