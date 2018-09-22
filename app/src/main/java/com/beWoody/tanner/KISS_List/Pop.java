@@ -70,13 +70,14 @@ public class Pop extends Activity{
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                addCatNow(v);
+                int newCatID = addCatNow(v);
                 if(copyTasksFrom != -1){
                     //We were passed a `catId` to copy tasks over from
                     //This will copy incomplete tasks
-                    int toId = db.countCategories(); //just added; TODO: isAppending check...
+                    int toId = newCatID;
                     int fromId = copyTasksFrom;
                     Log.d("MEAT22", "COPYING FROM " + Integer.toString(fromId) +" to " + Integer.toString(toId));
+
                     db.copyIncompleteTasks(toId, fromId);
                     List <Tasker> foo = db.getAllNoncompletedTasks(toId);
                     for (int i=0; i<foo.size(); i++){
@@ -88,9 +89,10 @@ public class Pop extends Activity{
         });
     }//end onCreate()
 
-    public void addCatNow(View v){
+    public int addCatNow(View v){
         EditText t = findViewById(R.id.editText_categories);
         String s1  = t.getText().toString();
+        int ret    = -1;
         if (s1.equalsIgnoreCase("")){
             Toast.makeText(this, "enter the task description first!!", Toast.LENGTH_LONG);
         }
@@ -98,12 +100,12 @@ public class Pop extends Activity{
             int categoryCount = db.countCategories();
             int place         = categoryCount + 1; //Always append the added item
             Categories cat    = new Categories(s1, place); //TODO: isAppending check...
-            db.addCat(cat);
+            ret = db.addCat(cat);
             t.setText("");
             adapt.add(cat);
             adapt.notifyDataSetChanged();
         }
-        finish();
+        return ret;
     }//end addTaskNow()
 
     @Override
