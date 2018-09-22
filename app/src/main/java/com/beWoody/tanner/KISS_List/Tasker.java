@@ -55,7 +55,7 @@ public class Tasker {
     public int getCatId() {
         return catId;
     }
-    public void setCatId(int status) {
+    public void setCatId(int catId) {
         this.catId = catId;
     }
 }
