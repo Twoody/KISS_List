@@ -150,7 +150,7 @@ public class TaskerDBHelper extends SQLiteOpenHelper {
     }//end processInput
 
     /**************************** ADD FUNCTIONS ****************************/
-    public void addCat(Categories category) {
+    public int addCat(Categories category) {
         //Add `task` to the database listed in `DATABASE_NAME`
         //Tanner 20180717
         SQLiteDatabase db    = this.getWritableDatabase();
@@ -160,17 +160,19 @@ public class TaskerDBHelper extends SQLiteOpenHelper {
         // status of task- can be 0 for not done and 1 for done
         values.put(KEY_PLACE, category.getPlace());
 
-        long newRowId = db.insert(TABLE_CATEGORIES, null, values);
+        int newRowId = (int) db.insert(TABLE_CATEGORIES, null, values);
         if (newRowId == -1)
             Log.e("cat: TBDH", "CATEGORY NOT INSERTED INTO DB");
         else
             category.setId((int)newRowId);
         db.close(); // Closing database connection
+        return newRowId;
     }//end addCat()
 
-    public void addTask(Tasker tasker) {
+    public int addTask(Tasker tasker) {
         //Add `task` to the database listed in `DATABASE_NAME`
         //Tanner 20180717
+        int ret = -1;
         SQLiteDatabase db       = this.getWritableDatabase();
         ContentValues values    = new ContentValues();
         String myContent        = tasker.getContent();
@@ -184,31 +186,28 @@ public class TaskerDBHelper extends SQLiteOpenHelper {
         values.put(KEY_PLACE, tasker.getPlace());
         values.put(KEY_CATEGORY_ID, tasker.getCatId());
 
-        long newRowId = db.insert(TABLE_TASKS, null, values);
+        ret = (int) db.insert(TABLE_TASKS, null, values);
 
-        if (newRowId == -1)
+        if (ret == -1)
             Log.e("task:TBDH", "TASK NOT INSERTED INTO DB");
         else
-            tasker.setId((int)newRowId);
+            tasker.setId(ret);
         db.close();
+        return ret;
     }//end addTask()
 
     /**************************** COPY FUNCTIONS ****************************/
     public void copyIncompleteTasks(int toId, int fromId){
         List <Tasker> toCopy = getAllNoncompletedTasks(fromId);
-        SQLiteDatabase db = this.getWritableDatabase();
+
         for (int i=0; i< toCopy.size(); i++){
             Tasker copyThis = toCopy.get(i);
-            Tasker addThis  = new Tasker();
-            addThis.setCatId(copyThis.getCatId());
-            addThis.setCategory(copyThis.getCategory());
-            addThis.setContent(copyThis.getContent());
-            addThis.setPlace(copyThis.getPlace());
-            addThis.setStatus(copyThis.getStatus());
-            addTask(addThis);
-            Log.d("MEAT33", "COPIED: `"+addThis.getContent()+"`");
-            Log.d("MEAT33", "ID:`"+addThis.getId()+"`");
-            Log.d("MEAT33", "CATID:`"+addThis.getCatId()+"`");
+            int taskCatId   = toId;
+            int place       = copyThis.getPlace();
+            String cat      = copyThis.getCategory();
+            String content  = copyThis.getContent();
+            Tasker task     = new Tasker(cat, content, 0, place, toId);
+            int suc = addTask(task);
         }
         return;
     }
@@ -328,7 +327,7 @@ public class TaskerDBHelper extends SQLiteOpenHelper {
         if (catid != 0) {
             whereclause += " AND "+ KEY_CATEGORY_ID +" = " + catid + " ";
         }
-        whereclause += " AND status = '1' ";
+        whereclause += " AND status = 1 ";
         selectAll += whereclause;
         selectAll += " ORDER BY place ";
         Cursor cursor = db.rawQuery(selectAll, null);
@@ -341,6 +340,7 @@ public class TaskerDBHelper extends SQLiteOpenHelper {
                 tasker.setContent(cursor.getString(2));
                 tasker.setStatus(cursor.getInt(3));
                 tasker.setPlace(cursor.getInt(4));
+                tasker.setCatId(cursor.getInt(5));
                 taskList.add(tasker);
 
                 cnt++;
@@ -362,7 +362,7 @@ public class TaskerDBHelper extends SQLiteOpenHelper {
         if (catid != 0) {
             whereclause += " AND "+ KEY_CATEGORY_ID +" = " + catid + " ";
         }
-        whereclause += " AND status = '0' ";
+        whereclause += " AND status = 0 ";
         selectAll += whereclause;
         selectAll += " ORDER BY place ";
         Cursor cursor = db.rawQuery(selectAll, null);
@@ -375,6 +375,7 @@ public class TaskerDBHelper extends SQLiteOpenHelper {
                 tasker.setContent(cursor.getString(2));
                 tasker.setStatus(cursor.getInt(3));
                 tasker.setPlace(cursor.getInt(4));
+                tasker.setCatId(cursor.getInt(5));
                 taskList.add(tasker);
                 cnt++;
             } while (cursor.moveToNext());
@@ -404,6 +405,7 @@ public class TaskerDBHelper extends SQLiteOpenHelper {
                 tasker.setContent(cursor.getString(2));
                 tasker.setStatus(cursor.getInt(3));
                 tasker.setPlace(cursor.getInt(4));
+                tasker.setCatId(cursor.getInt(5));
                 taskList.add(tasker);
                 cnt++;
             } while (cursor.moveToNext());
