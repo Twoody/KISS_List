@@ -202,7 +202,6 @@ public class TaskerDBHelper extends SQLiteOpenHelper {
 
         for (int i=0; i< toCopy.size(); i++){
             Tasker copyThis = toCopy.get(i);
-            int taskCatId   = toId;
             int place       = copyThis.getPlace();
             String cat      = copyThis.getCategory();
             String content  = copyThis.getContent();
@@ -210,7 +209,7 @@ public class TaskerDBHelper extends SQLiteOpenHelper {
             int suc = addTask(task);
         }
         return;
-    }
+    }//end copyIncompleteTasks
 
     /**************************** COUNT FUNCTIONS ****************************/
     public int countCategories(){
