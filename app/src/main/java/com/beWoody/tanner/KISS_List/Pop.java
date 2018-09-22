@@ -1,9 +1,11 @@
 package com.beWoody.tanner.KISS_List;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
@@ -22,11 +24,21 @@ public class Pop extends Activity{
     CatAdapter adapt;
     List<Categories> list;
     Button button;
+    int copyTasksFrom; //Flag passed from amt.java
 
     @Override
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         setContentView(R.layout.add_category);
+
+        Intent parentIntent = getIntent();
+        Bundle parentBD     = parentIntent.getExtras();
+        if (parentBD != null)
+            copyTasksFrom = (int) parentBD.get("copyTasksOverFrom");
+        else
+            copyTasksFrom = -1;
+
+
 
         DisplayMetrics dimensions = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(dimensions);
@@ -59,23 +71,33 @@ public class Pop extends Activity{
             @Override
             public void onClick(View v) {
                 addCatNow(v);
+                if(copyTasksFrom != -1){
+                    //We were passed a `catId` to copy tasks over from
+                    //This will copy incomplete tasks
+                    int toId = db.countCategories(); //just added; TODO: isAppending check...
+                    int fromId = copyTasksFrom;
+                    Log.d("MEAT22", "COPYING FROM " + Integer.toString(fromId) +" to " + Integer.toString(toId));
+                    db.copyIncompleteTasks(toId, fromId);
+                    List <Tasker> foo = db.getAllNoncompletedTasks(toId);
+                    for (int i=0; i<foo.size(); i++){
+                        Log.d("MEAT44", "ITEM: `"+foo.get(i).getContent()+"`");
+                    }
+                }
                 finish();
             }
         });
     }//end onCreate()
 
     public void addCatNow(View v){
-        Resources res = getResources();
-        boolean debug = res.getBoolean(R.bool.debug);
-        EditText t    = findViewById(R.id.editText_categories);
-        String s1     = t.getText().toString();
+        EditText t = findViewById(R.id.editText_categories);
+        String s1  = t.getText().toString();
         if (s1.equalsIgnoreCase("")){
             Toast.makeText(this, "enter the task description first!!", Toast.LENGTH_LONG);
         }
         else {
             int categoryCount = db.countCategories();
             int place         = categoryCount + 1; //Always append the added item
-            Categories cat    = new Categories(s1, place);
+            Categories cat    = new Categories(s1, place); //TODO: isAppending check...
             db.addCat(cat);
             t.setText("");
             adapt.add(cat);
