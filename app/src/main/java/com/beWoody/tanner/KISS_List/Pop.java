@@ -2,10 +2,8 @@ package com.beWoody.tanner.KISS_List;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.content.res.Resources;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
@@ -73,16 +71,10 @@ public class Pop extends Activity{
                 int newCatID = addCatNow(v);
                 if(copyTasksFrom != -1){
                     //We were passed a `catId` to copy tasks over from
-                    //This will copy incomplete tasks
+                    //This will only copy incomplete tasks
                     int toId = newCatID;
                     int fromId = copyTasksFrom;
-                    Log.d("MEAT22", "COPYING FROM " + Integer.toString(fromId) +" to " + Integer.toString(toId));
-
                     db.copyIncompleteTasks(toId, fromId);
-                    List <Tasker> foo = db.getAllNoncompletedTasks(toId);
-                    for (int i=0; i<foo.size(); i++){
-                        Log.d("MEAT44", "ITEM: `"+foo.get(i).getContent()+"`");
-                    }
                 }
                 finish();
             }
