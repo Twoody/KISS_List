@@ -166,7 +166,7 @@ public class TaskerDBHelper extends SQLiteOpenHelper {
         else
             category.setId((int)newRowId);
         db.close(); // Closing database connection
-    }//end addTask()
+    }//end addCat()
 
     public void addTask(Tasker tasker) {
         //Add `task` to the database listed in `DATABASE_NAME`
@@ -192,6 +192,26 @@ public class TaskerDBHelper extends SQLiteOpenHelper {
             tasker.setId((int)newRowId);
         db.close();
     }//end addTask()
+
+    /**************************** COPY FUNCTIONS ****************************/
+    public void copyIncompleteTasks(int toId, int fromId){
+        List <Tasker> toCopy = getAllNoncompletedTasks(fromId);
+        SQLiteDatabase db = this.getWritableDatabase();
+        for (int i=0; i< toCopy.size(); i++){
+            Tasker copyThis = toCopy.get(i);
+            Tasker addThis  = new Tasker();
+            addThis.setCatId(copyThis.getCatId());
+            addThis.setCategory(copyThis.getCategory());
+            addThis.setContent(copyThis.getContent());
+            addThis.setPlace(copyThis.getPlace());
+            addThis.setStatus(copyThis.getStatus());
+            addTask(addThis);
+            Log.d("MEAT33", "COPIED: `"+addThis.getContent()+"`");
+            Log.d("MEAT33", "ID:`"+addThis.getId()+"`");
+            Log.d("MEAT33", "CATID:`"+addThis.getCatId()+"`");
+        }
+        return;
+    }
 
     /**************************** COUNT FUNCTIONS ****************************/
     public int countCategories(){
@@ -306,7 +326,7 @@ public class TaskerDBHelper extends SQLiteOpenHelper {
         String whereclause    = "";
         whereclause += " WHERE 1=1 ";
         if (catid != 0) {
-            whereclause += " AND "+ KEY_CATEGORY_ID +" = '" + catid + "' ";
+            whereclause += " AND "+ KEY_CATEGORY_ID +" = " + catid + " ";
         }
         whereclause += " AND status = '1' ";
         selectAll += whereclause;
@@ -340,7 +360,7 @@ public class TaskerDBHelper extends SQLiteOpenHelper {
         String whereclause    = "";
         whereclause += " WHERE 1=1 ";
         if (catid != 0) {
-            whereclause += " AND "+ KEY_CATEGORY_ID +" = '" + catid + "' ";
+            whereclause += " AND "+ KEY_CATEGORY_ID +" = " + catid + " ";
         }
         whereclause += " AND status = '0' ";
         selectAll += whereclause;
@@ -371,7 +391,7 @@ public class TaskerDBHelper extends SQLiteOpenHelper {
         List<Tasker> taskList = new ArrayList<Tasker>();
         String selectAll      = "SELECT * FROM " + TABLE_TASKS;
         if (catid != 0) {
-            selectAll += " WHERE " + KEY_CATEGORY_ID + " = '" + catid + "' ";
+            selectAll += " WHERE " + KEY_CATEGORY_ID + " = " + catid + " ";
         }
         selectAll += " ORDER BY place ";
         Cursor cursor = db.rawQuery(selectAll, null);
@@ -405,7 +425,6 @@ public class TaskerDBHelper extends SQLiteOpenHelper {
         String where = " WHERE 1=1";
         where += " AND " + KEY_ID + " = " + Integer.toString(catId) + "";
         query += where;
-        Log.d("getCat44", "SQL: `" + query + "`");
         Cursor cursor     = db.rawQuery(query, null);
         if(cursor.moveToNext()) {
             String category = cursor.getString(1);
