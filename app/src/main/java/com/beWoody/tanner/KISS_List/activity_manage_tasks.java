@@ -108,12 +108,6 @@ public class activity_manage_tasks extends AppCompatActivity {
             copyToNewList.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener(){
                 @Override
                 public boolean onMenuItemClick(MenuItem menuItem) {
-                    final Intent prevIntent = getIntent();
-                    Bundle parentBD = prevIntent.getExtras();
-                    if (parentBD != null)
-                        catId   = (int) parentBD.get("catId");
-                    else
-                        catId = 0;
                     Intent createNewList = new Intent(
                             activity_manage_tasks.this,
                             Pop.class);
