@@ -18,7 +18,7 @@
         android:maxLength="100"
         android:hint="@string/fillable"
         android:imeOptions="actionDone"
-        android:inputType="textMultiLine"
+        android:inputType="textCapSentences|textMultiLine"
         app:layout_constraintTop_toBottomOf="@+id/button_addTaskToDB"
         tools:layout_editor_absoluteX="0dp">
 

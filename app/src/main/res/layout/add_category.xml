@@ -14,7 +14,7 @@
         android:layout_alignParentTop="true"
         android:layout_marginTop="8dp"
         android:ems="10"
-        android:inputType="text"
+        android:inputType="textCapSentences"
         android:imeOptions="actionDone"
         android:maxLength="40"
         android:hint="@string/fillable"
@@ -25,7 +25,7 @@
         <requestFocus />
     </EditText>
 
-    <!-- BUG: Do we need addCatNow() here? Why is it marked wrong in Android Studios? -->
+    <!-- TODO: Do we need addCatNow() here? Why is it marked wrong in Android Studios? -->
     <Button
         android:id="@+id/button_addCategoryToDB"
         android:layout_width="wrap_content"
