@@ -53,7 +53,7 @@ public class Pop_tasks extends Activity{
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                addTaskNow(v);
+                int suc  = addTaskNow(v);
                 finish();
             }
         });
@@ -69,7 +69,8 @@ public class Pop_tasks extends Activity{
         });
     }//end onCreate()
 
-    public void addTaskNow(View v){
+    public int addTaskNow(View v){
+        int ret = -1;
         EditText t = findViewById(R.id.editText_tasks);
         String s1  = category;
         String s2  = t.getText().toString();
@@ -79,12 +80,12 @@ public class Pop_tasks extends Activity{
         else {
             int taskCount = db.countTasks(s1);
             int place     = taskCount + 1; //TODO: Check isAppedning...
-            int taskCatId = catId;
-            Tasker task   = new Tasker(s1, s2, 0, place, taskCatId);
-            db.addTask(task);
+            Tasker task   = new Tasker(s1, s2, 0, place, catId);
+            ret = db.addTask(task);
             t.setText("");
         }
         finish();
+        return ret;
     }//end addTaskNow()
 
     @Override
