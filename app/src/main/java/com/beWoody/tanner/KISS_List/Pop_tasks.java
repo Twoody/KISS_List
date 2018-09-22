@@ -78,7 +78,7 @@ public class Pop_tasks extends Activity{
         }
         else {
             int taskCount = db.countTasks(s1);
-            int place     = taskCount + 1; //Always append the added item
+            int place     = taskCount + 1; //TODO: Check isAppedning...
             int taskCatId = catId;
             Tasker task   = new Tasker(s1, s2, 0, place, taskCatId);
             db.addTask(task);
